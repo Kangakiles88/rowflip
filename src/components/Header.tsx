@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TOOL_PAGES, type ToolPageId } from "@/config/nav";
 import { siteConfig } from "@/config/site";
 import styles from "./tool.module.css";
 
@@ -17,14 +18,28 @@ function Mark() {
   );
 }
 
-export function Header() {
+export function Header({ current }: { current: ToolPageId }) {
   return (
     <header className={styles.header}>
       <div className={`container ${styles.headerInner}`}>
-        <Link className={styles.wordmark} href="/" aria-label={`${siteConfig.name} 홈`}>
-          <Mark />
-          {siteConfig.name}
-        </Link>
+        <div className={styles.headerLeft}>
+          <Link className={styles.wordmark} href="/" aria-label={`${siteConfig.name} 홈`}>
+            <Mark />
+            {siteConfig.name}
+          </Link>
+          <nav className={styles.nav} aria-label="기능">
+            {TOOL_PAGES.map((p) => (
+              <Link
+                key={p.id}
+                href={p.href}
+                className={styles.navLink}
+                aria-current={p.id === current ? "page" : undefined}
+              >
+                {p.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
         <p className={styles.privacy}>
           <span className={styles.privacyDot} aria-hidden="true" />
           입력한 데이터는 서버로 전송되지 않습니다

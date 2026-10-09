@@ -2,6 +2,7 @@
 
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import type { TransformOptions } from "@/types";
+import { copyText } from "@/utils/clipboard";
 import { DEFAULT_OPTIONS, PRESETS, SAMPLE_INPUT } from "@/utils/presets";
 import { loadSettings, saveSettings } from "@/utils/storage";
 import { transform } from "@/utils/transformer";
@@ -12,25 +13,6 @@ import { OutputPanel } from "./OutputPanel";
 import { PresetButtons } from "./PresetButtons";
 import { Toast } from "./Toast";
 import styles from "./tool.module.css";
-
-async function copyText(text: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    // 클립보드 API가 막힌 환경용 대체 경로
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.setAttribute("readonly", "");
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    const ok = document.execCommand("copy");
-    ta.remove();
-    return ok;
-  }
-}
 
 export function Converter() {
   const [input, setInput] = useState("");

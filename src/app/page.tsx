@@ -1,27 +1,20 @@
+import Link from "next/link";
 import { Converter } from "@/components/Converter";
 import { Header } from "@/components/Header";
+import { JsonLd } from "@/components/JsonLd";
+import { SiteFooter } from "@/components/SiteFooter";
 import { PromotionArea } from "@/components/ads/PromotionArea";
 import { siteConfig } from "@/config/site";
 import { FAQ, GUIDES } from "@/content/seo";
 
-function JsonLd() {
-  const data = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebApplication",
-        "@id": `${siteConfig.url}/#app`,
-        name: siteConfig.h1,
-        alternateName: siteConfig.name,
-        url: `${siteConfig.url}/`,
-        description: siteConfig.description,
-        inLanguage: "ko-KR",
-        applicationCategory: "UtilitiesApplication",
-        operatingSystem: "Windows, macOS, Android, iOS",
-        browserRequirements: "JavaScript가 켜진 최신 브라우저",
-        isAccessibleForFree: true,
-        offers: { "@type": "Offer", price: "0", priceCurrency: "KRW" },
-        featureList: [
+export default function Home() {
+  return (
+    <>
+      <JsonLd
+        path="/"
+        name={siteConfig.h1}
+        description={siteConfig.description}
+        features={[
           "엑셀 세로 데이터를 가로로 변환",
           "가로 데이터를 세로로 변환",
           "줄바꿈을 쉼표로 변환",
@@ -30,32 +23,10 @@ function JsonLd() {
           "접두사·접미사 추가",
           "SQL IN 절 생성",
           "JSON 배열 생성",
-        ],
-      },
-      {
-        "@type": "FAQPage",
-        "@id": `${siteConfig.url}/#faq`,
-        mainEntity: FAQ.map((f) => ({
-          "@type": "Question",
-          name: f.q,
-          acceptedAnswer: { "@type": "Answer", text: f.plain },
-        })),
-      },
-    ],
-  };
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }}
-    />
-  );
-}
-
-export default function Home() {
-  return (
-    <>
-      <JsonLd />
-      <Header />
+        ]}
+        faq={FAQ}
+      />
+      <Header current="garosero" />
       <main className="container page">
         <div className="intro">
           <h1>{siteConfig.h1}</h1>
@@ -109,6 +80,13 @@ export default function Home() {
               </article>
             ))}
           </div>
+          <p className="related">
+            여러 행과 열로 된 표 전체를 돌리려면{" "}
+            <Link className="inlineLink" href="/transpose/">
+              엑셀 행열 바꾸기
+            </Link>
+            를 쓰세요.
+          </p>
         </section>
 
         <PromotionArea position="bottom" />
@@ -126,14 +104,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="footer">
-        <div className="container">
-          <span>
-            {siteConfig.name} · {siteConfig.h1}
-          </span>
-          <span>모든 데이터 변환은 현재 브라우저에서만 처리됩니다. 입력한 내용은 서버로 전송되거나 저장되지 않습니다.</span>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

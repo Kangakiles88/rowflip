@@ -11,8 +11,10 @@ interface Props {
   onClear: () => void;
   rowCount: number;
   colCount: number;
-  column: ColumnSelect;
-  onColumnChange: (c: ColumnSelect) => void;
+  /** 주면 여러 열일 때 '변환할 열' 선택이 나온다 */
+  column?: ColumnSelect;
+  onColumnChange?: (c: ColumnSelect) => void;
+  placeholder?: string;
 }
 
 const PLACEHOLDER = `엑셀이나 텍스트 데이터를 여기에 붙여넣으세요.
@@ -31,8 +33,9 @@ export function InputPanel({
   onClear,
   rowCount,
   colCount,
-  column,
+  column = "all",
   onColumnChange,
+  placeholder = PLACEHOLDER,
 }: Props) {
   const gutterRef = useRef<HTMLPreElement>(null);
   const lineCount = value === "" ? 1 : value.split("\n").length;
@@ -68,7 +71,7 @@ export function InputPanel({
           onScroll={(e) => {
             if (gutterRef.current) gutterRef.current.scrollTop = e.currentTarget.scrollTop;
           }}
-          placeholder={PLACEHOLDER}
+          placeholder={placeholder}
           spellCheck={false}
           autoComplete="off"
           autoCorrect="off"
@@ -79,9 +82,11 @@ export function InputPanel({
 
       <div className={styles.status}>
         <span>
-          {fmt(rowCount)}행 · {fmt(value.length)}자
+          {onColumnChange || colCount <= 1
+            ? `${fmt(rowCount)}행 · ${fmt(value.length)}자`
+            : `${fmt(rowCount)}행 × ${fmt(colCount)}열 · ${fmt(value.length)}자`}
         </span>
-        {multiColumn && (
+        {multiColumn && onColumnChange && (
           <span className={styles.statusNotice}>
             {fmt(rowCount)}행 × {colCount}열 감지
             <select

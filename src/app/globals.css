@@ -299,6 +299,38 @@ a {
   flex-wrap: wrap;
 }
 
+.footerNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.footerNav a {
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.footerNav a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.footerName {
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
+.related {
+  margin: 14px 0 0;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+
+.inlineLink {
+  color: var(--accent);
+  text-underline-offset: 2px;
+}
+
 @media (max-width: 960px) {
   .guide {
     grid-template-columns: minmax(0, 1fr) minmax(0, 17rem);

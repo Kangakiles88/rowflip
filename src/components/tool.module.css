@@ -11,6 +11,34 @@
   gap: 16px;
   flex-wrap: wrap;
 }
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  min-width: 0;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.navLink {
+  padding: 5px 9px;
+  font-size: 13px;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.navLink:hover {
+  color: var(--ink);
+  background: var(--hover);
+}
+.navLink[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 600;
+  background: var(--hover);
+}
 .wordmark {
   display: inline-flex;
   align-items: center;
@@ -55,6 +83,16 @@
 .areaInput { grid-area: input; min-width: 0; }
 .areaOutput { grid-area: output; min-width: 0; }
 .areaOptions { grid-area: options; }
+
+/* 행열 바꾸기 페이지 — 빠른 변환 줄이 없다 */
+.toolTranspose {
+  grid-template-areas:
+    "input output"
+    "options options";
+}
+.options.optionsTranspose {
+  grid-template-columns: minmax(200px, 1fr) minmax(300px, 3fr);
+}
 
 /* ── Presets ─────────────────────────────────── */
 .presets {
@@ -199,6 +237,65 @@
   border-radius: 3px;
 }
 
+/* ── 표 미리보기 (엑셀 시트처럼 행 번호·열 문자) ── */
+.tableWrap {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+}
+.grid {
+  border-collapse: separate;
+  border-spacing: 0;
+  font: 12.5px/1.45 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.grid th,
+.grid td {
+  padding: 5px 10px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+  white-space: pre;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.grid thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--gutter);
+  color: var(--ink-3);
+  font-weight: 400;
+  font-size: 11px;
+  text-align: center;
+}
+.grid tbody th {
+  position: sticky;
+  left: 0;
+  background: var(--gutter);
+  color: var(--ink-3);
+  font-weight: 400;
+  font-size: 11px;
+  text-align: right;
+  min-width: 40px;
+}
+.grid thead th:first-child {
+  left: 0;
+  z-index: 2;
+}
+.grid tbody tr:first-child td {
+  font-weight: 600;
+  background: var(--accent-soft);
+}
+.emptyNote {
+  margin: 0;
+  padding: 10px 12px;
+  color: var(--ink-3);
+  font-size: 14px;
+}
+
 /* ── Buttons ─────────────────────────────────── */
 .ghost,
 .primary {
@@ -241,6 +338,16 @@
   padding: 3px 4px;
   border-radius: 3px;
   background: rgb(255 255 255 / 0.16);
+}
+
+/* 터치 기기에는 키보드 단축키 힌트가 의미 없다 */
+@media (hover: none) and (pointer: coarse) {
+  .kbd {
+    display: none;
+  }
+  .primary {
+    padding: 0 10px;
+  }
 }
 
 /* ── Options ─────────────────────────────────── */
@@ -417,6 +524,15 @@
       "options"
       "output";
   }
+  .toolTranspose {
+    grid-template-areas:
+      "input"
+      "output"
+      "options";
+  }
+  .options.optionsTranspose {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .editor {
     height: 220px;
     flex: none;
@@ -432,6 +548,20 @@
 }
 
 @media (max-width: 520px) {
+  .headerLeft {
+    gap: 10px;
+  }
+  .wordmark {
+    font-size: 14px;
+  }
+  .navLink {
+    padding: 5px 7px;
+    font-size: 12.5px;
+  }
+  .headerInner {
+    padding-block: 8px;
+    row-gap: 2px;
+  }
   .privacy {
     font-size: 11.5px;
   }
