@@ -1,0 +1,24 @@
+import type { PromotionPosition } from "../types";
+
+/**
+ * 프로모션 클릭 이벤트.
+ * 인자 타입을 고정해 두어 입력 데이터나 결과가 이벤트에 섞여 들어갈 수 없게 한다.
+ * 분석 도구(gtag 등)가 페이지에 있으면 그쪽으로 전달하고, 없으면 아무 일도 하지 않는다.
+ */
+export interface PromotionClickEvent {
+  type: "brand-connect" | "adsense";
+  position: PromotionPosition;
+}
+
+type Gtag = (command: "event", name: string, params: Record<string, string>) => void;
+
+export function trackPromotionClick(event: PromotionClickEvent): void {
+  if (typeof window === "undefined") return;
+  const gtag = (window as unknown as { gtag?: Gtag }).gtag;
+  if (typeof gtag === "function") {
+    gtag("event", "promotion_click", {
+      promotion_type: event.type,
+      promotion_position: event.position,
+    });
+  }
+}

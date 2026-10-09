@@ -1,0 +1,70 @@
+"use client";
+
+import { useRef } from "react";
+import type { TransformStats } from "@/types";
+import styles from "./tool.module.css";
+
+interface Props {
+  value: string;
+  stats: TransformStats;
+  pending: boolean;
+  modKey: string;
+  onCopy: () => void;
+  onResetOptions: () => void;
+}
+
+const fmt = (n: number) => n.toLocaleString("ko-KR");
+
+export function OutputPanel({ value, stats, pending, modKey, onCopy, onResetOptions }: Props) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+
+  const selectAll = () => {
+    ref.current?.focus();
+    ref.current?.select();
+  };
+
+  const removed: string[] = [];
+  if (stats.removedDuplicates > 0) removed.push(`중복 ${fmt(stats.removedDuplicates)}`);
+  if (stats.removedEmpty > 0) removed.push(`빈 칸 ${fmt(stats.removedEmpty)}`);
+
+  return (
+    <section className={`${styles.pane} ${styles.outputPane}`} aria-labelledby="output-label">
+      <div className={styles.paneHead}>
+        <label id="output-label" htmlFor="result" className={styles.paneTitle}>
+          변환 결과
+        </label>
+        <div className={styles.paneActions}>
+          <button type="button" className={styles.ghost} onClick={onResetOptions}>
+            옵션 초기화
+          </button>
+          <button type="button" className={styles.ghost} onClick={selectAll} disabled={!value}>
+            전체 선택
+          </button>
+          <button type="button" className={styles.primary} onClick={onCopy} disabled={!value}>
+            복사
+            <kbd className={styles.kbd}>{modKey}↵</kbd>
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.editor} data-pending={pending || undefined}>
+        <textarea
+          ref={ref}
+          id="result"
+          className={`${styles.code} ${styles.codeWrap}`}
+          value={value}
+          readOnly
+          placeholder="원본 데이터를 붙여넣으면 변환 결과가 여기에 바로 표시됩니다."
+          spellCheck={false}
+        />
+      </div>
+
+      <div className={styles.status} aria-live="polite">
+        <span>
+          {fmt(stats.outputCount)}개 항목 · {fmt(value.length)}자
+        </span>
+        {removed.length > 0 && <span>{removed.join(" · ")} 제거됨</span>}
+      </div>
+    </section>
+  );
+}

@@ -1,0 +1,35 @@
+import Link from "next/link";
+import { siteConfig } from "@/config/site";
+import styles from "./tool.module.css";
+
+function Mark() {
+  return (
+    <svg className={styles.mark} viewBox="0 0 32 32" aria-hidden="true">
+      <rect width="32" height="32" rx="6" fill="currentColor" />
+      <g fill="var(--panel)">
+        <rect x="7" y="7" width="5" height="5" rx="1" />
+        <rect x="7" y="13.5" width="5" height="5" rx="1" opacity=".55" />
+        <rect x="7" y="20" width="5" height="5" rx="1" opacity=".3" />
+        <rect x="13.5" y="7" width="5" height="5" rx="1" opacity=".55" />
+        <rect x="20" y="7" width="5" height="5" rx="1" opacity=".3" />
+      </g>
+    </svg>
+  );
+}
+
+export function Header() {
+  return (
+    <header className={styles.header}>
+      <div className={`container ${styles.headerInner}`}>
+        <Link className={styles.wordmark} href="/" aria-label={`${siteConfig.name} 홈`}>
+          <Mark />
+          {siteConfig.name}
+        </Link>
+        <p className={styles.privacy}>
+          <span className={styles.privacyDot} aria-hidden="true" />
+          입력한 데이터는 서버로 전송되지 않습니다
+        </p>
+      </div>
+    </header>
+  );
+}

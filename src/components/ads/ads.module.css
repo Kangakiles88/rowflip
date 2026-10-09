@@ -1,0 +1,103 @@
+.area {
+  display: grid;
+  gap: 12px;
+}
+
+/* ── AdSense ─────────────────────────────── */
+.adSlot {
+  display: grid;
+  gap: 4px;
+}
+.adLabel {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.adSlot :global(.adsbygoogle) {
+  min-height: 90px;
+}
+
+/* ── 브랜드커넥트 ───────────────────────────── */
+.brand {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+.brandLink {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  color: inherit;
+  text-decoration: none;
+}
+.brandLink:hover .brandCta {
+  background: var(--ink);
+  color: var(--panel);
+  border-color: var(--ink);
+}
+.brandLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  border-radius: var(--radius);
+}
+.brandMedia {
+  flex: none;
+  width: 88px;
+  height: 88px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--gutter);
+}
+.brandMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.brandBody {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+.brandTitle {
+  font-size: 14px;
+  font-weight: 600;
+}
+.brandDesc {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.brandCta {
+  flex: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: background 0.12s, color 0.12s;
+}
+.disclosure {
+  margin: 0;
+  padding: 7px 16px;
+  border-top: 1px solid var(--line);
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
+@media (max-width: 640px) {
+  .brandLink {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .brandMedia {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+  .brandCta {
+    width: 100%;
+    text-align: center;
+  }
+}
