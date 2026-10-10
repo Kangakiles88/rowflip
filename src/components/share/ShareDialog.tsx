@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { shareConfig } from "@/config/share";
+import { siteConfig } from "@/config/site";
 import { copyText } from "@/utils/clipboard";
 import { trackShare, type ShareChannel } from "@/utils/tracking";
 import { ShareIcon, type ShareIconName } from "./ShareIcons";
@@ -84,7 +85,8 @@ export function ShareDialog({ open, onClose, path, summary }: Props) {
       setRunId((n) => n + 1);
       setNotice("");
       setCopied(false);
-      setUrl(`${window.location.origin}${path}`);
+      // www나 미리보기 주소로 들어와도 대표 주소로 공유한다 — 카카오에는 rowflip.com 하나만 등록하면 되고 검색 점수도 한 주소로 모인다
+      setUrl(`${siteConfig.url}${path}`);
       setCanNativeShare(typeof navigator.share === "function");
       d.showModal();
       void loadKakao().then(setKakao);
