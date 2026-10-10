@@ -93,6 +93,13 @@
 .options.optionsTranspose {
   grid-template-columns: minmax(200px, 1fr) minmax(300px, 3fr);
 }
+/* 중복 제거 페이지 — 결과 / 비교 기준 / 비교 방법 / 남길 행 */
+.options.optionsDedupe {
+  grid-template-columns: minmax(300px, 1.6fr) minmax(220px, 1.2fr) minmax(150px, 0.8fr) minmax(210px, 1fr);
+}
+.selectFull {
+  width: 100%;
+}
 
 /* ── 첫 변환 버튼 — 원본과 결과 사이, 한 번 누르면 사라진다 ── */
 .tool.toolGated {
@@ -570,6 +577,9 @@
   .options {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+  .options.optionsDedupe {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 860px) {
@@ -661,7 +671,8 @@
   .preset {
     flex: none;
   }
-  .options {
+  .options,
+  .options.optionsDedupe {
     grid-template-columns: minmax(0, 1fr);
   }
   .paneActions .ghost:first-child {

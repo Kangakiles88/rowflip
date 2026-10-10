@@ -11,6 +11,7 @@
 - 현재 페이지
   - `/` 엑셀 가로세로 변환기: 한 열·한 행 목록을 가로↔세로, 쉼표 연결, 중복 제거, 정렬, 접두사/접미사, 따옴표, 번호, SQL IN, JSON·JS·Python 배열, HTML 목록으로
   - `/transpose/` 엑셀 행열 바꾸기: 표 전체의 행과 열 전환 → 엑셀 붙여넣기(탭 구분) / CSV / 마크다운 표
+  - `/dedupe/` 엑셀 중복 제거: 목록·표의 중복 제거 / 중복된 값만 / 개수 세기, 행 전체 또는 특정 열 기준, 처음·마지막 행 남기기
   - `/privacy/` 개인정보처리방침(문구는 `src/content/privacy.tsx`, 문의 메일은 `NEXT_PUBLIC_CONTACT_EMAIL`). 안내 페이지는 `nav.ts`의 `INFO_PAGES` → 푸터·sitemap에만 들어감
 
 ## 기술 스택
@@ -37,10 +38,10 @@ src/
 │  │               PresetButtons, CleanupOptions, OutputOptions, Segmented, Toast, tool.module.css
 │  └─ ads/         AdSlot, AdSenseScript, BrandConnectBanner, PromotionArea
 ├─ config/         site.ts(브랜드·도메인·SEO), analytics.ts(GA4), nav.ts(페이지 목록), share.ts(첫 변환 공유 안내), ads.ts, brandConnect.ts
-├─ content/        seo.tsx(/ 안내·FAQ), transpose.tsx(/transpose/ 메타·안내·FAQ)
-├─ utils/          parser, transformer, transpose(순수 함수 + 테스트), presets, storage, clipboard, tracking
+├─ content/        seo.tsx(/ 안내·FAQ), transpose.tsx, dedupe.tsx(각 페이지 메타·안내·FAQ), privacy.tsx
+├─ utils/          parser, transformer, transpose, dedupe(순수 함수 + 테스트), presets, storage, clipboard, tracking
 └─ types/
-public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(배너 이미지)
+public/            og.png, og-transpose.png, og-dedupe.png(1200×630 공유 이미지), ads/(배너 이미지)
 ```
 
 ## 코드 작성 원칙
@@ -69,7 +70,7 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
 ## 첫 변환 공유 안내 (바이럴)
 - 처음 변환할 때만 원본과 결과 사이에 [변환하기] 버튼이 나오고, 누르면 약 1.2초 로딩 뒤 공유 부탁 팝업이 뜸. 버튼은 한 번 누르면 사라지고 이후에는 바로 변환.
 - 설정은 `src/config/share.ts`: `enabled`(끄기), `frequency`("session" = 방문마다 한 번, "once" = 이 브라우저에서 처음 한 번), 문구, 로딩 시간.
-- 상태는 `useConvertGate` 훅 하나로 두 페이지가 공유. 저장값은 `rowflip:convert-gate:v1 = "1"` 뿐.
+- 상태는 `useConvertGate` 훅 하나로 모든 기능 페이지가 공유. 저장값은 `rowflip:convert-gate:v1 = "1"` 뿐.
 - 공유 채널: 링크 복사, 카카오톡(`NEXT_PUBLIC_KAKAO_JS_KEY` 있을 때만), 네이버, 밴드, 페이스북, X, 다른 앱(휴대폰 기본 공유창). 클릭은 `trackShare`(채널·페이지만)로 기록.
 - 팝업 디자인: 위에 전광판처럼 흐르는 안내 문구(`Ticker`) + 진행 막대로 로딩 느낌, 아래에 동그란 아이콘 버튼 + 이름을 한 줄로(휴대폰은 5개 이상이면 두 줄로 고르게). 움직임 줄이기 설정 사용자에게는 멈춘 문단으로 표시.
 - 대기 시간: 전광판 문구가 끝까지 한 번 흘러가는 시간(실제 글자 너비 ÷ `tickerSpeed`)을 계산해 남은 초를 표시. 그동안 ✕·결과 보기·Esc·바깥 클릭으로 닫히지 않고, 0초가 되면 닫기 버튼이 나타남. 공유 버튼은 대기 중에도 누를 수 있음.
@@ -115,7 +116,7 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
 - 카카오톡 공유를 쓰려면 카카오 디벨로퍼스에서 앱을 만들고 JavaScript 키를 `NEXT_PUBLIC_KAKAO_JS_KEY`에, 배포 도메인을 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 등록
 
 ## 현재 상태와 남은 일
-- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 두 기능 페이지, 첫 변환 공유 안내 팝업, 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 36개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
+- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 3개(가로세로·행열·중복 제거), 첫 변환 공유 안내 팝업, 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 50개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - Cloudflare AI 로봇 설정 확인(robots.txt에 검색 로봇이 막히지 않았는지)
   - 개인정보처리방침의 문의 메일 정하기 → Cloudflare 빌드 변수 `NEXT_PUBLIC_CONTACT_EMAIL`
@@ -123,7 +124,7 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
   - 브랜드커넥트 실제 링크·이미지
   - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅
   - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click만
-  - 기능 페이지 후보: 엑셀 빈 줄 제거, 엑셀 중복 제거, 줄바꿈 제거·쉼표를 줄바꿈으로, 엑셀 열 합치기·나누기
+  - 기능 페이지 후보: 엑셀 빈 줄 제거, 줄바꿈 제거·쉼표를 줄바꿈으로, 엑셀 열 합치기·나누기
 
 ## 답변 방식
 - 한국어로 답변. 코드를 바꾸면 바꾼 파일과 이유를 짧게 정리.

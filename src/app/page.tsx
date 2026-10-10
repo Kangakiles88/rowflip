@@ -85,6 +85,10 @@ export default function Home() {
             <Link className="inlineLink" href="/transpose/">
               엑셀 행열 바꾸기
             </Link>
+            를, 표에서 특정 열 기준으로 중복 행을 지우거나 중복값 개수를 세려면{" "}
+            <Link className="inlineLink" href="/dedupe/">
+              엑셀 중복 제거
+            </Link>
             를 쓰세요.
           </p>
         </section>

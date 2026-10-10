@@ -28,6 +28,11 @@ export const BROWSER_STORAGE = [
     what: "행열 바꾸기의 복사 형식(엑셀 붙여넣기, CSV, 마크다운 표)",
   },
   {
+    key: "rowflip:dedupe:v1",
+    where: "로컬 저장소",
+    what: "중복 제거의 옵션(결과 종류, 남길 행, 공백·대소문자 무시, 빈 칸 제외)",
+  },
+  {
     key: "rowflip:convert-gate:v1",
     where: "세션 저장소",
     what: "첫 변환 안내를 이미 봤는지 여부(값은 1). 브라우저 탭을 닫으면 지워집니다.",

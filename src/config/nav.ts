@@ -2,6 +2,7 @@
 export const TOOL_PAGES = [
   { id: "garosero", href: "/", label: "가로세로 변환", priority: 1 },
   { id: "transpose", href: "/transpose/", label: "행열 바꾸기", priority: 0.9 },
+  { id: "dedupe", href: "/dedupe/", label: "중복 제거", priority: 0.9 },
 ] as const;
 
 /** 기능이 아닌 안내 페이지 — 푸터와 sitemap에만 들어간다 */

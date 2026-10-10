@@ -74,9 +74,13 @@ export default function TransposePage() {
             ))}
           </div>
           <p className="related">
-            한 열짜리 목록을 쉼표로 잇거나 중복을 지우려면{" "}
+            한 열짜리 목록을 쉼표로 이으려면{" "}
             <Link className="inlineLink" href="/">
               엑셀 가로세로 변환기
+            </Link>
+            를, 표에서 중복 행을 지우려면{" "}
+            <Link className="inlineLink" href="/dedupe/">
+              엑셀 중복 제거
             </Link>
             를 쓰세요.
           </p>
