@@ -14,8 +14,16 @@
 export const shareConfig = {
   enabled: true,
   frequency: "session" as "session" | "once",
-  /** 로딩 표시 시간(ms) */
-  loadingMs: 1200,
+  /**
+   * 로딩(안내) 시간은 전광판 문구가 끝까지 한 번 흘러가는 시간으로 자동 계산된다.
+   * 그동안 남은 초가 표시되고, 끝나야 닫기 버튼이 나타난다.
+   */
+  /** 전광판 속도(px/초). 낮을수록 천천히 흐르고 대기 시간이 길어진다 */
+  tickerSpeed: 120,
+  /** 움직임 줄이기 설정 사용자의 읽는 시간(글자당 ms) */
+  readMsPerChar: 90,
+  /** 최소 대기 시간(ms) */
+  loadingMs: 3000,
   buttonLabel: "변환하기",
   loadingText: "변환하는 중",
   doneTitle: "변환이 끝났습니다",

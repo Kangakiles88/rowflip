@@ -58,36 +58,62 @@ function loadKakao(): Promise<KakaoSdk | null> {
   return kakaoLoading;
 }
 
+
 export function ShareDialog({ open, onClose, path, summary }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const [phase, setPhase] = useState<"loading" | "done">("loading");
+  /** 문구가 한 번 다 흘러갈 때까지 걸리는 시간(ms) — 전광판이 실제 너비를 재서 알려 준다 */
+  const [readMs, setReadMs] = useState<number | null>(null);
+  const [remaining, setRemaining] = useState<number | null>(null);
+  const [runId, setRunId] = useState(0);
   const [notice, setNotice] = useState("");
   const [kakao, setKakao] = useState<KakaoSdk | null>(null);
   const [canNativeShare, setCanNativeShare] = useState(false);
   const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
 
+  // 열기·닫기
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
     if (open && !d.open) {
       setPhase("loading");
+      setReadMs(null);
+      setRemaining(null);
+      setRunId((n) => n + 1);
       setNotice("");
       setCopied(false);
       setUrl(`${window.location.origin}${path}`);
       setCanNativeShare(typeof navigator.share === "function");
       d.showModal();
       void loadKakao().then(setKakao);
-      const t = setTimeout(() => setPhase("done"), shareConfig.loadingMs);
-      return () => clearTimeout(t);
     }
     if (!open && d.open) d.close();
   }, [open, path]);
 
+  // 남은 시간 표시 → 0초가 되면 닫기 버튼이 나타난다
+  useEffect(() => {
+    if (!open || readMs === null) return;
+    const end = performance.now() + readMs;
+    const tick = () => {
+      const left = Math.max(0, end - performance.now());
+      setRemaining(Math.ceil(left / 1000));
+      if (left === 0) setPhase("done");
+    };
+    tick();
+    const id = window.setInterval(tick, 200);
+    return () => window.clearInterval(id);
+  }, [open, readMs, runId]);
+
   useEffect(() => {
     if (phase === "done") closeRef.current?.focus();
   }, [phase]);
+
+  const canClose = phase === "done";
+  const close = () => {
+    if (canClose) ref.current?.close();
+  };
 
   const text = shareConfig.shareText;
   const enc = encodeURIComponent;
@@ -140,30 +166,40 @@ export function ShareDialog({ open, onClose, path, summary }: Props) {
       aria-labelledby="share-title"
       aria-busy={phase === "loading"}
       onClose={onClose}
+      onCancel={(e) => {
+        // 문구가 끝나기 전에는 Esc 로 닫히지 않게
+        if (!canClose) e.preventDefault();
+      }}
       onClick={(e) => {
-        // 바깥(배경)을 누르면 닫기
-        if (e.target === e.currentTarget) ref.current?.close();
+        // 바깥(배경)을 누르면 닫기 — 문구가 끝난 뒤에만
+        if (e.target === e.currentTarget) close();
       }}
     >
       <div className={styles.body}>
         <div className={styles.head}>
           <p id="share-title" className={styles.title}>
-            {phase === "done" ? (
+            {canClose ? (
               <span className={styles.check} aria-hidden="true" />
             ) : (
               <span className={styles.spinner} aria-hidden="true" />
             )}
-            {phase === "loading" ? shareConfig.loadingText : shareConfig.doneTitle}
+            {canClose ? shareConfig.doneTitle : shareConfig.loadingText}
             <span className={styles.summary}>{summary}</span>
           </p>
-          <button type="button" className={styles.x} aria-label="닫기" onClick={() => ref.current?.close()}>
-            <ShareIcon name="close" size={18} />
-          </button>
+          {canClose ? (
+            <button type="button" className={styles.x} aria-label="닫기" onClick={close}>
+              <ShareIcon name="close" size={18} />
+            </button>
+          ) : (
+            <span className={styles.countdown} aria-live="off">
+              {remaining ?? "–"}초
+            </span>
+          )}
         </div>
 
-        <Ticker lines={shareConfig.message} />
-        <div className={styles.progress} data-done={phase === "done" || undefined} aria-hidden="true">
-          <span style={{ animationDuration: `${shareConfig.loadingMs}ms` }} />
+        <Ticker key={runId} lines={shareConfig.message} active={open} onMeasured={setReadMs} />
+        <div className={styles.progress} data-done={canClose || undefined} aria-hidden="true">
+          {readMs !== null && <span key={runId} style={{ animationDuration: `${readMs}ms` }} />}
         </div>
 
         <p className={styles.sectionTitle}>지인에게 알리기</p>
@@ -223,9 +259,11 @@ export function ShareDialog({ open, onClose, path, summary }: Props) {
 
         <div className={styles.footer}>
           <p className={styles.footnote}>{shareConfig.footnote}</p>
-          <button ref={closeRef} type="button" className={styles.close} onClick={() => ref.current?.close()}>
-            {shareConfig.closeLabel}
-          </button>
+          {canClose ? (
+            <button ref={closeRef} type="button" className={styles.close} onClick={close}>
+              {shareConfig.closeLabel}
+            </button>
+          ) : null}
         </div>
       </div>
     </dialog>
@@ -233,28 +271,67 @@ export function ShareDialog({ open, onClose, path, summary }: Props) {
 }
 
 /**
- * 전광판처럼 오른쪽에서 왼쪽으로 흐르는 안내 문구.
- * 같은 문구를 두 벌 이어 붙여 끊김 없이 돌고, 화면 낭독기는 숨겨 둔 정지 문구를 읽는다.
- * 움직임 줄이기 설정을 켠 사용자에게는 멈춘 문단으로 보여 준다.
+ * 전광판처럼 오른쪽 끝에서 들어와 왼쪽으로 흘러가는 안내 문구.
+ * 실제 글자 너비를 재서 속도를 일정하게 맞추고,
+ * "마지막 글자가 들어와 화면 가운데쯤까지 온 시점"을 다 읽은 시간으로 부모에게 알려 준다.
+ * 움직임 줄이기 설정 사용자에게는 멈춘 문단을 보여 주고 글자 수로 읽는 시간을 잡는다.
  */
-function Ticker({ lines }: { lines: readonly string[] }) {
+function Ticker({
+  lines,
+  active,
+  onMeasured,
+}: {
+  lines: readonly string[];
+  active: boolean;
+  onMeasured: (ms: number) => void;
+}) {
+  const windowRef = useRef<HTMLDivElement>(null);
+  const runRef = useRef<HTMLSpanElement>(null);
+  const [motion, setMotion] = useState<{ from: number; to: number; ms: number } | null>(null);
   const text = lines.join(" ");
-  // 글자 수에 비례해 속도를 일정하게 유지 (대략 초당 7~8자)
-  const duration = `${Math.max(12, Math.round(text.length * 0.14))}s`;
+
+  useEffect(() => {
+    if (!active) return;
+    // 대화상자가 화면에 그려진 다음 프레임에 잰다
+    const id = requestAnimationFrame(() => {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const win = windowRef.current?.clientWidth ?? 0;
+      const run = runRef.current?.scrollWidth ?? 0;
+      if (reduce || win === 0 || run === 0) {
+        onMeasured(Math.max(shareConfig.loadingMs, text.length * shareConfig.readMsPerChar));
+        return;
+      }
+      const speed = shareConfig.tickerSpeed; // px/초
+      setMotion({ from: win, to: -run, ms: ((win + run) / speed) * 1000 });
+      onMeasured(((run + win * 0.5) / speed) * 1000);
+    });
+    return () => cancelAnimationFrame(id);
+  }, [active, onMeasured, text]);
+
   return (
     <div className={styles.ticker}>
       <p className={styles.tickerStatic}>{text}</p>
-      <div className={styles.tickerWindow} aria-hidden="true">
-        <div className={styles.tickerTrack} style={{ "--ticker-duration": duration } as React.CSSProperties}>
-          {[0, 1].map((copy) => (
-            <span key={copy} className={styles.tickerRun}>
-              {lines.map((line, i) => (
-                <span key={i} className={styles.tickerItem}>
-                  {line}
-                </span>
-              ))}
-            </span>
-          ))}
+      <div className={styles.tickerWindow} ref={windowRef} aria-hidden="true">
+        <div
+          className={styles.tickerTrack}
+          data-running={motion ? "" : undefined}
+          style={
+            motion
+              ? ({
+                  "--ticker-from": `${motion.from}px`,
+                  "--ticker-to": `${motion.to}px`,
+                  "--ticker-duration": `${motion.ms}ms`,
+                } as React.CSSProperties)
+              : undefined
+          }
+        >
+          <span className={styles.tickerRun} ref={runRef}>
+            {lines.map((line, i) => (
+              <span key={i} className={styles.tickerItem}>
+                {line}
+              </span>
+            ))}
+          </span>
         </div>
       </div>
     </div>

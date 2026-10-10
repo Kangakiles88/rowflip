@@ -15,6 +15,11 @@
 .dialog[open] {
   animation: dialog-in 0.14s ease-out;
 }
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}
 @keyframes dialog-in {
   from {
     opacity: 0;
@@ -53,6 +58,7 @@
 }
 .x {
   flex: none;
+  animation: appear 0.2s ease-out;
   width: 30px;
   height: 30px;
   margin: -4px -6px 0 0;
@@ -66,6 +72,20 @@
 .x:hover {
   color: var(--ink);
   background: var(--hover);
+}
+.countdown {
+  flex: none;
+  min-width: 44px;
+  height: 26px;
+  padding: 0 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 13px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 13px;
 }
 .check {
   width: 18px;
@@ -134,8 +154,12 @@
 .tickerTrack {
   display: flex;
   width: max-content;
-  animation: ticker var(--ticker-duration, 20s) linear infinite;
+  visibility: hidden;
   will-change: transform;
+}
+.tickerTrack[data-running] {
+  visibility: visible;
+  animation: ticker var(--ticker-duration) linear infinite;
 }
 .tickerRun {
   display: flex;
@@ -158,12 +182,16 @@
   background: var(--accent-soft);
   opacity: 0.85;
 }
+.tickerItem:last-child::after {
+  display: none;
+}
+/* 오른쪽 끝에서 들어와 왼쪽 끝으로 빠져나간 뒤 다시 들어온다 */
 @keyframes ticker {
   from {
-    transform: translateX(0);
+    transform: translateX(var(--ticker-from));
   }
   to {
-    transform: translateX(-50%);
+    transform: translateX(var(--ticker-to));
   }
 }
 
@@ -275,6 +303,7 @@
 }
 
 .footer {
+  min-height: 45px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -289,6 +318,7 @@
 }
 .close {
   flex: none;
+  animation: appear 0.2s ease-out;
   height: 32px;
   padding: 0 14px;
   font-size: 13px;
@@ -321,7 +351,7 @@
   .close {
     height: 38px;
   }
-}
+  }
 
 @media (prefers-reduced-motion: reduce) {
   .dialog[open] {
