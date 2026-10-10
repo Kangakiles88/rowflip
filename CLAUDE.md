@@ -9,7 +9,7 @@
 - 목표: 구글·네이버 검색 유입 → AdSense·네이버 브랜드커넥트 광고 수익.
 - 원칙: 붙여넣기 → 옵션 선택 → 결과 확인 → 복사. 회원가입·업로드·서버 저장 없음. 모든 처리는 브라우저 안에서.
 - 현재 페이지
-  - `/` 엑셀 가로세로 변환기: 한 열·한 행 목록을 가로↔세로(입력창 상태줄의 '나누기'로 쉼표·띄어쓰기 목록도 나눔, 쉼표 목록이면 '쉼표로 나누기' 안내), 쉼표 연결, 중복 제거, 정렬, 접두사/접미사, 따옴표, 번호, SQL IN, JSON·JS·Python 배열, HTML 목록으로
+  - `/` 엑셀 가로세로 변환기: 한 열·한 행 목록을 가로↔세로(입력창 상태줄의 '나누기'로 쉼표·띄어쓰기 목록도 나눔, 쉼표·코드 목록이면 '…로 나누기' 안내, 값이 한 칸뿐인데 '세로로'·'가로로'를 누르면 쉼표>세미콜론>띄어쓰기로 자동 나눔), 쉼표 연결, 중복 제거, 정렬, 접두사/접미사, 따옴표, 번호, SQL IN, JSON·JS·Python 배열, HTML 목록으로
   - `/transpose/` 엑셀 행열 바꾸기: 표 전체의 행과 열 전환 → 엑셀 붙여넣기(탭 구분) / CSV / 마크다운 표
   - `/dedupe/` 엑셀 중복 제거: 목록·표의 중복 제거 / 중복된 값만 / 개수 세기, 행 전체 또는 특정 열 기준, 처음·마지막 행 남기기
   - `/split/` 쉼표를 줄바꿈으로 변환: 쉼표·세미콜론·띄어쓰기·슬래시·파이프·직접 입력 구분자로 나눠 세로(줄바꿈)/가로(엑셀 한 행), 괄호·따옴표 벗기기(SQL IN·JSON 배열 → 목록)
@@ -41,7 +41,7 @@ src/
 │  └─ ads/         AdSlot, AdSenseScript, BrandConnectBanner, PromotionArea
 ├─ config/         site.ts(브랜드·도메인·SEO), analytics.ts(GA4), nav.ts(페이지 목록), share.ts(첫 변환 공유 안내), ads.ts, brandConnect.ts
 ├─ content/        seo.tsx(/ 안내·FAQ), transpose.tsx, dedupe.tsx, split.tsx(각 페이지 메타·안내·FAQ), privacy.tsx
-├─ utils/          parser, split(원본 나누기), transformer, transpose, dedupe(순수 함수 + 테스트), presets, storage, clipboard, tracking
+├─ utils/          parser, split(원본 나누기), rotation(광고 순번), transformer, transpose, dedupe(순수 함수 + 테스트), presets, storage, clipboard, tracking
 └─ types/
 public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×630 공유 이미지), ads/(배너 이미지)
 ```
@@ -90,7 +90,7 @@ public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×6
 ## 광고
 - AdSense: `.env`의 `NEXT_PUBLIC_ADSENSE_*`. 꺼져 있거나 값이 없으면 스크립트·광고 칸을 DOM에 렌더링하지 않음. 슬롯은 top·bottom 2개만.
 - 브랜드커넥트: 상품 목록(`products`: name·href·image)은 `src/config/brandConnect.ts`에서만 수정(컴포넌트에 하드코딩 금지). 이미지는 `public/ads/`에 정사각형 96px webp. 링크는 `target="_blank" rel="sponsored noopener noreferrer"`. 대가성 안내 문구(`disclosureText`)는 띠 안에 항상 보이게.
-- 브랜드커넥트 표시: 메뉴 바로 아래·H1 위(`position: "header"`)의 한 줄 띠(높이 약 52px). 상품이 옆으로 천천히 흐르고(같은 목록 3벌 + 1/3 이동), 마우스·키보드 포커스 시 멈춤, 움직임 줄이기 설정이면 멈춘 스크롤 목록. 카드형처럼 키우지 말 것(첫 화면 도구 가림).
+- 브랜드커넥트 표시: 메뉴 바로 아래·H1 위(`position: "header"`)의 한 줄 띠(높이 약 56px)에 상품 **하나**만. 새로고침마다 다음 상품(`utils/rotation.ts`, 순번은 `rowflip:brand-rotation:v1`, 첫 방문은 무작위 시작). 흐르는 전광판·카드형으로 키우지 말 것(첫 화면 도구 가림).
 - 위치는 `PromotionArea`(header / top / middle / bottom). AdSense는 top·bottom만. 광고가 도구보다 먼저 크게 보이면 안 됨.
 - `NEXT_PUBLIC_*` 값은 빌드 때 코드에 들어가므로 바꾸면 다시 빌드.
 
@@ -120,7 +120,7 @@ public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×6
 - 카카오톡 공유를 쓰려면 카카오 디벨로퍼스에서 앱을 만들고 JavaScript 키를 `NEXT_PUBLIC_KAKAO_JS_KEY`에, 배포 도메인을 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 등록
 
 ## 현재 상태와 남은 일
-- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 4개(가로세로·행열·중복 제거·쉼표→줄바꿈), 첫 변환 공유 안내 팝업, 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 68개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
+- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 4개(가로세로·행열·중복 제거·쉼표→줄바꿈), 첫 변환 공유 안내 팝업, 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 76개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - Cloudflare AI 로봇 설정 확인(robots.txt에 검색 로봇이 막히지 않았는지)
   - 개인정보처리방침의 문의 메일 정하기 → Cloudflare 빌드 변수 `NEXT_PUBLIC_CONTACT_EMAIL`

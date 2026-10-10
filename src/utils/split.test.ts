@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_OPTIONS } from "./presets";
-import { splitCell, splitCells, suggestInputSplit, unquote, unwrapBrackets } from "./split";
+import {
+  splitCell,
+  splitCells,
+  splitForSingleCell,
+  suggestInputSplit,
+  unquote,
+  unwrapBrackets,
+} from "./split";
 import { transform } from "./transformer";
 
 describe("splitCell", () => {
@@ -52,9 +59,28 @@ describe("suggestInputSplit", () => {
     expect(suggestInputSplit(["A, B, C"])).toBe("comma");
     expect(suggestInputSplit(["a;b"])).toBe("semicolon");
   });
+  it("코드·숫자가 띄어쓰기로 이어져 있으면 띄어쓰기", () => {
+    expect(suggestInputSplit(["12345  45678"])).toBe("space");
+    expect(suggestInputSplit(["A-10234 A-10235"])).toBe("space");
+  });
+  it("한글 문장의 띄어쓰기는 추측하지 않는다", () => {
+    expect(suggestInputSplit(["서울 강남구"])).toBeNull();
+  });
   it("엑셀 목록이면 추측하지 않는다", () => {
     expect(suggestInputSplit(["a", "b", "c", "d"])).toBeNull();
     expect(suggestInputSplit(["제목이 아닙니다 애플"])).toBeNull();
+  });
+});
+
+describe("splitForSingleCell", () => {
+  it("한 칸이면 쉼표 > 세미콜론 > 띄어쓰기 순으로 고른다", () => {
+    expect(splitForSingleCell(["a, b c"])).toBe("comma");
+    expect(splitForSingleCell(["a; b"])).toBe("semicolon");
+    expect(splitForSingleCell(["제목이 아닙니다 애플"])).toBe("space");
+    expect(splitForSingleCell(["12345"])).toBeNull();
+  });
+  it("칸이 여러 개면 손대지 않는다", () => {
+    expect(splitForSingleCell(["12345", "45678"])).toBeNull();
   });
 });
 

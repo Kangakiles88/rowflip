@@ -38,6 +38,11 @@ export const BROWSER_STORAGE = [
     what: "쉼표를 줄바꿈으로 변환의 옵션(나눌 기준, 결과 모양, 정리 옵션)",
   },
   {
+    key: "rowflip:brand-rotation:v1",
+    where: "로컬 저장소",
+    what: "추천 상품 띠에 마지막으로 보여 준 상품 순번(숫자). 새로고침하면 다음 상품을 보여 주는 데 씁니다.",
+  },
+  {
     key: "rowflip:convert-gate:v1",
     where: "세션 저장소",
     what: "첫 변환 안내를 이미 봤는지 여부(값은 1). 브라우저 탭을 닫으면 지워집니다.",

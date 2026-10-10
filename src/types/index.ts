@@ -83,10 +83,6 @@ export interface BrandConnectConfig {
   /** 대가성 안내 — 필수. 띠 오른쪽(휴대폰은 아래)에 항상 보인다 */
   disclosureText: string;
   position: PromotionPosition;
-  /** 상품이 옆으로 천천히 흐른다(마우스를 올리면 멈춤). false면 멈춘 목록 */
-  autoScroll: boolean;
-  /** 흐르는 속도(px/초) */
-  scrollSpeed: number;
   products: BrandConnectProduct[];
 }
 

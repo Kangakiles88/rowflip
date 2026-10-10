@@ -95,14 +95,39 @@ export function unquote(item: string): string {
   return item;
 }
 
+const nonEmpty = (cells: string[]) => cells.map((c) => c.trim()).filter((c) => c !== "");
+const HAS_COMMA = /[,，、]/;
+const HAS_SEMICOLON = /[;；]/;
+const HAS_SPACE = /[ \u00a0\u3000]/;
+/** 코드·숫자처럼 보이는 낱말(영문·숫자·기호만) — '12345', 'A-10234', 'kim@a.com' */
+const CODE_TOKEN = /^[\x21-\x7e]+$/;
+
 /**
- * 붙여넣은 목록이 엑셀 칸이 아니라 쉼표·세미콜론으로 이어진 것 같으면 그 구분자를 돌려준다.
+ * 붙여넣은 목록이 엑셀 칸이 아니라 쉼표·세미콜론·띄어쓰기로 이어진 것 같으면 그 구분자를 돌려준다.
  * 칸이 적은데(3개 이하) 모든 칸에 같은 구분자가 들어 있을 때만 추측한다.
+ * 띄어쓰기는 '제목이 아닙니다'처럼 값 안에 들어가는 경우가 많아, 낱말이 모두 코드·숫자일 때만 추측한다.
  */
 export function suggestInputSplit(cells: string[]): InputSplit | null {
-  const values = cells.map((c) => c.trim()).filter((c) => c !== "");
+  const values = nonEmpty(cells);
   if (values.length === 0 || values.length > 3) return null;
-  if (values.every((v) => /[,，、]/.test(v))) return "comma";
-  if (values.every((v) => /[;；]/.test(v))) return "semicolon";
+  if (values.every((v) => HAS_COMMA.test(v))) return "comma";
+  if (values.every((v) => HAS_SEMICOLON.test(v))) return "semicolon";
+  if (values.every((v) => HAS_SPACE.test(v) && v.split(/[ \u00a0\u3000]+/).every((t) => CODE_TOKEN.test(t)))) {
+    return "space";
+  }
+  return null;
+}
+
+/**
+ * 값이 한 칸뿐이면 가로·세로로 돌릴 것이 없다 — 그 칸을 나눌 구분자를 고른다(쉼표 > 세미콜론 > 띄어쓰기).
+ * '세로로'·'가로로'를 눌렀을 때만 쓴다.
+ */
+export function splitForSingleCell(cells: string[]): InputSplit | null {
+  const values = nonEmpty(cells);
+  if (values.length !== 1) return null;
+  const v = values[0];
+  if (HAS_COMMA.test(v)) return "comma";
+  if (HAS_SEMICOLON.test(v)) return "semicolon";
+  if (HAS_SPACE.test(v)) return "space";
   return null;
 }
