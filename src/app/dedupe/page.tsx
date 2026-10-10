@@ -43,6 +43,8 @@ export default function DedupePage() {
       />
       <Header current="dedupe" />
       <main className="container page">
+        <PromotionArea position="header" />
+
         <div className="intro">
           <h1>{M.h1}</h1>
           <p className="lede">
@@ -55,9 +57,9 @@ export default function DedupePage() {
 
         <DedupeTool />
 
-        <ToolDirectory current="dedupe" />
-
         <PromotionArea position="middle" />
+
+        <ToolDirectory current="dedupe" />
 
         <section className="section" aria-labelledby="guide-title">
           <h2 id="guide-title">엑셀 중복값 제거하는 방법</h2>

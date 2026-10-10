@@ -29,6 +29,8 @@ export default function Home() {
       />
       <Header current="garosero" />
       <main className="container page">
+        <PromotionArea position="header" />
+
         <div className="intro">
           <h1>{siteConfig.h1}</h1>
           <p className="lede">
@@ -41,9 +43,9 @@ export default function Home() {
 
         <Converter />
 
-        <ToolDirectory current="garosero" />
-
         <PromotionArea position="middle" />
+
+        <ToolDirectory current="garosero" />
 
         <section className="section usage" aria-labelledby="usage-title">
           <h2 id="usage-title">사용 방법</h2>

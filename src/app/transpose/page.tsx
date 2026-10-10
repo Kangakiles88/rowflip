@@ -43,6 +43,8 @@ export default function TransposePage() {
       />
       <Header current="transpose" />
       <main className="container page">
+        <PromotionArea position="header" />
+
         <div className="intro">
           <h1>{M.h1}</h1>
           <p className="lede">
@@ -55,9 +57,9 @@ export default function TransposePage() {
 
         <TransposeTool />
 
-        <ToolDirectory current="transpose" />
-
         <PromotionArea position="middle" />
+
+        <ToolDirectory current="transpose" />
 
         <section className="section" aria-labelledby="guide-title">
           <h2 id="guide-title">엑셀 행열 바꾸는 방법</h2>

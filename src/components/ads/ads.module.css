@@ -16,88 +16,128 @@
   min-height: 90px;
 }
 
-/* ── 브랜드커넥트 ───────────────────────────── */
+/* ── 브랜드커넥트 한 줄 띠 ───────────────────────
+   [추천 상품] [사진 이름 → · 사진 이름 → …흐름…] [광고 안내]
+   높이를 낮게 유지해 첫 화면에서 도구를 밀어내지 않는다. */
 .brand {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "title track note";
+  align-items: center;
+  column-gap: 14px;
+  min-height: 52px;
+  padding: 0 14px;
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
   background: var(--panel);
+}
+.brandTitle {
+  grid-area: title;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.brandViewport {
+  grid-area: track;
+  min-width: 0;
+  overflow: hidden;
+}
+.brandTrack {
+  display: flex;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.brandViewport[data-loop] .brandTrack {
+  animation: brand-loop var(--brand-duration) linear infinite;
+}
+.brandViewport[data-loop]:hover .brandTrack,
+.brandViewport[data-loop]:focus-within .brandTrack {
+  animation-play-state: paused;
+}
+@keyframes brand-loop {
+  to {
+    transform: translateX(calc(-100% / 3));
+  }
+}
+/* 간격은 gap 대신 margin — 세 벌이 정확히 같은 폭이어야 1/3 이동이 이음매 없이 맞는다 */
+.brandItem {
+  flex: none;
+  margin-right: 6px;
 }
 .brandLink {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 14px 16px;
-  color: inherit;
+  gap: 9px;
+  height: 44px;
+  padding: 0 10px 0 4px;
+  border-radius: 4px;
+  color: var(--ink);
   text-decoration: none;
+  white-space: nowrap;
 }
-.brandLink:hover .brandCta {
-  background: var(--ink);
-  color: var(--panel);
-  border-color: var(--ink);
+.brandLink:hover {
+  background: var(--hover);
 }
 .brandLink:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: -2px;
-  border-radius: var(--radius);
 }
-.brandMedia {
+.brandImage {
   flex: none;
-  width: 88px;
-  height: 88px;
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border: 1px solid var(--line);
   border-radius: 4px;
-  overflow: hidden;
   background: var(--gutter);
 }
-.brandMedia img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.brandBody {
-  flex: 1;
-  min-width: 0;
-  display: grid;
-  gap: 2px;
-}
-.brandTitle {
-  font-size: 14px;
-  font-weight: 600;
-}
-.brandDesc {
-  font-size: 13px;
-  color: var(--ink-2);
-}
-.brandCta {
-  flex: none;
-  font-size: 13px;
+.brandName {
+  font-size: 13.5px;
   font-weight: 500;
-  padding: 6px 12px;
-  border: 1px solid var(--line-strong);
-  border-radius: 4px;
-  white-space: nowrap;
-  transition: background 0.12s, color 0.12s;
+}
+.brandLink:hover .brandName {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.brandArrow {
+  font-size: 13px;
+  color: var(--accent);
 }
 .disclosure {
+  grid-area: note;
   margin: 0;
-  padding: 7px 16px;
-  border-top: 1px solid var(--line);
-  font-size: 11.5px;
+  max-width: 170px;
+  font-size: 11px;
+  line-height: 1.35;
   color: var(--ink-3);
 }
 
-@media (max-width: 640px) {
-  .brandLink {
-    flex-wrap: wrap;
-    gap: 12px;
+@media (max-width: 860px) {
+  .brand {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "title track"
+      "note note";
+    padding: 2px 12px 6px;
   }
-  .brandMedia {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
+  .disclosure {
+    max-width: none;
   }
-  .brandCta {
-    width: 100%;
-    text-align: center;
+}
+
+/* 움직임 줄이기 설정 — 흐르지 않고 손으로 넘겨 보는 목록 */
+@media (prefers-reduced-motion: reduce) {
+  .brandViewport {
+    overflow-x: auto;
+  }
+  .brandViewport[data-loop] .brandTrack {
+    animation: none;
+  }
+  .brandItem[aria-hidden="true"] {
+    display: none;
   }
 }

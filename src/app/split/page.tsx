@@ -43,6 +43,8 @@ export default function SplitPage() {
       />
       <Header current="split" />
       <main className="container page">
+        <PromotionArea position="header" />
+
         <div className="intro">
           <h1>{M.h1}</h1>
           <p className="lede">
@@ -55,9 +57,9 @@ export default function SplitPage() {
 
         <SplitTool />
 
-        <ToolDirectory current="split" />
-
         <PromotionArea position="middle" />
+
+        <ToolDirectory current="split" />
 
         <section className="section" aria-labelledby="guide-title">
           <h2 id="guide-title">쉼표를 줄바꿈으로 바꾸는 방법</h2>

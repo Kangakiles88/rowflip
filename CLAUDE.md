@@ -89,8 +89,9 @@ public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×6
 
 ## 광고
 - AdSense: `.env`의 `NEXT_PUBLIC_ADSENSE_*`. 꺼져 있거나 값이 없으면 스크립트·광고 칸을 DOM에 렌더링하지 않음. 슬롯은 top·bottom 2개만.
-- 브랜드커넥트: 내용은 `src/config/brandConnect.ts`에서만 수정(컴포넌트에 하드코딩 금지). 링크는 `target="_blank" rel="sponsored noopener noreferrer"`. 대가성 안내 문구(`disclosureText`) 필수.
-- 위치는 `PromotionArea`(top / middle / bottom). 광고가 도구보다 먼저 크게 보이면 안 됨.
+- 브랜드커넥트: 상품 목록(`products`: name·href·image)은 `src/config/brandConnect.ts`에서만 수정(컴포넌트에 하드코딩 금지). 이미지는 `public/ads/`에 정사각형 96px webp. 링크는 `target="_blank" rel="sponsored noopener noreferrer"`. 대가성 안내 문구(`disclosureText`)는 띠 안에 항상 보이게.
+- 브랜드커넥트 표시: 메뉴 바로 아래·H1 위(`position: "header"`)의 한 줄 띠(높이 약 52px). 상품이 옆으로 천천히 흐르고(같은 목록 3벌 + 1/3 이동), 마우스·키보드 포커스 시 멈춤, 움직임 줄이기 설정이면 멈춘 스크롤 목록. 카드형처럼 키우지 말 것(첫 화면 도구 가림).
+- 위치는 `PromotionArea`(header / top / middle / bottom). AdSense는 top·bottom만. 광고가 도구보다 먼저 크게 보이면 안 됨.
 - `NEXT_PUBLIC_*` 값은 빌드 때 코드에 들어가므로 바꾸면 다시 빌드.
 
 ## SEO 규칙
@@ -115,7 +116,6 @@ public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×6
 ## 배포 전 체크리스트
 - 도메인 기본값은 `https://rowflip.com`(`site.ts`). 다른 주소로 시험 배포할 때만 `.env`의 `NEXT_PUBLIC_SITE_URL`로 덮어씀
 - 구글 서치 콘솔·네이버 서치어드바이저 인증값 입력 후 재빌드, 두 곳에 `/sitemap.xml` 제출
-- `brandConnect.ts`의 링크·상품 문구·대가성 문구를 실제 값으로 교체 (현재는 예시 값)
 - AdSense 승인 후 `NEXT_PUBLIC_ADSENSE_ENABLED=true` + 클라이언트 ID·슬롯 ID
 - 카카오톡 공유를 쓰려면 카카오 디벨로퍼스에서 앱을 만들고 JavaScript 키를 `NEXT_PUBLIC_KAKAO_JS_KEY`에, 배포 도메인을 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 등록
 
@@ -125,7 +125,7 @@ public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×6
   - Cloudflare AI 로봇 설정 확인(robots.txt에 검색 로봇이 막히지 않았는지)
   - 개인정보처리방침의 문의 메일 정하기 → Cloudflare 빌드 변수 `NEXT_PUBLIC_CONTACT_EMAIL`
   - AdSense 신청
-  - 브랜드커넥트 실제 링크·이미지
+  - 브랜드커넥트 상품 5개 연결 완료(의자 2, A4용지, 데스크매트, 책상) — 상품 추가·교체는 brandConnect.ts
   - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅
   - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click만
   - 기능 페이지 후보: 엑셀 빈 줄 제거, 줄바꿈 제거, 엑셀 열 합치기·나누기

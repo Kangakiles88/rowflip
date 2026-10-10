@@ -67,17 +67,28 @@ export interface TransformResult {
   suggestedSplit: InputSplit | null;
 }
 
-export interface BrandConnectBannerConfig {
-  enabled: boolean;
+export interface BrandConnectProduct {
+  /** 상품 이름 — 카드에 그대로 표시 */
+  name: string;
+  /** 브랜드커넥트에서 만든 내 링크 */
   href: string;
-  desktopImage?: string;
-  mobileImage?: string;
-  imageAlt?: string;
-  title?: string;
-  description?: string;
-  ctaText?: string;
-  disclosureText?: string;
-  position: PromotionPosition;
+  /** public/ads/ 아래 이미지("/ads/파일명.webp"), 정사각형 권장 */
+  image: string;
 }
 
-export type PromotionPosition = "top" | "middle" | "bottom";
+export interface BrandConnectConfig {
+  enabled: boolean;
+  /** 상품 줄 위에 붙는 제목 */
+  title: string;
+  /** 대가성 안내 — 필수. 띠 오른쪽(휴대폰은 아래)에 항상 보인다 */
+  disclosureText: string;
+  position: PromotionPosition;
+  /** 상품이 옆으로 천천히 흐른다(마우스를 올리면 멈춤). false면 멈춘 목록 */
+  autoScroll: boolean;
+  /** 흐르는 속도(px/초) */
+  scrollSpeed: number;
+  products: BrandConnectProduct[];
+}
+
+/** header = 메뉴 바로 아래·페이지 제목 위(한 줄 띠) */
+export type PromotionPosition = "header" | "top" | "middle" | "bottom";
