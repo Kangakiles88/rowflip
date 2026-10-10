@@ -13,7 +13,7 @@
   - `/transpose/` 엑셀 행열 바꾸기: 표 전체의 행과 열 전환 → 엑셀 붙여넣기(탭 구분) / CSV / 마크다운 표
   - `/dedupe/` 엑셀 중복 제거: 목록·표의 중복 제거 / 중복된 값만 / 개수 세기, 행 전체 또는 특정 열 기준, 처음·마지막 행 남기기
   - `/split/` 쉼표를 줄바꿈으로 변환: 쉼표·세미콜론·띄어쓰기·슬래시·파이프·직접 입력 구분자로 나눠 세로(줄바꿈)/가로(엑셀 한 행), 괄호·따옴표 벗기기(SQL IN·JSON 배열 → 목록)
-  - `/privacy/` 개인정보처리방침(문구는 `src/content/privacy.tsx`, 문의 메일은 `NEXT_PUBLIC_CONTACT_EMAIL`). 안내 페이지는 `nav.ts`의 `INFO_PAGES` → 푸터·sitemap에만 들어감
+  - `/privacy/` 개인정보처리방침(문구는 `src/content/privacy.tsx`, 문의 메일 `contact@rowflip.com` = `site.ts`의 contactEmail, Cloudflare 이메일 라우팅으로 운영자 Gmail에 전달 — 개인 메일 주소는 저장소에 넣지 않음). 안내 페이지는 `nav.ts`의 `INFO_PAGES` → 푸터·sitemap에만 들어감
 
 ## 기술 스택
 - Next.js 16 (App Router), React 19, TypeScript strict, CSS Modules + `globals.css` 디자인 토큰. Tailwind·외부 UI 라이브러리 쓰지 않음.
@@ -123,7 +123,6 @@ public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×6
 - 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 4개(가로세로·행열·중복 제거·쉼표→줄바꿈), 첫 변환 공유 안내 팝업, 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 76개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - Cloudflare AI 로봇 설정 확인(robots.txt에 검색 로봇이 막히지 않았는지)
-  - 개인정보처리방침의 문의 메일 정하기 → Cloudflare 빌드 변수 `NEXT_PUBLIC_CONTACT_EMAIL`
   - AdSense 신청
   - 브랜드커넥트 상품 5개 연결 완료(의자 2, A4용지, 데스크매트, 책상) — 상품 추가·교체는 brandConnect.ts
   - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅
