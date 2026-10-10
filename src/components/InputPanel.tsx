@@ -20,9 +20,9 @@ interface Props {
 const PLACEHOLDER = `엑셀이나 텍스트 데이터를 여기에 붙여넣으세요.
 
 예:
-apple
-banana
-melon`;
+A-10234
+A-10235
+A-10236`;
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ToolDirectory } from "@/components/ToolDirectory";
 import { DedupeTool } from "@/components/DedupeTool";
 import { PromotionArea } from "@/components/ads/PromotionArea";
 import { siteConfig } from "@/config/site";
@@ -53,6 +54,8 @@ export default function DedupePage() {
         <PromotionArea position="top" />
 
         <DedupeTool />
+
+        <ToolDirectory current="dedupe" />
 
         <PromotionArea position="middle" />
 

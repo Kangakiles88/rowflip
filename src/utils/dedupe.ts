@@ -130,6 +130,24 @@ export function dedupeRows(input: string[][], o: DedupeOptions): { rows: string[
   };
 }
 
+/**
+ * 첫 행이 머리글(제목 행)처럼 보이는지 추측한다.
+ * 조건: 두 행·두 열 이상, 첫 행 칸이 모두 채워져 있고 숫자가 없으며 서로 다르고,
+ * 같은 열 아래쪽에 같은 값이 다시 나오지 않으며, 아래쪽 어딘가에는 숫자가 든 칸이 있다.
+ */
+export function looksLikeHeader(rows: string[][]): boolean {
+  if (rows.length < 2) return false;
+  const first = rows[0].map((c) => c.trim());
+  if (first.length < 2) return false;
+  if (first.some((c) => c === "" || /\d/.test(c))) return false;
+  if (new Set(first).size !== first.length) return false;
+  const body = rows.slice(1);
+  for (let c = 0; c < first.length; c++) {
+    if (body.some((r) => (r[c] ?? "").trim() === first[c])) return false;
+  }
+  return body.some((r) => r.some((cell) => /\d/.test(cell)));
+}
+
 /** 붙여넣은 텍스트 → 결과. 한 행짜리 가로 목록은 칸 하나하나를 목록으로 보고 결과도 가로로 돌려준다. */
 export function dedupeText(raw: string, o: DedupeOptions): DedupeResult {
   const table = parseTable(raw);

@@ -3,6 +3,7 @@ import { Converter } from "@/components/Converter";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ToolDirectory } from "@/components/ToolDirectory";
 import { PromotionArea } from "@/components/ads/PromotionArea";
 import { siteConfig } from "@/config/site";
 import { FAQ, GUIDES } from "@/content/seo";
@@ -39,6 +40,8 @@ export default function Home() {
         <PromotionArea position="top" />
 
         <Converter />
+
+        <ToolDirectory current="garosero" />
 
         <PromotionArea position="middle" />
 

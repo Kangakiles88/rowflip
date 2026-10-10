@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ToolDirectory } from "@/components/ToolDirectory";
 import { TransposeTool } from "@/components/TransposeTool";
 import { PromotionArea } from "@/components/ads/PromotionArea";
 import { siteConfig } from "@/config/site";
@@ -53,6 +54,8 @@ export default function TransposePage() {
         <PromotionArea position="top" />
 
         <TransposeTool />
+
+        <ToolDirectory current="transpose" />
 
         <PromotionArea position="middle" />
 

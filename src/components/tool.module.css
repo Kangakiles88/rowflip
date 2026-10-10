@@ -3,43 +3,53 @@
   background: var(--panel);
   border-bottom: 1px solid var(--line);
 }
+/* 로고 | 기능 탭 | 개인정보 안내 — 860px 이하에서는 탭이 아래 줄로 내려간다 */
 .headerInner {
-  min-height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "brand nav privacy";
+  align-items: stretch;
+  column-gap: 28px;
 }
 .headerLeft {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  min-width: 0;
+  display: contents;
 }
 .nav {
+  grid-area: nav;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 2px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav::-webkit-scrollbar {
+  display: none;
 }
 .navLink {
-  padding: 5px 9px;
-  font-size: 13px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--ink-2);
   text-decoration: none;
-  border-radius: 4px;
   white-space: nowrap;
+  border-bottom: 2px solid transparent;
 }
 .navLink:hover {
   color: var(--ink);
   background: var(--hover);
 }
 .navLink[aria-current="page"] {
-  color: var(--ink);
-  font-weight: 600;
-  background: var(--hover);
+  color: var(--accent);
+  font-weight: 700;
+  border-bottom-color: var(--accent);
 }
 .wordmark {
+  grid-area: brand;
+  align-self: center;
   display: inline-flex;
   align-items: center;
   gap: 9px;
@@ -55,6 +65,8 @@
   color: var(--accent);
 }
 .privacy {
+  grid-area: privacy;
+  align-self: center;
   margin: 0;
   display: flex;
   align-items: center;
@@ -96,6 +108,9 @@
 /* 중복 제거 페이지 — 결과 / 비교 기준 / 비교 방법 / 남길 행 */
 .options.optionsDedupe {
   grid-template-columns: minmax(300px, 1.6fr) minmax(220px, 1.2fr) minmax(150px, 0.8fr) minmax(210px, 1fr);
+}
+.options.optionsDedupe3 {
+  grid-template-columns: minmax(300px, 1.6fr) minmax(220px, 1.2fr) minmax(150px, 0.8fr);
 }
 .selectFull {
   width: 100%;
@@ -349,7 +364,7 @@
   left: 0;
   z-index: 2;
 }
-.grid tbody tr:first-child td {
+.gridHead tbody tr:first-child td {
   font-weight: 600;
   background: var(--accent-soft);
 }
@@ -577,12 +592,36 @@
   .options {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  .options.optionsDedupe {
+  .options.optionsDedupe,
+  .options.optionsDedupe3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 860px) {
+  .headerInner {
+    min-height: 0;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "brand privacy"
+      "nav nav";
+    column-gap: 12px;
+  }
+  .wordmark {
+    padding-block: 10px;
+  }
+  .privacy {
+    justify-self: end;
+    text-align: right;
+  }
+  .nav {
+    border-top: 1px solid var(--line);
+  }
+  .navLink {
+    flex: 1 0 auto;
+    justify-content: center;
+    height: 42px;
+  }
   .tool {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
@@ -645,22 +684,16 @@
 }
 
 @media (max-width: 520px) {
-  .headerLeft {
-    gap: 10px;
-  }
   .wordmark {
     font-size: 14px;
   }
   .navLink {
-    padding: 5px 7px;
-    font-size: 12.5px;
-  }
-  .headerInner {
-    padding-block: 8px;
-    row-gap: 2px;
+    padding: 0 10px;
+    font-size: 13.5px;
   }
   .privacy {
-    font-size: 11.5px;
+    font-size: 11px;
+    gap: 5px;
   }
   .presetList {
     flex-wrap: nowrap;
@@ -672,7 +705,8 @@
     flex: none;
   }
   .options,
-  .options.optionsDedupe {
+  .options.optionsDedupe,
+  .options.optionsDedupe3 {
     grid-template-columns: minmax(0, 1fr);
   }
   .paneActions .ghost:first-child {

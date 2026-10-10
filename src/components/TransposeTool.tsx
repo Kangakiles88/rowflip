@@ -11,6 +11,7 @@ import {
 } from "@/utils/transpose";
 import { InputPanel } from "./InputPanel";
 import { Segmented } from "./Segmented";
+import { SheetPreview } from "./SheetPreview";
 import { ConvertGateButton } from "./share/ConvertGateButton";
 import { ShareDialog } from "./share/ShareDialog";
 import { useConvertGate } from "./share/useConvertGate";
@@ -178,30 +179,7 @@ export function TransposeTool() {
                   : "원본 표를 붙여넣으면 행과 열이 바뀐 표가 여기에 표시됩니다."}
               </p>
             ) : (
-              <div className={styles.tableWrap}>
-                <table className={styles.grid}>
-                  <thead>
-                    <tr>
-                      <th aria-hidden="true" />
-                      {shownRows[0].slice(0, PREVIEW_COLS).map((_, c) => (
-                        <th key={c} scope="col">
-                          {columnLetter(c)}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {shownRows.map((r, i) => (
-                      <tr key={i}>
-                        <th scope="row">{i + 1}</th>
-                        {r.slice(0, PREVIEW_COLS).map((cell, c) => (
-                          <td key={c}>{cell}</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <SheetPreview rows={shownRows} maxCols={PREVIEW_COLS} headerRow />
             )}
           </div>
 
@@ -263,16 +241,4 @@ export function TransposeTool() {
       />
     </div>
   );
-}
-
-/** 0 → A, 25 → Z, 26 → AA — 엑셀 열 이름 */
-function columnLetter(index: number): string {
-  let n = index + 1;
-  let s = "";
-  while (n > 0) {
-    const r = (n - 1) % 26;
-    s = String.fromCharCode(65 + r) + s;
-    n = Math.floor((n - 1) / 26);
-  }
-  return s;
 }

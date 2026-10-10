@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_DEDUPE_OPTIONS as D, DEDUPE_SAMPLE, dedupeRows, dedupeText, type DedupeOptions } from "./dedupe";
+import {
+  DEFAULT_DEDUPE_OPTIONS as D,
+  DEDUPE_SAMPLE,
+  dedupeRows,
+  dedupeText,
+  looksLikeHeader,
+  type DedupeOptions,
+} from "./dedupe";
 
 const opts = (patch: Partial<DedupeOptions> = {}): DedupeOptions => ({ ...D, ...patch });
 const list = (...v: string[]) => v.join("\n");
@@ -78,6 +85,26 @@ describe("dedupeText — 한 행짜리 가로 목록", () => {
     const r = dedupeText("A\tB\tA\tC", opts({ header: true, key: 2 }));
     expect(r.horizontal).toBe(true);
     expect(r.output).toBe("A\tB\tC");
+  });
+});
+
+describe("looksLikeHeader", () => {
+  const t = (s: string) => s.split("\n").map((r) => r.split("\t"));
+  it("글자로 된 제목 행 + 숫자·코드가 든 데이터", () => {
+    expect(looksLikeHeader(t(DEDUPE_SAMPLE))).toBe(true);
+  });
+  it("첫 행에 숫자가 있으면 데이터로 본다", () => {
+    expect(looksLikeHeader(t("A-10234\t김민수\nA-10235\t이서연"))).toBe(false);
+  });
+  it("첫 행 값이 아래에 다시 나오면 데이터로 본다", () => {
+    expect(looksLikeHeader(t("서울\t영업\n서울\t12\n부산\t7"))).toBe(false);
+  });
+  it("한 열이나 한 행이면 추측하지 않는다", () => {
+    expect(looksLikeHeader(t("이름\n김민수\n1"))).toBe(false);
+    expect(looksLikeHeader(t("이름\t부서"))).toBe(false);
+  });
+  it("숫자가 하나도 없는 표는 머리글로 보지 않는다", () => {
+    expect(looksLikeHeader(t("김민수\t영업\n이서연\t인사"))).toBe(false);
   });
 });
 

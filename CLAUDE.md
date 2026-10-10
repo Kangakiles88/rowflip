@@ -34,7 +34,8 @@
 ```
 src/
 ├─ app/            layout(공통 메타), page(/), transpose/page, sitemap, robots, manifest, icon
-├─ components/     share/(ShareDialog, ConvertGateButton, useConvertGate), Header, SiteFooter, JsonLd, Converter, TransposeTool, InputPanel, OutputPanel,
+├─ components/     share/(ShareDialog, ConvertGateButton, useConvertGate), Header, SiteFooter, ToolDirectory(다른 도구 목록), JsonLd,
+│  │               Converter, TransposeTool, DedupeTool, SheetPreview(엑셀식 표 미리보기), InputPanel, OutputPanel,
 │  │               PresetButtons, CleanupOptions, OutputOptions, Segmented, Toast, tool.module.css
 │  └─ ads/         AdSlot, AdSenseScript, BrandConnectBanner, PromotionArea
 ├─ config/         site.ts(브랜드·도메인·SEO), analytics.ts(GA4), nav.ts(페이지 목록), share.ts(첫 변환 공유 안내), ads.ts, brandConnect.ts
@@ -60,6 +61,8 @@ public/            og.png, og-transpose.png, og-dedupe.png(1200×630 공유 이�
 - 폰트: UI는 Pretendard 14px 내외, 데이터 영역은 monospace + 줄 번호. 숫자는 `tabular-nums`.
 - 옵션은 툴바형 컴팩트 컨트롤(세그먼트 버튼, select, 체크박스). 패널 하단에 상태 표시줄(행 수, 글자 수, 제거된 개수 등).
 - 주요 동작에 단축키(Ctrl/⌘+Enter = 복사)와 kbd 힌트. 터치 기기에서는 kbd 숨김.
+- 헤더 기능 메뉴는 탭(현재 페이지 = accent 글자 + 아래 2px 막대). 860px 이하에서는 탭이 로고 아래 한 줄로 내려가고, 넘치면 가로 스크롤.
+- 표 결과는 `SheetPreview`(열 이름 A·B·C + 행 번호)로 보여 주고 '표 / 텍스트' 전환.
 - 반응형: 860px 이하 1단. 모바일(390px)에서 가로 스크롤 없어야 함.
 
 ## 문구 규칙
@@ -103,7 +106,7 @@ public/            og.png, og-transpose.png, og-dedupe.png(1200×630 공유 이�
 2. `src/components/<기능>Tool.tsx` (기존 컴포넌트·스타일 재사용)
 3. `src/content/<기능>.tsx`에 META(path, h1, title, description, keywords, features), GUIDES, FAQ
 4. `src/app/<주소>/page.tsx`: metadata + `<JsonLd>` + `<Header current=…>` + `PromotionArea` + `<SiteFooter>`
-5. `src/config/nav.ts`의 `TOOL_PAGES`에 한 줄 추가 → 헤더 메뉴·푸터·sitemap 자동 반영
+5. `src/config/nav.ts`의 `TOOL_PAGES`에 항목 추가(label·title·desc) → 헤더 탭·푸터·sitemap·도구 아래 '다른 도구' 목록 자동 반영. 페이지에는 도구 바로 아래 `<ToolDirectory current=…>`
 6. `public/og-<기능>.png` 공유 이미지
 7. 관련 페이지 본문에서 새 페이지로 내부 링크 추가
 8. `npm run check` 통과, 1366·820·390px 폭에서 확인
@@ -116,7 +119,7 @@ public/            og.png, og-transpose.png, og-dedupe.png(1200×630 공유 이�
 - 카카오톡 공유를 쓰려면 카카오 디벨로퍼스에서 앱을 만들고 JavaScript 키를 `NEXT_PUBLIC_KAKAO_JS_KEY`에, 배포 도메인을 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 등록
 
 ## 현재 상태와 남은 일
-- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 3개(가로세로·행열·중복 제거), 첫 변환 공유 안내 팝업, 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 50개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
+- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 3개(가로세로·행열·중복 제거), 첫 변환 공유 안내 팝업, 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 55개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - Cloudflare AI 로봇 설정 확인(robots.txt에 검색 로봇이 막히지 않았는지)
   - 개인정보처리방침의 문의 메일 정하기 → Cloudflare 빌드 변수 `NEXT_PUBLIC_CONTACT_EMAIL`
