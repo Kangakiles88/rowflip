@@ -111,6 +111,18 @@ export function Converter() {
           colCount={result.stats.colCount}
           column={options.column}
           onColumnChange={(column) => update({ column })}
+          split={options.inputSplit}
+          onSplitChange={(inputSplit) =>
+            // 쉼표로 나눈 뒤 다시 쉼표로 이으면 결과가 그대로라 세로 목록으로 바꿔 준다
+            update(
+              inputSplit === "comma" &&
+                options.format === "list" &&
+                (options.separator === "comma" || options.separator === "comma-space")
+                ? { inputSplit, separator: "newline" }
+                : { inputSplit },
+            )
+          }
+          splitSuggestion={result.suggestedSplit}
         />
       </div>
 

@@ -9,9 +9,10 @@
 - 목표: 구글·네이버 검색 유입 → AdSense·네이버 브랜드커넥트 광고 수익.
 - 원칙: 붙여넣기 → 옵션 선택 → 결과 확인 → 복사. 회원가입·업로드·서버 저장 없음. 모든 처리는 브라우저 안에서.
 - 현재 페이지
-  - `/` 엑셀 가로세로 변환기: 한 열·한 행 목록을 가로↔세로, 쉼표 연결, 중복 제거, 정렬, 접두사/접미사, 따옴표, 번호, SQL IN, JSON·JS·Python 배열, HTML 목록으로
+  - `/` 엑셀 가로세로 변환기: 한 열·한 행 목록을 가로↔세로(입력창 상태줄의 '나누기'로 쉼표·띄어쓰기 목록도 나눔, 쉼표 목록이면 '쉼표로 나누기' 안내), 쉼표 연결, 중복 제거, 정렬, 접두사/접미사, 따옴표, 번호, SQL IN, JSON·JS·Python 배열, HTML 목록으로
   - `/transpose/` 엑셀 행열 바꾸기: 표 전체의 행과 열 전환 → 엑셀 붙여넣기(탭 구분) / CSV / 마크다운 표
   - `/dedupe/` 엑셀 중복 제거: 목록·표의 중복 제거 / 중복된 값만 / 개수 세기, 행 전체 또는 특정 열 기준, 처음·마지막 행 남기기
+  - `/split/` 쉼표를 줄바꿈으로 변환: 쉼표·세미콜론·띄어쓰기·슬래시·파이프·직접 입력 구분자로 나눠 세로(줄바꿈)/가로(엑셀 한 행), 괄호·따옴표 벗기기(SQL IN·JSON 배열 → 목록)
   - `/privacy/` 개인정보처리방침(문구는 `src/content/privacy.tsx`, 문의 메일은 `NEXT_PUBLIC_CONTACT_EMAIL`). 안내 페이지는 `nav.ts`의 `INFO_PAGES` → 푸터·sitemap에만 들어감
 
 ## 기술 스택
@@ -35,19 +36,19 @@
 src/
 ├─ app/            layout(공통 메타), page(/), transpose/page, sitemap, robots, manifest, icon
 ├─ components/     share/(ShareDialog, ConvertGateButton, useConvertGate), Header, SiteFooter, ToolDirectory(다른 도구 목록), JsonLd,
-│  │               Converter, TransposeTool, DedupeTool, SheetPreview(엑셀식 표 미리보기), InputPanel, OutputPanel,
+│  │               Converter, TransposeTool, DedupeTool, SplitTool, SheetPreview, ActiveTabScroll(엑셀식 표 미리보기), InputPanel, OutputPanel,
 │  │               PresetButtons, CleanupOptions, OutputOptions, Segmented, Toast, tool.module.css
 │  └─ ads/         AdSlot, AdSenseScript, BrandConnectBanner, PromotionArea
 ├─ config/         site.ts(브랜드·도메인·SEO), analytics.ts(GA4), nav.ts(페이지 목록), share.ts(첫 변환 공유 안내), ads.ts, brandConnect.ts
-├─ content/        seo.tsx(/ 안내·FAQ), transpose.tsx, dedupe.tsx(각 페이지 메타·안내·FAQ), privacy.tsx
-├─ utils/          parser, transformer, transpose, dedupe(순수 함수 + 테스트), presets, storage, clipboard, tracking
+├─ content/        seo.tsx(/ 안내·FAQ), transpose.tsx, dedupe.tsx, split.tsx(각 페이지 메타·안내·FAQ), privacy.tsx
+├─ utils/          parser, split(원본 나누기), transformer, transpose, dedupe(순수 함수 + 테스트), presets, storage, clipboard, tracking
 └─ types/
-public/            og.png, og-transpose.png, og-dedupe.png(1200×630 공유 이미지), ads/(배너 이미지)
+public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×630 공유 이미지), ads/(배너 이미지)
 ```
 
 ## 코드 작성 원칙
 - 변환 로직은 `src/utils/`의 순수 함수로 만들고 UI 컴포넌트에 넣지 않음. 새 로직에는 `*.test.ts` 테스트를 함께 추가.
-- 변환 순서(가로세로): 파싱 → 공백 제거 → 빈 줄 제거 → 중복 제거 → 정렬 → 접두사/접미사 → 따옴표 → 번호 → 연결.
+- 변환 순서(가로세로): 파싱 → (괄호 벗기기) → 원본 나누기(`split.ts`) → (따옴표 벗기기) → 공백 제거 → 빈 줄 제거 → 중복 제거 → 정렬 → 접두사/접미사 → 따옴표 → 번호 → 연결.
 - 엑셀 복사 데이터는 탭=열, 줄바꿈=행. 줄바꿈이 든 셀은 큰따옴표로 감싸져 오므로 `parser.ts`의 `parseTable`을 재사용.
 - 큰 입력(수만 줄)에서도 끊기지 않게 `useDeferredValue` 패턴 유지, 큰 표 미리보기는 행·열 수 제한.
 - 새 UI는 기존 컴포넌트(InputPanel, Segmented, Toast)와 `tool.module.css` 클래스를 재사용.
@@ -61,7 +62,7 @@ public/            og.png, og-transpose.png, og-dedupe.png(1200×630 공유 이�
 - 폰트: UI는 Pretendard 14px 내외, 데이터 영역은 monospace + 줄 번호. 숫자는 `tabular-nums`.
 - 옵션은 툴바형 컴팩트 컨트롤(세그먼트 버튼, select, 체크박스). 패널 하단에 상태 표시줄(행 수, 글자 수, 제거된 개수 등).
 - 주요 동작에 단축키(Ctrl/⌘+Enter = 복사)와 kbd 힌트. 터치 기기에서는 kbd 숨김.
-- 헤더 기능 메뉴는 탭(현재 페이지 = accent 글자 + 아래 2px 막대). 860px 이하에서는 탭이 로고 아래 한 줄로 내려가고, 넘치면 가로 스크롤.
+- 헤더 기능 메뉴는 탭(현재 페이지 = accent 글자 + 아래 2px 막대). 860px 이하에서는 탭이 로고 아래 한 줄로 내려가고, 넘치면 가로 스크롤(`ActiveTabScroll`이 현재 탭을 화면 안으로). 탭 이름은 짧게(390px에서 4개가 한 줄에 들어가는 길이).
 - 표 결과는 `SheetPreview`(열 이름 A·B·C + 행 번호)로 보여 주고 '표 / 텍스트' 전환.
 - 반응형: 860px 이하 1단. 모바일(390px)에서 가로 스크롤 없어야 함.
 
@@ -119,7 +120,7 @@ public/            og.png, og-transpose.png, og-dedupe.png(1200×630 공유 이�
 - 카카오톡 공유를 쓰려면 카카오 디벨로퍼스에서 앱을 만들고 JavaScript 키를 `NEXT_PUBLIC_KAKAO_JS_KEY`에, 배포 도메인을 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 등록
 
 ## 현재 상태와 남은 일
-- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 3개(가로세로·행열·중복 제거), 첫 변환 공유 안내 팝업, 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 55개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
+- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 4개(가로세로·행열·중복 제거·쉼표→줄바꿈), 첫 변환 공유 안내 팝업, 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 68개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - Cloudflare AI 로봇 설정 확인(robots.txt에 검색 로봇이 막히지 않았는지)
   - 개인정보처리방침의 문의 메일 정하기 → Cloudflare 빌드 변수 `NEXT_PUBLIC_CONTACT_EMAIL`
@@ -127,7 +128,7 @@ public/            og.png, og-transpose.png, og-dedupe.png(1200×630 공유 이�
   - 브랜드커넥트 실제 링크·이미지
   - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅
   - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click만
-  - 기능 페이지 후보: 엑셀 빈 줄 제거, 줄바꿈 제거·쉼표를 줄바꿈으로, 엑셀 열 합치기·나누기
+  - 기능 페이지 후보: 엑셀 빈 줄 제거, 줄바꿈 제거, 엑셀 열 합치기·나누기
 
 ## 답변 방식
 - 한국어로 답변. 코드를 바꾸면 바꾼 파일과 이유를 짧게 정리.

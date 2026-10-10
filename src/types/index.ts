@@ -1,3 +1,5 @@
+import type { InputSplit } from "../utils/split";
+
 export type Separator =
   | "newline"
   | "comma-space"
@@ -21,6 +23,11 @@ export type OutputFormat = "list" | "sql-in" | "json" | "js" | "python" | "html"
 export type ColumnSelect = "all" | number;
 
 export interface TransformOptions {
+  /** 원본 셀을 다시 나눌 구분자 — "cells"면 엑셀 칸(탭·줄바꿈) 그대로 */
+  inputSplit: InputSplit;
+  inputCustom: string;
+  /** ('a','b') · ["a","b"]의 괄호와 따옴표 벗기기 */
+  unwrap: boolean;
   trim: boolean;
   removeEmpty: boolean;
   dedupe: boolean;
@@ -56,6 +63,8 @@ export interface TransformResult {
   output: string;
   items: string[];
   stats: TransformStats;
+  /** 엑셀 칸으로만 나눴는데 쉼표·세미콜론 목록처럼 보이면 그 구분자 */
+  suggestedSplit: InputSplit | null;
 }
 
 export interface BrandConnectBannerConfig {

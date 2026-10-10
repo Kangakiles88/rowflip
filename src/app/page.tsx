@@ -92,7 +92,11 @@ export default function Home() {
             <Link className="inlineLink" href="/dedupe/">
               엑셀 중복 제거
             </Link>
-            를 쓰세요.
+            를, 쉼표로 이어진 목록을 한 줄에 하나씩 나누려면{" "}
+            <Link className="inlineLink" href="/split/">
+              쉼표를 줄바꿈으로 변환
+            </Link>
+            을 쓰세요.
           </p>
         </section>
 

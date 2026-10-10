@@ -20,7 +20,7 @@ export const BROWSER_STORAGE = [
   {
     key: "rowflip:settings:v1",
     where: "로컬 저장소",
-    what: "가로세로 변환기의 옵션(구분자, 결과 형식, 정렬, 중복 제거 등)",
+    what: "가로세로 변환기의 옵션(원본 나누기 기준, 구분자, 결과 형식, 정렬, 중복 제거 등)",
   },
   {
     key: "rowflip:transpose:v1",
@@ -31,6 +31,11 @@ export const BROWSER_STORAGE = [
     key: "rowflip:dedupe:v1",
     where: "로컬 저장소",
     what: "중복 제거의 옵션(결과 종류, 남길 행, 공백·대소문자 무시, 빈 칸 제외)",
+  },
+  {
+    key: "rowflip:split:v1",
+    where: "로컬 저장소",
+    what: "쉼표를 줄바꿈으로 변환의 옵션(나눌 기준, 결과 모양, 정리 옵션)",
   },
   {
     key: "rowflip:convert-gate:v1",

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ActiveTabScroll } from "./ActiveTabScroll";
 import { TOOL_PAGES, type ToolPageId } from "@/config/nav";
 import { siteConfig } from "@/config/site";
 import styles from "./tool.module.css";
@@ -27,7 +28,7 @@ export function Header({ current }: { current?: ToolPageId }) {
             <Mark />
             {siteConfig.name}
           </Link>
-          <nav className={styles.nav} aria-label="기능">
+          <nav id="tool-nav" className={styles.nav} aria-label="기능">
             {TOOL_PAGES.map((p) => (
               <Link
                 key={p.id}
@@ -39,6 +40,7 @@ export function Header({ current }: { current?: ToolPageId }) {
               </Link>
             ))}
           </nav>
+          <ActiveTabScroll navId="tool-nav" />
         </div>
         <p className={styles.privacy}>
           <span className={styles.privacyDot} aria-hidden="true" />

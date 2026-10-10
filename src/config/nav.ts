@@ -24,6 +24,14 @@ export const TOOL_PAGES = [
     desc: "중복값 지우기, 중복된 값 찾기, 값마다 개수 세기",
     priority: 0.9,
   },
+  {
+    id: "split",
+    href: "/split/",
+    label: "쉼표 → 줄바꿈",
+    title: "쉼표를 줄바꿈으로 변환",
+    desc: "쉼표·띄어쓰기로 이어진 목록을 한 줄에 하나씩, 엑셀 칸으로",
+    priority: 0.9,
+  },
 ] as const;
 
 /** 기능이 아닌 안내 페이지 — 푸터와 sitemap에만 들어간다 */

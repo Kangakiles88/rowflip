@@ -1,5 +1,6 @@
 import type { TransformOptions } from "../types";
 import { DEFAULT_OPTIONS } from "./presets";
+import { INPUT_SPLITS } from "./split";
 
 /**
  * LocalStorage에는 UI 설정만 저장한다.
@@ -9,6 +10,8 @@ const KEY = "rowflip:settings:v1";
 
 type StoredSettings = Pick<
   TransformOptions,
+  | "inputSplit"
+  | "unwrap"
   | "trim"
   | "removeEmpty"
   | "dedupe"
@@ -22,6 +25,8 @@ type StoredSettings = Pick<
 >;
 
 const STORED_KEYS: (keyof StoredSettings)[] = [
+  "inputSplit",
+  "unwrap",
   "trim",
   "removeEmpty",
   "dedupe",
@@ -43,6 +48,7 @@ export function loadSettings(): Partial<StoredSettings> {
     for (const k of STORED_KEYS) {
       if (k in parsed && typeof parsed[k] === typeof DEFAULT_OPTIONS[k]) out[k] = parsed[k];
     }
+    if ("inputSplit" in out && !INPUT_SPLITS.some((s) => s.value === out.inputSplit)) delete out.inputSplit;
     return out as Partial<StoredSettings>;
   } catch {
     return {};

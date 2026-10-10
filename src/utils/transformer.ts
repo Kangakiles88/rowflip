@@ -8,6 +8,7 @@ import type {
   TransformResult,
 } from "../types";
 import { extractCells, parseTable } from "./parser";
+import { splitCells, suggestInputSplit, unquote, unwrapBrackets } from "./split";
 
 /* ── 각 단계는 독립된 순수 함수 ─────────────────────────── */
 
@@ -157,6 +158,10 @@ export function transform(raw: string, o: TransformOptions): TransformResult {
   const table = parseTable(raw);
   const column = o.column !== "all" && o.column >= table.colCount ? "all" : o.column;
   let items = extractCells(table, column);
+  const suggestedSplit = o.inputSplit === "cells" ? suggestInputSplit(items) : null;
+  if (o.unwrap) items = items.map(unwrapBrackets);
+  items = splitCells(items, o.inputSplit, o.inputCustom);
+  if (o.unwrap) items = items.map(unquote);
   const inputCells = items.length;
 
   if (o.trim) items = trimItems(items);
@@ -181,6 +186,7 @@ export function transform(raw: string, o: TransformOptions): TransformResult {
   return {
     output,
     items,
+    suggestedSplit,
     stats: {
       rowCount: table.rowCount,
       colCount: table.colCount,

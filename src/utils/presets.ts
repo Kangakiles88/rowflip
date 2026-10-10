@@ -1,6 +1,9 @@
 import type { TransformOptions } from "../types";
 
 export const DEFAULT_OPTIONS: TransformOptions = {
+  inputSplit: "cells",
+  inputCustom: "",
+  unwrap: false,
   trim: true,
   removeEmpty: true,
   dedupe: false,

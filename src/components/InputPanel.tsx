@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import type { ColumnSelect } from "@/types";
+import { INPUT_SPLITS, type InputSplit } from "@/utils/split";
 import styles from "./tool.module.css";
 
 interface Props {
@@ -15,6 +16,11 @@ interface Props {
   column?: ColumnSelect;
   onColumnChange?: (c: ColumnSelect) => void;
   placeholder?: string;
+  /** 주면 상태 표시줄에 '나누기' 선택이 나온다 */
+  split?: InputSplit;
+  onSplitChange?: (s: InputSplit) => void;
+  /** 쉼표 목록처럼 보일 때 바로 바꿀 수 있게 안내 */
+  splitSuggestion?: InputSplit | null;
 }
 
 const PLACEHOLDER = `엑셀이나 텍스트 데이터를 여기에 붙여넣으세요.
@@ -36,6 +42,9 @@ export function InputPanel({
   column = "all",
   onColumnChange,
   placeholder = PLACEHOLDER,
+  split,
+  onSplitChange,
+  splitSuggestion,
 }: Props) {
   const gutterRef = useRef<HTMLPreElement>(null);
   const lineCount = value === "" ? 1 : value.split("\n").length;
@@ -86,6 +95,30 @@ export function InputPanel({
             ? `${fmt(rowCount)}행 · ${fmt(value.length)}자`
             : `${fmt(rowCount)}행 × ${fmt(colCount)}열 · ${fmt(value.length)}자`}
         </span>
+        {split && onSplitChange && (
+          <span className={styles.statusControls}>
+            {splitSuggestion && (
+              <button type="button" className={styles.statusAction} onClick={() => onSplitChange(splitSuggestion)}>
+                {INPUT_SPLITS.find((s) => s.value === splitSuggestion)?.short}로 나누기
+              </button>
+            )}
+            <label className={split === "cells" ? undefined : styles.statusNotice}>
+              나누기{" "}
+              <select
+                aria-label="원본을 나눌 기준"
+                className={styles.statusSelect}
+                value={split}
+                onChange={(e) => onSplitChange(e.target.value as InputSplit)}
+              >
+                {INPUT_SPLITS.map((s) => (
+                  <option key={s.value} value={s.value}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </span>
+        )}
         {multiColumn && onColumnChange && (
           <span className={styles.statusNotice}>
             {fmt(rowCount)}행 × {colCount}열 감지

@@ -46,6 +46,19 @@ export function CleanupOptions({ options, update }: Props) {
           />
           대소문자 무시
         </label>
+        <label className={styles.check} title="('A','B') · [&quot;A&quot;, &quot;B&quot;]를 A, B 목록으로">
+          <input type="checkbox" checked={options.unwrap} onChange={(e) => update({ unwrap: e.target.checked })} />
+          괄호·따옴표 벗기기
+        </label>
+        {options.inputSplit === "custom" && (
+          <input
+            className={`${styles.input} ${styles.mono}`}
+            aria-label="원본을 나눌 문자"
+            placeholder="나눌 문자 (예: ::)"
+            value={options.inputCustom}
+            onChange={(e) => update({ inputCustom: e.target.value })}
+          />
+        )}
       </fieldset>
 
       <fieldset className={styles.group}>
