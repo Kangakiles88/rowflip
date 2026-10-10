@@ -28,6 +28,21 @@ npm run dev                  # http://localhost:3000
 | `npm test` | 변환 로직 단위 테스트 (Vitest) |
 | `npm run check` | 위 네 가지를 순서대로 |
 
+## 배포 (Cloudflare Pages + GitHub)
+
+`main` 브랜치에 커밋이 올라가면 Cloudflare Pages가 자동으로 빌드·배포합니다.
+
+| 항목 | 값 |
+| --- | --- |
+| Framework preset | Next.js (Static HTML Export) |
+| Build command | `npm run build` |
+| Build output directory | `out` |
+| Node 버전 | `.node-version` 파일(22)로 지정 |
+
+- 커스텀 도메인: `rowflip.com`, `www.rowflip.com` (DNS는 Cloudflare)
+- 응답 헤더·캐시는 `public/_headers`
+- 광고·검색 인증 값(`NEXT_PUBLIC_*`)은 Cloudflare Pages 프로젝트의 **Settings → Variables and Secrets**에 넣고 다시 배포합니다.
+
 ## 배포 전에 꼭 할 일 (SEO)
 
 1. 도메인은 기본으로 **`https://rowflip.com`** 이 들어가 있습니다(`src/config/site.ts`). 다른 주소에서 시험할 때만 `.env`의 `NEXT_PUBLIC_SITE_URL`로 바꿔 빌드합니다. canonical, `sitemap.xml`, `robots.txt`, 공유 이미지 주소가 모두 이 값으로 만들어집니다.

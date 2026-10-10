@@ -1,0 +1,9 @@
+# Cloudflare Pages 응답 헤더
+# 빌드마다 파일 이름이 바뀌는 정적 리소스는 1년 동안 캐시
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
