@@ -75,7 +75,7 @@ public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×6
 - 처음 변환할 때만 원본과 결과 사이에 [변환하기] 버튼이 나오고, 누르면 약 1.2초 로딩 뒤 공유 부탁 팝업이 뜸. 버튼은 한 번 누르면 사라지고 이후에는 바로 변환.
 - 설정은 `src/config/share.ts`: `enabled`(끄기), `frequency`("session" = 방문마다 한 번, "once" = 이 브라우저에서 처음 한 번), 문구, 로딩 시간.
 - 상태는 `useConvertGate` 훅 하나로 모든 기능 페이지가 공유. 저장값은 `rowflip:convert-gate:v1 = "1"` 뿐.
-- 공유 채널: 링크 복사, 카카오톡(`NEXT_PUBLIC_KAKAO_JS_KEY` 있을 때만), 네이버, 밴드, 페이스북, X, 다른 앱(휴대폰 기본 공유창). 클릭은 `trackShare`(채널·페이지만)로 기록.
+- 공유 채널: 링크 복사, 카카오톡(JS 키는 `share.ts`에 기본값, 카카오 디벨로퍼스에 rowflip.com 등록 필요), 네이버, 밴드, 페이스북, X, 다른 앱(휴대폰 기본 공유창). 클릭은 `trackShare`(채널·페이지만)로 기록.
 - 팝업 디자인: 위에 전광판처럼 흐르는 안내 문구(`Ticker`) + 진행 막대로 로딩 느낌, 아래에 동그란 아이콘 버튼 + 이름을 한 줄로(휴대폰은 5개 이상이면 두 줄로 고르게). 움직임 줄이기 설정 사용자에게는 멈춘 문단으로 표시.
 - 대기 시간: 전광판 문구가 끝까지 한 번 흘러가는 시간(실제 글자 너비 ÷ `tickerSpeed`)을 계산해 남은 초를 표시. 그동안 ✕·결과 보기·Esc·바깥 클릭으로 닫히지 않고, 0초가 되면 닫기 버튼이 나타남. 공유 버튼은 대기 중에도 누를 수 있음.
 - 브랜드 아이콘은 직접 그리지 않고 `simple-icons`(CC0 아이콘 모음, 버전 고정) 패키지 데이터를 씀(`ShareIcons.tsx`). 밴드는 모음에 없어 일반 '모임' 아이콘.
@@ -117,7 +117,7 @@ public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×6
 - 도메인 기본값은 `https://rowflip.com`(`site.ts`). 다른 주소로 시험 배포할 때만 `.env`의 `NEXT_PUBLIC_SITE_URL`로 덮어씀
 - 구글 서치 콘솔·네이버 서치어드바이저 인증값 입력 후 재빌드, 두 곳에 `/sitemap.xml` 제출
 - AdSense 승인 후 `NEXT_PUBLIC_ADSENSE_ENABLED=true` + 클라이언트 ID·슬롯 ID
-- 카카오톡 공유를 쓰려면 카카오 디벨로퍼스에서 앱을 만들고 JavaScript 키를 `NEXT_PUBLIC_KAKAO_JS_KEY`에, 배포 도메인을 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 등록
+- 카카오톡 공유: JavaScript 키는 `share.ts`에 들어가 있음. 카카오 디벨로퍼스 앱의 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 `https://rowflip.com`이 등록돼 있어야 동작
 
 ## 현재 상태와 남은 일
 - 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 4개(가로세로·행열·중복 제거·쉼표→줄바꿈), 첫 변환 공유 안내 팝업, 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 76개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형

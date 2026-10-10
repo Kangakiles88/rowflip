@@ -38,7 +38,9 @@ export const shareConfig = {
   /** SNS에 함께 올라가는 소개 문구 */
   shareText: "RowFlip - 엑셀 세로↔가로, 행열 바꾸기를 붙여넣기 한 번에 해 주는 무료 도구",
   kakao: {
-    jsKey: process.env.NEXT_PUBLIC_KAKAO_JS_KEY ?? "",
+    /** 카카오 JavaScript 키 — 브라우저에 공개되는 값이라 코드에 둔다(env가 있으면 env 우선).
+     *  카카오 디벨로퍼스 앱 설정에 등록된 도메인(rowflip.com)에서만 동작한다. */
+    jsKey: process.env.NEXT_PUBLIC_KAKAO_JS_KEY || "a12fd7715bcb7f7630df1541ad0b6018",
     sdkUrl: "https://t1.kakaocdn.net/kakao_js_sdk/2.8.3/kakao.min.js",
     /** 카카오 다운로드 페이지의 "SRI 해시 복사" 값. 비워 두면 integrity 검사 없이 로드 */
     sdkIntegrity: process.env.NEXT_PUBLIC_KAKAO_SDK_INTEGRITY ?? "",

@@ -189,7 +189,8 @@ export function privacySections(contactEmail: string): PolicySection[] {
           <li>글꼴: Pretendard 글꼴을 jsDelivr CDN에서 불러옵니다.</li>
           <li>
             공유 버튼: 카카오톡, 네이버, 밴드, 페이스북, X 버튼은 누를 때만 해당 서비스로 이동하거나 공유 창을 엽니다.
-            공유되는 것은 페이지 주소와 소개 문구뿐이며, 입력한 데이터나 변환 결과는 포함되지 않습니다.
+            카카오톡 버튼을 위해 공유 창이 열릴 때 카카오 공유 도구(JavaScript SDK)를 불러옵니다. 공유되는 것은 페이지 주소와
+            소개 문구뿐이며, 입력한 데이터나 변환 결과는 포함되지 않습니다.
           </li>
           <li>
             방문 분석: Google Analytics 4. 어떤 페이지를 몇 번 봤는지, 어느 검색엔진이나 사이트에서 들어왔는지, 기기와
