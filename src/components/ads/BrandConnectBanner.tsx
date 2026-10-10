@@ -56,7 +56,7 @@ export function BrandConnectBanner({ config }: Props) {
           <span className={styles.brandRow}>
             <span className={styles.brandTitle}>{config.title}</span>
             {/* eslint-disable-next-line @next/next/no-img-element -- 정적 내보내기라 이미지 최적화 서버가 없고, 작은 webp로 미리 줄여 둠 */}
-            <img className={styles.brandImage} src={p.image} alt="" width={40} height={40} decoding="async" />
+            <img className={styles.brandImage} src={p.image} alt="" width={44} height={44} decoding="async" />
             <span className={styles.brandName}>{p.name}</span>
             <span className={styles.brandCta}>
               상품 보기<span aria-hidden="true"> →</span>
