@@ -90,7 +90,7 @@ public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×6
 ## 광고
 - AdSense: `.env`의 `NEXT_PUBLIC_ADSENSE_*`. 꺼져 있거나 값이 없으면 스크립트·광고 칸을 DOM에 렌더링하지 않음. 슬롯은 top·bottom 2개만.
 - 브랜드커넥트: 상품 목록(`products`: name·href·image)은 `src/config/brandConnect.ts`에서만 수정(컴포넌트에 하드코딩 금지). 이미지는 `public/ads/`에 정사각형 96px webp. 링크는 `target="_blank" rel="sponsored noopener noreferrer"`. 대가성 안내 문구(`disclosureText`)는 띠 안에 항상 보이게.
-- 브랜드커넥트 표시: 메뉴 바로 아래·H1 위(`position: "header"`)의 한 줄 띠(높이 약 56px)에 상품 **하나**만. 새로고침마다 다음 상품(`utils/rotation.ts`, 순번은 `rowflip:brand-rotation:v1`, 첫 방문은 무작위 시작). 흐르는 전광판·카드형으로 키우지 말 것(첫 화면 도구 가림).
+- 브랜드커넥트 표시: 메뉴 바로 아래·H1 위(`position: "header"`)의 띠(높이 약 75px, 띠 전체가 링크, 가운데 정렬: 추천 상품·사진·상품명·상품 보기 버튼 + 아래 줄 대가성 안내)에 상품 **하나**만. 새로고침마다 다음 상품(`utils/rotation.ts`, 순번은 `rowflip:brand-rotation:v1`, 첫 방문은 무작위 시작). 흐르는 전광판·카드형으로 키우지 말 것(첫 화면 도구 가림).
 - 위치는 `PromotionArea`(header / top / middle / bottom). AdSense는 top·bottom만. 광고가 도구보다 먼저 크게 보이면 안 됨.
 - `NEXT_PUBLIC_*` 값은 빌드 때 코드에 들어가므로 바꾸면 다시 빌드.
 

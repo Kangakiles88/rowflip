@@ -12,7 +12,7 @@ import type { BrandConnectConfig } from "@/types";
 const brandConnect: BrandConnectConfig = {
   enabled: true,
   title: "추천 상품",
-  disclosureText: "브랜드커넥트 광고 · 구매 시 운영자에게 수수료 지급",
+  disclosureText: "네이버 브랜드 커넥트 활동 일환으로 일정 부분 판매 발생시 수수료를 제공 받습니다",
   position: "header",
   products: [
     { name: "듀오백 T-ZERO 사무용 의자", href: "https://naver.me/GcA73bpW", image: "/ads/duoback-t-zero.webp" },

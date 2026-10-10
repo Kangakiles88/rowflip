@@ -1,6 +1,7 @@
 .area {
   display: grid;
   gap: 12px;
+  min-width: 0;
 }
 
 /* ── AdSense ─────────────────────────────── */
@@ -16,59 +17,63 @@
   min-height: 90px;
 }
 
-/* ── 브랜드커넥트 한 줄 띠 ───────────────────────
-   [추천 상품] [사진 상품명 상품 보기 →] ……… [광고 안내]
-   상품 하나만 보여 주고 새로고침마다 다음 상품으로 바뀐다.
-   높이를 낮게 유지해 첫 화면에서 도구를 밀어내지 않는다. */
+/* ── 브랜드커넥트 띠 ───────────────────────────
+   띠 전체가 링크. 가운데에 [추천 상품] [사진] [상품명] [상품 보기 →], 아래 줄에 대가성 안내.
+   상품 하나만 보여 주고 새로고침마다 다음 상품으로 바뀐다. 높이를 낮게 유지해 도구를 밀어내지 않는다. */
 .brand {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-areas: "title item note";
+  min-width: 0;
+  min-height: 68px;
+}
+.brandLink,
+.brandPlaceholder {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  column-gap: 14px;
-  min-height: 56px;
-  padding: 0 14px;
+  justify-content: center;
+  gap: 3px;
+  min-height: 68px;
+  padding: 8px 16px 7px;
   border: 1px solid var(--line);
   border-left: 3px solid var(--accent);
   border-radius: 6px;
   background: var(--panel);
 }
-.brandTitle {
-  grid-area: title;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--accent);
-  white-space: nowrap;
-}
-.brandLink,
-.brandPlaceholder {
-  grid-area: item;
-  min-width: 0;
-}
 .brandLink {
-  justify-self: start;
-  max-width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  height: 48px;
-  padding: 0 10px 0 4px;
-  border-radius: 4px;
+  width: 100%;
+  min-width: 0;
   color: var(--ink);
   text-decoration: none;
-  animation: brand-in 0.25s ease-out;
+  text-align: center;
+  transition: background 0.12s, border-color 0.12s;
 }
 .brandLink:hover {
-  background: var(--hover);
+  background: var(--accent-soft);
+  border-color: var(--accent);
 }
 .brandLink:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: -2px;
+  outline-offset: 1px;
+}
+.brandRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 100%;
+  min-width: 0;
+  animation: brand-in 0.25s ease-out;
 }
 @keyframes brand-in {
   from {
     opacity: 0;
   }
+}
+.brandTitle {
+  flex: none;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  white-space: nowrap;
 }
 .brandImage {
   flex: none;
@@ -81,56 +86,47 @@
 }
 .brandName {
   min-width: 0;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.brandLink:hover .brandName {
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
 .brandCta {
   flex: none;
+  padding: 4px 10px;
   font-size: 13px;
-  font-weight: 500;
-  color: var(--accent);
+  font-weight: 600;
+  color: var(--panel);
+  background: var(--accent);
+  border-radius: 4px;
   white-space: nowrap;
 }
-.brandPlaceholder {
-  height: 48px;
-}
 .disclosure {
-  grid-area: note;
-  margin: 0;
-  max-width: 170px;
+  max-width: 100%;
   font-size: 11px;
   line-height: 1.35;
   color: var(--ink-3);
 }
 
-@media (max-width: 860px) {
-  .brand {
-    grid-template-columns: auto minmax(0, 1fr);
-    grid-template-areas:
-      "title item"
-      "note note";
-    padding: 2px 12px 6px;
-  }
-  .disclosure {
-    max-width: none;
-  }
-}
-
 @media (max-width: 520px) {
-  .brandCta {
+  .brandRow {
+    gap: 8px;
+  }
+  .brandTitle {
     display: none;
+  }
+  .brandName {
+    font-size: 14px;
+  }
+  .brandCta {
+    padding: 3px 8px;
+    font-size: 12px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .brandLink {
+  .brandRow {
     animation: none;
   }
 }
