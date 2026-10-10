@@ -113,9 +113,10 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
 - 카카오톡 공유를 쓰려면 카카오 디벨로퍼스에서 앱을 만들고 JavaScript 키를 `NEXT_PUBLIC_KAKAO_JS_KEY`에, 배포 도메인을 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 등록
 
 ## 현재 상태와 남은 일
-- 완료: 두 기능 페이지, 첫 변환 공유 안내 팝업, 테스트 36개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
+- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 두 기능 페이지, 첫 변환 공유 안내 팝업, 테스트 36개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
-  - Cloudflare Workers 프로젝트 `rowflip` 첫 배포 성공 확인 → 커스텀 도메인 `rowflip.com`·`www.rowflip.com` 추가 (DNS는 이미 Cloudflare로 이전 완료)
+  - 구글 서치 콘솔·네이버 서치어드바이저 등록, sitemap 제출
+  - Cloudflare AI 로봇 설정 확인(robots.txt에 검색 로봇이 막히지 않았는지)
   - 개인정보처리방침 페이지 (광고 쿠키 안내 포함, AdSense 신청 전에 준비)
   - 브랜드커넥트 실제 링크·이미지
   - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅
