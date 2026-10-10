@@ -19,6 +19,7 @@ export const shareConfig = {
   buttonLabel: "변환하기",
   loadingText: "변환하는 중",
   doneTitle: "변환이 끝났습니다",
+  /** 전광판처럼 흘러가는 안내 문구 (문장마다 사이에 구분점이 들어감) */
   message: [
     "저희 서비스가 유용하셨다면 필요한 지인들에게 알려주시면 너무 감사하겠습니다.",
     "유용한 무료 서비스를 함께 사용하면 다함께 편리해지지 않을까요?",
@@ -28,19 +29,6 @@ export const shareConfig = {
   closeLabel: "결과 보기",
   /** SNS에 함께 올라가는 소개 문구 */
   shareText: "엑셀 세로↔가로, 행열 바꾸기를 붙여넣기 한 번에 해 주는 무료 도구",
-  /**
-   * 공유 버튼 아이콘. 각 회사 공식 브랜드 자료에서 받은 아이콘을 public/share/ 에 넣고
-   * 경로를 적으면 원 안에 그 이미지가 들어간다. 비워 두면 이름 첫 글자로 표시된다.
-   * (카카오: 카카오 디벨로퍼스 > 리소스 다운로드, 네이버: 네이버 공유하기 가이드,
-   *  밴드·페이스북·X: 각 사 브랜드 리소스 페이지)
-   */
-  icons: {
-    kakao: "",
-    naver: "",
-    band: "",
-    facebook: "",
-    x: "",
-  } as Record<"kakao" | "naver" | "band" | "facebook" | "x", string>,
   kakao: {
     jsKey: process.env.NEXT_PUBLIC_KAKAO_JS_KEY ?? "",
     sdkUrl: "https://t1.kakaocdn.net/kakao_js_sdk/2.8.3/kakao.min.js",

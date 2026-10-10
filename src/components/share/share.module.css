@@ -6,7 +6,8 @@
   background: var(--panel);
   border: 1px solid var(--line-strong);
   border-radius: 6px;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .dialog::backdrop {
   background: rgb(20 20 18 / 0.45);
@@ -23,6 +24,7 @@
 
 .body {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   padding: 20px 22px 16px;
 }
@@ -85,10 +87,90 @@
   transform: rotate(45deg);
 }
 
+/* 로딩 중 회전 표시 */
+.spinner {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border: 2px solid var(--line-strong);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 전광판 — 오른쪽에서 왼쪽으로 계속 흐르는 안내 문구 */
+.ticker {
+  position: relative;
+  min-width: 0;
+  margin-bottom: -10px;
+}
+.tickerStatic {
+  /* 화면 낭독기용. 움직임 줄이기 설정에서는 이 문단이 보인다 */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.tickerWindow {
+  min-width: 0;
+  overflow: hidden;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  color: var(--panel);
+  background: var(--ink);
+  border-radius: 6px 6px 0 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+}
+.tickerTrack {
+  display: flex;
+  width: max-content;
+  animation: ticker var(--ticker-duration, 20s) linear infinite;
+  will-change: transform;
+}
+.tickerRun {
+  display: flex;
+  flex: none;
+}
+.tickerItem {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.tickerItem::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin: 0 22px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  opacity: 0.85;
+}
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 .progress {
-  height: 3px;
+  height: 4px;
   background: var(--line);
-  border-radius: 2px;
+  border-radius: 0 0 4px 4px;
   overflow: hidden;
 }
 .progress span {
@@ -112,32 +194,12 @@
   }
 }
 
-.shareSection {
-  display: grid;
-  gap: 6px;
-}
 .sectionTitle {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 14px;
-  font-weight: 700;
-}
-.message {
-  font-size: 13.5px;
-  line-height: 1.65;
+  margin: 4px 0 -4px;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--ink-2);
-  text-wrap: pretty;
 }
-.message p {
-  margin: 0;
-  display: inline;
-}
-.message p + p::before {
-  content: " ";
-}
-
 /* 공유 대상 — 동그란 아이콘 + 아래 이름, 한 줄 균등 배치 */
 .targets {
   --cols: var(--n);
@@ -192,16 +254,6 @@
   color: var(--accent-ink);
   background: var(--accent);
   border-color: var(--accent);
-}
-.mark {
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1;
-}
-.brandImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 .label {
   font-size: 12.5px;
@@ -280,5 +332,25 @@
   }
   .circle {
     transition: none;
+  }
+  .spinner {
+    animation-duration: 2s;
+  }
+  .tickerWindow {
+    display: none;
+  }
+  .tickerStatic {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+    padding: 12px 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-2);
+    background: var(--hover);
+    border-radius: 6px 6px 0 0;
   }
 }

@@ -87,7 +87,7 @@ NEXT_PUBLIC_ADSENSE_BOTTOM_SLOT=0987654321
 - 설정: `src/config/share.ts` — 끄기(`enabled`), 빈도(`frequency`: `"session"` 방문마다 한 번 / `"once"` 처음 한 번만), 문구, 로딩 시간
 - 카카오톡 버튼: `.env`에 `NEXT_PUBLIC_KAKAO_JS_KEY`를 넣으면 나타납니다. 카카오 디벨로퍼스 앱 설정에서 배포 도메인을 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 등록해야 동작합니다.
 - 휴대폰에서는 기본 공유창(‘다른 앱’)이 함께 나와 카카오톡·문자 등으로 바로 보낼 수 있습니다.
-- 공유 버튼 아이콘: 각 회사 공식 브랜드 자료에서 받은 아이콘을 `public/share/`에 넣고 `share.ts`의 `icons`에 경로(예: `"/share/kakao.svg"`)를 적으면 동그란 버튼 안에 들어갑니다. 비워 두면 이름 첫 글자로 표시됩니다.
+- 팝업 위쪽 안내 문구는 전광판처럼 흘러가고(문구는 `share.ts`의 `message`), 공유 버튼은 동그란 아이콘으로 표시됩니다. 브랜드 아이콘은 `simple-icons` 패키지(CC0)를 씁니다.
 
 ## 개인정보
 

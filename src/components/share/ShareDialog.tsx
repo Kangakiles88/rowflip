@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { shareConfig } from "@/config/share";
 import { copyText } from "@/utils/clipboard";
 import { trackShare, type ShareChannel } from "@/utils/tracking";
+import { ShareIcon, type ShareIconName } from "./ShareIcons";
 import styles from "./share.module.css";
 
 interface Props {
@@ -93,12 +94,11 @@ export function ShareDialog({ open, onClose, path, summary }: Props) {
   const page = path;
   const track = (channel: ShareChannel) => trackShare({ channel, page });
 
-  type Brand = keyof typeof shareConfig.icons;
-  const links: { channel: Brand; label: string; mark: string; href: string }[] = [
-    { channel: "naver", label: "네이버", mark: "네", href: `https://share.naver.com/web/shareView?url=${enc(url)}&title=${enc(text)}` },
-    { channel: "band", label: "밴드", mark: "밴", href: `https://band.us/plugin/share?body=${enc(`${text}\n${url}`)}&route=${enc(url)}` },
-    { channel: "facebook", label: "페이스북", mark: "페", href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}` },
-    { channel: "x", label: "X", mark: "X", href: `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}` },
+  const links: { channel: ShareChannel & ShareIconName; label: string; href: string }[] = [
+    { channel: "naver", label: "네이버", href: `https://share.naver.com/web/shareView?url=${enc(url)}&title=${enc(text)}` },
+    { channel: "band", label: "밴드", href: `https://band.us/plugin/share?body=${enc(`${text}\n${url}`)}&route=${enc(url)}` },
+    { channel: "facebook", label: "페이스북", href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}` },
+    { channel: "x", label: "X", href: `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}` },
   ];
 
   const copyLink = async () => {
@@ -131,14 +131,6 @@ export function ShareDialog({ open, onClose, path, summary }: Props) {
     }
   };
 
-  const brandMark = (brand: Brand, mark: string) =>
-    shareConfig.icons[brand] ? (
-      // eslint-disable-next-line @next/next/no-img-element -- 운영자가 넣는 정적 아이콘
-      <img src={shareConfig.icons[brand]} alt="" className={styles.brandImg} />
-    ) : (
-      <span className={styles.mark}>{mark}</span>
-    );
-
   const itemCount = 1 + (kakao ? 1 : 0) + links.length + (canNativeShare ? 1 : 0);
 
   return (
@@ -156,35 +148,34 @@ export function ShareDialog({ open, onClose, path, summary }: Props) {
       <div className={styles.body}>
         <div className={styles.head}>
           <p id="share-title" className={styles.title}>
-            {phase === "done" && <span className={styles.check} aria-hidden="true" />}
+            {phase === "done" ? (
+              <span className={styles.check} aria-hidden="true" />
+            ) : (
+              <span className={styles.spinner} aria-hidden="true" />
+            )}
             {phase === "loading" ? shareConfig.loadingText : shareConfig.doneTitle}
             <span className={styles.summary}>{summary}</span>
           </p>
           <button type="button" className={styles.x} aria-label="닫기" onClick={() => ref.current?.close()}>
-            <Icon name="close" />
+            <ShareIcon name="close" size={18} />
           </button>
         </div>
+
+        <Ticker lines={shareConfig.message} />
         <div className={styles.progress} data-done={phase === "done" || undefined} aria-hidden="true">
           <span style={{ animationDuration: `${shareConfig.loadingMs}ms` }} />
         </div>
 
-        <section className={styles.shareSection} aria-labelledby="share-heading">
-          <p id="share-heading" className={styles.sectionTitle}>
-            <Icon name="people" />
-            지인에게 알리기
-          </p>
-          <div className={styles.message}>
-            {shareConfig.message.map((line) => (
-              <p key={line}>{line}</p>
-            ))}
-          </div>
-        </section>
-
-        <ul className={styles.targets} style={{ "--n": itemCount, "--n-narrow": itemCount <= 4 ? itemCount : Math.ceil(itemCount / 2) } as React.CSSProperties}>
+        <p className={styles.sectionTitle}>지인에게 알리기</p>
+        <ul
+          className={styles.targets}
+          aria-label="공유하기"
+          style={{ "--n": itemCount, "--n-narrow": itemCount <= 4 ? itemCount : Math.ceil(itemCount / 2) } as React.CSSProperties}
+        >
           <li>
             <button type="button" className={styles.target} onClick={copyLink}>
               <span className={styles.circle} data-done={copied || undefined}>
-                <Icon name={copied ? "check" : "link"} />
+                <ShareIcon name={copied ? "check" : "link"} />
               </span>
               <span className={styles.label}>{copied ? "복사됨" : "링크 복사"}</span>
             </button>
@@ -192,7 +183,9 @@ export function ShareDialog({ open, onClose, path, summary }: Props) {
           {kakao && (
             <li>
               <button type="button" className={styles.target} onClick={kakaoShare}>
-                <span className={styles.circle}>{brandMark("kakao", "카")}</span>
+                <span className={styles.circle}>
+                  <ShareIcon name="kakao" />
+                </span>
                 <span className={styles.label}>카카오톡</span>
               </button>
             </li>
@@ -206,7 +199,9 @@ export function ShareDialog({ open, onClose, path, summary }: Props) {
                 rel="noopener noreferrer"
                 onClick={() => track(l.channel)}
               >
-                <span className={styles.circle}>{brandMark(l.channel, l.mark)}</span>
+                <span className={styles.circle}>
+                  <ShareIcon name={l.channel} />
+                </span>
                 <span className={styles.label}>{l.label}</span>
               </a>
             </li>
@@ -215,7 +210,7 @@ export function ShareDialog({ open, onClose, path, summary }: Props) {
             <li>
               <button type="button" className={styles.target} onClick={nativeShare}>
                 <span className={styles.circle}>
-                  <Icon name="share" />
+                  <ShareIcon name="share" />
                 </span>
                 <span className={styles.label}>다른 앱</span>
               </button>
@@ -237,55 +232,31 @@ export function ShareDialog({ open, onClose, path, summary }: Props) {
   );
 }
 
-/** 일반 기능 아이콘 (브랜드 로고 아님) */
-function Icon({ name }: { name: "link" | "check" | "share" | "close" | "people" }) {
-  const common = {
-    width: 20,
-    height: 20,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-    "aria-hidden": true,
-  };
-  switch (name) {
-    case "link":
-      return (
-        <svg {...common}>
-          <path d="M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4l-1.1 1.1" />
-          <path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1.1-1.1" />
-        </svg>
-      );
-    case "check":
-      return (
-        <svg {...common}>
-          <path d="M5 12.5l4.5 4.5L19 7.5" />
-        </svg>
-      );
-    case "share":
-      return (
-        <svg {...common}>
-          <path d="M12 15V3.5" />
-          <path d="M7.5 8L12 3.5 16.5 8" />
-          <path d="M5 12.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-6.5" />
-        </svg>
-      );
-    case "close":
-      return (
-        <svg {...common} width={18} height={18}>
-          <path d="M6 6l12 12M18 6L6 18" />
-        </svg>
-      );
-    case "people":
-      return (
-        <svg {...common} width={16} height={16}>
-          <circle cx="9" cy="8" r="3.2" />
-          <path d="M3.5 19a5.5 5.5 0 0 1 11 0" />
-          <circle cx="17" cy="9" r="2.4" />
-          <path d="M16 14.2a4.4 4.4 0 0 1 4.8 4.8" />
-        </svg>
-      );
-  }
+/**
+ * 전광판처럼 오른쪽에서 왼쪽으로 흐르는 안내 문구.
+ * 같은 문구를 두 벌 이어 붙여 끊김 없이 돌고, 화면 낭독기는 숨겨 둔 정지 문구를 읽는다.
+ * 움직임 줄이기 설정을 켠 사용자에게는 멈춘 문단으로 보여 준다.
+ */
+function Ticker({ lines }: { lines: readonly string[] }) {
+  const text = lines.join(" ");
+  // 글자 수에 비례해 속도를 일정하게 유지 (대략 초당 7~8자)
+  const duration = `${Math.max(12, Math.round(text.length * 0.14))}s`;
+  return (
+    <div className={styles.ticker}>
+      <p className={styles.tickerStatic}>{text}</p>
+      <div className={styles.tickerWindow} aria-hidden="true">
+        <div className={styles.tickerTrack} style={{ "--ticker-duration": duration } as React.CSSProperties}>
+          {[0, 1].map((copy) => (
+            <span key={copy} className={styles.tickerRun}>
+              {lines.map((line, i) => (
+                <span key={i} className={styles.tickerItem}>
+                  {line}
+                </span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
