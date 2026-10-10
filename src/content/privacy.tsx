@@ -54,7 +54,7 @@ export function privacySections(contactEmail: string): PolicySection[] {
           <ul>
             <li>붙여넣은 데이터와 변환 결과는 사용자의 브라우저 안에서만 처리되며 서버로 전송되지 않습니다.</li>
             <li>브라우저에는 화면 설정만 저장합니다.</li>
-            <li>광고(Google AdSense 등)가 게재되는 경우 광고 회사가 쿠키를 사용할 수 있습니다.</li>
+            <li>방문 통계(Google Analytics)와 광고(Google AdSense 등)를 위해 Google 등이 쿠키를 사용할 수 있습니다.</li>
           </ul>
         </>
       ),
@@ -176,7 +176,21 @@ export function privacySections(contactEmail: string): PolicySection[] {
             공유 버튼: 카카오톡, 네이버, 밴드, 페이스북, X 버튼은 누를 때만 해당 서비스로 이동하거나 공유 창을 엽니다.
             공유되는 것은 페이지 주소와 소개 문구뿐이며, 입력한 데이터나 변환 결과는 포함되지 않습니다.
           </li>
-          <li>사이트는 현재 별도의 방문 분석 도구를 사용하지 않습니다. 도입하게 되면 이 방침을 먼저 고칩니다.</li>
+          <li>
+            방문 분석: Google Analytics 4. 어떤 페이지를 몇 번 봤는지, 어느 검색엔진이나 사이트에서 들어왔는지, 기기와
+            브라우저 종류, 대략적인 지역(국가·도시) 같은 통계를 보기 위해 사용합니다. 이를 위해 Google이{" "}
+            <code>_ga</code>로 시작하는 쿠키를 저장합니다. 공유 버튼을 누르면 어떤 채널(카카오톡, 링크 복사 등)을 눌렀는지도
+            기록하지만, 입력한 데이터나 변환 결과는 어떤 경우에도 보내지 않습니다. 수집을 원하지 않으면{" "}
+            <a
+              className="inlineLink"
+              href="https://tools.google.com/dlpage/gaoptout"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Google 애널리틱스 차단 브라우저 부가기능
+            </a>
+            을 설치하거나 브라우저에서 쿠키를 차단하면 됩니다.
+          </li>
         </ul>
       ),
     },

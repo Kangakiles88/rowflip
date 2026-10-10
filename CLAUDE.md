@@ -36,7 +36,7 @@ src/
 ├─ components/     share/(ShareDialog, ConvertGateButton, useConvertGate), Header, SiteFooter, JsonLd, Converter, TransposeTool, InputPanel, OutputPanel,
 │  │               PresetButtons, CleanupOptions, OutputOptions, Segmented, Toast, tool.module.css
 │  └─ ads/         AdSlot, AdSenseScript, BrandConnectBanner, PromotionArea
-├─ config/         site.ts(브랜드·도메인·SEO), nav.ts(페이지 목록), share.ts(첫 변환 공유 안내), ads.ts, brandConnect.ts
+├─ config/         site.ts(브랜드·도메인·SEO), analytics.ts(GA4), nav.ts(페이지 목록), share.ts(첫 변환 공유 안내), ads.ts, brandConnect.ts
 ├─ content/        seo.tsx(/ 안내·FAQ), transpose.tsx(/transpose/ 메타·안내·FAQ)
 ├─ utils/          parser, transformer, transpose(순수 함수 + 테스트), presets, storage, clipboard, tracking
 └─ types/
@@ -122,6 +122,7 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
   - AdSense 신청
   - 브랜드커넥트 실제 링크·이미지
   - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅
+  - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click만
   - 기능 페이지 후보: 엑셀 빈 줄 제거, 엑셀 중복 제거, 줄바꿈 제거·쉼표를 줄바꿈으로, 엑셀 열 합치기·나누기
 
 ## 답변 방식

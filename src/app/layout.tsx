@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { AdSenseScript } from "@/components/ads/AdSenseScript";
+import { analyticsConfig } from "@/config/analytics";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -59,6 +61,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {children}
         <AdSenseScript />
       </body>
+      {analyticsConfig.gaId && <GoogleAnalytics gaId={analyticsConfig.gaId} />}
     </html>
   );
 }
