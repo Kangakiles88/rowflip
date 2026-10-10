@@ -1,5 +1,5 @@
 .dialog {
-  width: min(460px, calc(100vw - 32px));
+  width: min(480px, calc(100vw - 32px));
   max-height: calc(100dvh - 32px);
   padding: 0;
   color: var(--ink);
@@ -23,20 +23,25 @@
 
 .body {
   display: grid;
-  gap: 14px;
-  padding: 18px 20px 16px;
+  gap: 16px;
+  padding: 20px 22px 16px;
 }
 
-.statusRow {
-  min-height: 22px;
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
 }
 .title {
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 15px;
-  font-weight: 600;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 .summary {
   font: 12.5px var(--font-mono);
@@ -44,9 +49,25 @@
   color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
+.x {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  margin: -4px -6px 0 0;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+}
+.x:hover {
+  color: var(--ink);
+  background: var(--hover);
+}
 .check {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   flex: none;
   border-radius: 50%;
   background: var(--accent);
@@ -55,8 +76,8 @@
 .check::after {
   content: "";
   position: absolute;
-  left: 5px;
-  top: 2.5px;
+  left: 6px;
+  top: 3px;
   width: 4px;
   height: 8px;
   border: solid var(--accent-ink);
@@ -91,94 +112,108 @@
   }
 }
 
-.message {
+.shareSection {
   display: grid;
-  gap: 2px;
+  gap: 6px;
+}
+.sectionTitle {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
   font-size: 14px;
+  font-weight: 700;
+}
+.message {
+  font-size: 13.5px;
   line-height: 1.65;
   color: var(--ink-2);
   text-wrap: pretty;
 }
 .message p {
   margin: 0;
+  display: inline;
+}
+.message p + p::before {
+  content: " ";
 }
 
-.shareGrid {
+/* 공유 대상 — 동그란 아이콘 + 아래 이름, 한 줄 균등 배치 */
+.targets {
+  --cols: var(--n);
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: 14px 4px;
 }
-.shareBtn {
-  height: 36px;
-  display: inline-flex;
+.target {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ink);
-  background: var(--panel);
-  border: 1px solid var(--line-strong);
-  border-radius: 4px;
+  gap: 8px;
+  padding: 2px 0;
+  color: var(--ink-2);
+  background: none;
+  border: 0;
   text-decoration: none;
   cursor: pointer;
 }
-.shareBtn:hover {
-  border-color: var(--ink-3);
+.circle {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: var(--ink);
   background: var(--hover);
-}
-.shareWide {
-  grid-column: 1 / -1;
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--panel);
-}
-.shareWide:hover {
-  background: var(--ink);
-  opacity: 0.9;
-}
-
-.kakao {
-  grid-column: 1 / -1;
-  background: #fee500;
-  border-color: #fee500;
-  color: #191919;
-}
-.kakao:hover {
-  background: #f5dc00;
-  border-color: #f5dc00;
-}
-
-.linkRow {
-  display: flex;
-  gap: 6px;
-}
-.linkInput {
-  flex: 1;
-  min-width: 0;
-  height: 34px;
-  padding: 0 10px;
-  font: 12.5px var(--font-mono);
-  color: var(--ink-2);
-  background: var(--gutter);
   border: 1px solid var(--line);
-  border-radius: 4px;
+  border-radius: 50%;
+  transition: background 0.12s, border-color 0.12s, transform 0.12s;
 }
-.copyBtn {
-  flex: none;
-  height: 34px;
-  padding: 0 12px;
-  font-size: 13px;
-  font-weight: 600;
+.target:hover .circle {
+  background: var(--line);
+  border-color: var(--line-strong);
+}
+.target:active .circle {
+  transform: scale(0.96);
+}
+.target:focus-visible {
+  outline: none;
+}
+.target:focus-visible .circle {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.target .circle[data-done],
+.target:hover .circle[data-done] {
   color: var(--accent-ink);
   background: var(--accent);
-  border: 1px solid var(--accent);
-  border-radius: 4px;
+  border-color: var(--accent);
 }
-.copyBtn:hover {
-  background: var(--accent-hover);
+.mark {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
 }
+.brandImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.label {
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+.target:hover .label {
+  color: var(--ink);
+}
+
 .notice {
-  margin: -6px 0 0;
+  margin: -4px 0 0;
+  text-align: center;
   min-height: 0;
   font-size: 12.5px;
   color: var(--accent);
@@ -219,11 +254,13 @@
   .body {
     padding: 16px;
   }
-  .shareGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .targets {
+    /* 5개 이상이면 두 줄로 고르게 나눈다 (개수는 JS에서 계산) */
+    --cols: var(--n-narrow);
   }
-  .shareBtn {
-    height: 40px;
+  .circle {
+    width: 50px;
+    height: 50px;
   }
   .footer {
     flex-direction: column;
@@ -240,5 +277,8 @@
   }
   .progress span {
     animation-timing-function: steps(1, end);
+  }
+  .circle {
+    transition: none;
   }
 }
