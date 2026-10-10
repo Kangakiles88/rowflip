@@ -115,7 +115,7 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
 ## 현재 상태와 남은 일
 - 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 두 기능 페이지, 첫 변환 공유 안내 팝업, 테스트 36개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
-  - 구글 서치 콘솔·네이버 서치어드바이저 등록, sitemap 제출
+  - 네이버 서치어드바이저: 소유확인 메타태그 반영(`site.ts`) → 소유확인·sitemap 제출 / 구글 서치 콘솔: 도메인 속성(DNS TXT)으로 등록·sitemap 제출
   - Cloudflare AI 로봇 설정 확인(robots.txt에 검색 로봇이 막히지 않았는지)
   - 개인정보처리방침 페이지 (광고 쿠키 안내 포함, AdSense 신청 전에 준비)
   - 브랜드커넥트 실제 링크·이미지

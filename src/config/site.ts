@@ -28,8 +28,9 @@ export const siteConfig = {
     "리스트 변환기",
   ],
   locale: "ko_KR",
+  /** 검색엔진 소유 확인 값 — 페이지 HTML에 공개되는 값이라 코드에 둔다(env가 있으면 env 우선) */
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
-    naver: process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION || "",
+    naver: process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION || "f0dec20a2cb5e231e3b4bb9d3c370d601c975d41",
   },
 } as const;
