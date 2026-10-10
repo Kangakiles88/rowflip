@@ -28,20 +28,22 @@ npm run dev                  # http://localhost:3000
 | `npm test` | 변환 로직 단위 테스트 (Vitest) |
 | `npm run check` | 위 네 가지를 순서대로 |
 
-## 배포 (Cloudflare Pages + GitHub)
+## 배포 (Cloudflare Workers 정적 자산 + GitHub)
 
-`main` 브랜치에 커밋이 올라가면 Cloudflare Pages가 자동으로 빌드·배포합니다.
+`main` 브랜치에 커밋이 올라가면 Cloudflare가 자동으로 빌드·배포합니다. 서버 코드 없이 `out/` 폴더만 정적 파일로 올리는 방식이며, 설정은 `wrangler.jsonc`에 있습니다.
 
 | 항목 | 값 |
 | --- | --- |
-| Framework preset | Next.js (Static HTML Export) |
 | Build command | `npm run build` |
-| Build output directory | `out` |
+| Deploy command | `npx wrangler deploy` (기본값) |
+| 배포 대상 | `wrangler.jsonc`의 `assets.directory` = `./out` |
 | Node 버전 | `.node-version` 파일(22)로 지정 |
+
+`wrangler.jsonc`가 없으면 Cloudflare가 Next.js용 서버 변환 도구(OpenNext)를 자동으로 붙여 빌드가 실패하니 지우지 마세요.
 
 - 커스텀 도메인: `rowflip.com`, `www.rowflip.com` (DNS는 Cloudflare)
 - 응답 헤더·캐시는 `public/_headers`
-- 광고·검색 인증 값(`NEXT_PUBLIC_*`)은 Cloudflare Pages 프로젝트의 **Settings → Variables and Secrets**에 넣고 다시 배포합니다.
+- 광고·검색 인증 값(`NEXT_PUBLIC_*`)은 빌드할 때 코드에 들어갑니다. Cloudflare 프로젝트 **Settings → Build → 빌드 변수(Build variables)**에 넣고 다시 배포합니다.
 
 ## 배포 전에 꼭 할 일 (SEO)
 

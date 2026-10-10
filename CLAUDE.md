@@ -20,7 +20,8 @@
 - 테스트 Vitest, 린트 ESLint(eslint-config-next).
 
 ## 배포
-- GitHub `Kangakiles88/rowflip`의 `main`에 푸시하면 Cloudflare Pages가 자동 빌드·배포. 빌드 설정: `npm run build` → `out`, Node는 `.node-version`(22).
+- GitHub `Kangakiles88/rowflip`의 `main`에 푸시하면 Cloudflare Workers(정적 자산 전용)가 자동 빌드·배포. Build command `npm run build`, Deploy command `npx wrangler deploy`, 대상은 `wrangler.jsonc`의 `./out`. Node는 `.node-version`(22), wrangler는 package.json에 버전 고정.
+- `wrangler.jsonc`를 지우면 Cloudflare가 OpenNext(서버용)를 자동 적용해 빌드가 깨짐. 배포 전 점검: `npm run build && npx wrangler deploy --dry-run`.
 - 커밋 작성자는 `Kangakiles88 <Kangakiles88@users.noreply.github.com>`(공개 저장소라 개인 메일을 넣지 않음).
 
 ## 명령어
@@ -114,7 +115,7 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
 ## 현재 상태와 남은 일
 - 완료: 두 기능 페이지, 첫 변환 공유 안내 팝업, 테스트 36개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
-  - Cloudflare Pages를 GitHub 저장소(`Kangakiles88/rowflip`, `main`)에 연결해 첫 배포 → 커스텀 도메인 `rowflip.com`·`www.rowflip.com` 추가 (DNS는 이미 Cloudflare로 이전 완료)
+  - Cloudflare Workers 프로젝트 `rowflip` 첫 배포 성공 확인 → 커스텀 도메인 `rowflip.com`·`www.rowflip.com` 추가 (DNS는 이미 Cloudflare로 이전 완료)
   - 개인정보처리방침 페이지 (광고 쿠키 안내 포함, AdSense 신청 전에 준비)
   - 브랜드커넥트 실제 링크·이미지
   - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅

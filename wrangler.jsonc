@@ -1,0 +1,13 @@
+// Cloudflare Workers 배포 설정 — 서버 코드 없이 정적 파일(out/)만 올린다.
+// 이 파일이 있으면 Cloudflare가 Next.js용 서버 변환 도구(OpenNext)를 자동으로 붙이지 않는다.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "rowflip",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    // next build (output: "export") 결과 폴더
+    "directory": "./out",
+    // 없는 주소는 out/404.html 을 404 상태로 보여 준다
+    "not_found_handling": "404-page"
+  }
+}
