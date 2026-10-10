@@ -19,7 +19,7 @@ import styles from "./tool.module.css";
 
 const PREVIEW_ROWS = 200;
 const PREVIEW_COLS = 40;
-const STORAGE_KEY = "excel-garosero:transpose:v1";
+const STORAGE_KEY = "rowflip:transpose:v1";
 
 const FORMATS: { value: TableFormat; label: string; title: string }[] = [
   { value: "excel", label: "엑셀 붙여넣기", title: "탭으로 구분 — 엑셀·구글 시트에 그대로 붙여넣기" },

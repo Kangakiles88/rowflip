@@ -1,4 +1,4 @@
-# 엑셀 가로세로
+# RowFlip — 엑셀 가로세로 변환기
 
 엑셀·구글 시트·메모장에서 복사한 데이터를 붙여넣어 바로 변환하는 도구 사이트입니다.
 
@@ -30,7 +30,7 @@ npm run dev                  # http://localhost:3000
 
 ## 배포 전에 꼭 할 일 (SEO)
 
-1. `.env`에 **`NEXT_PUBLIC_SITE_URL`** 을 실제 도메인으로 넣고 빌드합니다. canonical, `sitemap.xml`, `robots.txt`, 공유 이미지 주소가 모두 이 값으로 만들어집니다.
+1. 도메인은 기본으로 **`https://rowflip.com`** 이 들어가 있습니다(`src/config/site.ts`). 다른 주소에서 시험할 때만 `.env`의 `NEXT_PUBLIC_SITE_URL`로 바꿔 빌드합니다. canonical, `sitemap.xml`, `robots.txt`, 공유 이미지 주소가 모두 이 값으로 만들어집니다.
 2. **구글 서치 콘솔**, **네이버 서치어드바이저**에 사이트를 등록하고, HTML 태그 인증값을 각각 `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`, `NEXT_PUBLIC_NAVER_SITE_VERIFICATION` 에 넣은 뒤 다시 빌드·배포합니다.
 3. 두 곳 모두에 `https://도메인/sitemap.xml` 을 제출합니다. 네이버는 ‘웹 페이지 수집 요청’도 한 번 해 두면 색인이 빨라집니다.
 
@@ -93,7 +93,7 @@ NEXT_PUBLIC_ADSENSE_BOTTOM_SLOT=0987654321
 ## 개인정보
 
 - 입력·결과 데이터는 서버 전송, 저장, 로그, 분석 이벤트 어디에도 들어가지 않습니다.
-- LocalStorage에는 출력 형식·구분자 같은 UI 설정만 저장합니다 (`src/utils/storage.ts`). 접두사/접미사도 저장하지 않습니다.
+- LocalStorage에는 출력 형식·구분자 같은 UI 설정만 저장합니다(키 접두사 `rowflip:`) (`src/utils/storage.ts`). 접두사/접미사도 저장하지 않습니다.
 - 클릭 측정 `trackPromotionClick` 은 광고 종류와 위치만 받도록 타입이 고정되어 있습니다.
 
 ## 구조

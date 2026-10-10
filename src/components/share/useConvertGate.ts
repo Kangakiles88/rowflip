@@ -4,9 +4,9 @@ import { useCallback, useSyncExternalStore } from "react";
 import { shareConfig } from "@/config/share";
 
 /** 사이트 전체에서 하나의 상태 — 한 페이지에서 풀면 다른 페이지도 바로 변환된다. */
-const KEY = "excel-garosero:convert-gate:v1";
+const KEY = "rowflip:convert-gate:v1";
 /** 같은 탭 안의 다른 페이지(미리 불러온 페이지 포함)에 풀렸다고 알리는 이벤트 */
-const EVENT = "excel-garosero:convert-gate-unlocked";
+const EVENT = "rowflip:convert-gate-unlocked";
 
 /** 저장소를 못 쓰는 환경(시크릿 창 제한 등)을 위한 메모리 표시 */
 let unlockedInMemory = false;

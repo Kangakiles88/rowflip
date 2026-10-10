@@ -5,7 +5,7 @@ import { DEFAULT_OPTIONS } from "./presets";
  * LocalStorage에는 UI 설정만 저장한다.
  * 원본 데이터·결과는 물론, 사용자가 입력한 접두사/접미사도 저장하지 않는다.
  */
-const KEY = "excel-garosero:settings:v1";
+const KEY = "rowflip:settings:v1";
 
 type StoredSettings = Pick<
   TransformOptions,

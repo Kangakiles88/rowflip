@@ -36,7 +36,7 @@ export const shareConfig = {
   footnote: "다음 변환부터는 버튼 없이 바로 변환이 가능합니다.",
   closeLabel: "결과 보기",
   /** SNS에 함께 올라가는 소개 문구 */
-  shareText: "엑셀 세로↔가로, 행열 바꾸기를 붙여넣기 한 번에 해 주는 무료 도구",
+  shareText: "RowFlip - 엑셀 세로↔가로, 행열 바꾸기를 붙여넣기 한 번에 해 주는 무료 도구",
   kakao: {
     jsKey: process.env.NEXT_PUBLIC_KAKAO_JS_KEY ?? "",
     sdkUrl: "https://t1.kakaocdn.net/kakao_js_sdk/2.8.3/kakao.min.js",

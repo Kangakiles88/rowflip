@@ -7,7 +7,8 @@ const { google, naver } = siteConfig.verification;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
-  title: siteConfig.title,
+  // 하위 페이지 제목 뒤에 " | RowFlip"이 붙는다 (메인 페이지는 default를 그대로 씀)
+  title: { default: siteConfig.title, template: `%s | ${siteConfig.name}` },
   description: siteConfig.description,
   keywords: [...siteConfig.keywords],
   applicationName: siteConfig.name,

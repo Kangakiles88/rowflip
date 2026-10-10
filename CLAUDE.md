@@ -1,9 +1,11 @@
 @AGENTS.md
 
-# 엑셀 가로세로 — 프로젝트 지침
+# RowFlip (엑셀 가로세로 변환기) — 프로젝트 지침
 
 ## 프로젝트 개요
-- 사이트명: **엑셀 가로세로**. 엑셀·구글 시트·메모장에서 복사한 데이터를 붙여넣어 바로 변환하는 무료 웹 도구 사이트.
+- 브랜드: **RowFlip**, 도메인 `https://rowflip.com` (GoDaddy에서 구매). 엑셀·구글 시트·메모장에서 복사한 데이터를 붙여넣어 바로 변환하는 무료 웹 도구 사이트.
+- 브랜드·도메인에는 "엑셀/Excel"을 쓰지 않음(Microsoft 상표 가이드라인). "엑셀"은 페이지 제목·H1·본문에서 기능 설명으로만 사용. 제목 형식: `<페이지 제목> | RowFlip`.
+- 나중에 영어 페이지를 `/en/` 아래에 추가할 계획(.com 하나로 한국어 `/` + 영어 `/en/`).
 - 목표: 구글·네이버 검색 유입 → AdSense·네이버 브랜드커넥트 광고 수익.
 - 원칙: 붙여넣기 → 옵션 선택 → 결과 확인 → 복사. 회원가입·업로드·서버 저장 없음. 모든 처리는 브라우저 안에서.
 - 현재 페이지
@@ -28,7 +30,7 @@ src/
 ├─ components/     share/(ShareDialog, ConvertGateButton, useConvertGate), Header, SiteFooter, JsonLd, Converter, TransposeTool, InputPanel, OutputPanel,
 │  │               PresetButtons, CleanupOptions, OutputOptions, Segmented, Toast, tool.module.css
 │  └─ ads/         AdSlot, AdSenseScript, BrandConnectBanner, PromotionArea
-├─ config/         site.ts(사이트명·SEO), nav.ts(페이지 목록), share.ts(첫 변환 공유 안내), ads.ts, brandConnect.ts
+├─ config/         site.ts(브랜드·도메인·SEO), nav.ts(페이지 목록), share.ts(첫 변환 공유 안내), ads.ts, brandConnect.ts
 ├─ content/        seo.tsx(/ 안내·FAQ), transpose.tsx(/transpose/ 메타·안내·FAQ)
 ├─ utils/          parser, transformer, transpose(순수 함수 + 테스트), presets, storage, clipboard, tracking
 └─ types/
@@ -61,7 +63,7 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
 ## 첫 변환 공유 안내 (바이럴)
 - 처음 변환할 때만 원본과 결과 사이에 [변환하기] 버튼이 나오고, 누르면 약 1.2초 로딩 뒤 공유 부탁 팝업이 뜸. 버튼은 한 번 누르면 사라지고 이후에는 바로 변환.
 - 설정은 `src/config/share.ts`: `enabled`(끄기), `frequency`("session" = 방문마다 한 번, "once" = 이 브라우저에서 처음 한 번), 문구, 로딩 시간.
-- 상태는 `useConvertGate` 훅 하나로 두 페이지가 공유. 저장값은 `excel-garosero:convert-gate:v1 = "1"` 뿐.
+- 상태는 `useConvertGate` 훅 하나로 두 페이지가 공유. 저장값은 `rowflip:convert-gate:v1 = "1"` 뿐.
 - 공유 채널: 링크 복사, 카카오톡(`NEXT_PUBLIC_KAKAO_JS_KEY` 있을 때만), 네이버, 밴드, 페이스북, X, 다른 앱(휴대폰 기본 공유창). 클릭은 `trackShare`(채널·페이지만)로 기록.
 - 팝업 디자인: 위에 전광판처럼 흐르는 안내 문구(`Ticker`) + 진행 막대로 로딩 느낌, 아래에 동그란 아이콘 버튼 + 이름을 한 줄로(휴대폰은 5개 이상이면 두 줄로 고르게). 움직임 줄이기 설정 사용자에게는 멈춘 문단으로 표시.
 - 대기 시간: 전광판 문구가 끝까지 한 번 흘러가는 시간(실제 글자 너비 ÷ `tickerSpeed`)을 계산해 남은 초를 표시. 그동안 ✕·결과 보기·Esc·바깥 클릭으로 닫히지 않고, 0초가 되면 닫기 버튼이 나타남. 공유 버튼은 대기 중에도 누를 수 있음.
@@ -70,7 +72,7 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
 
 ## 개인정보 (절대 규칙)
 - 사용자가 붙여넣은 데이터와 변환 결과는 서버 전송, DB, LocalStorage, 로그, 분석 이벤트, 광고 어디에도 넣지 않음.
-- LocalStorage에는 UI 설정만 저장(키 접두사 `excel-garosero:`). 접두사·접미사 입력값도 저장하지 않음.
+- LocalStorage에는 UI 설정만 저장(키 접두사 `rowflip:`). 접두사·접미사 입력값도 저장하지 않음.
 - `trackPromotionClick`은 광고 종류(type)와 위치(position)만 받음. 인자 타입을 넓히지 말 것.
 
 ## 광고
@@ -99,7 +101,7 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
 8. `npm run check` 통과, 1366·820·390px 폭에서 확인
 
 ## 배포 전 체크리스트
-- `.env`에 `NEXT_PUBLIC_SITE_URL` 실제 도메인 (없으면 canonical·sitemap이 localhost로 나감)
+- 도메인 기본값은 `https://rowflip.com`(`site.ts`). 다른 주소로 시험 배포할 때만 `.env`의 `NEXT_PUBLIC_SITE_URL`로 덮어씀
 - 구글 서치 콘솔·네이버 서치어드바이저 인증값 입력 후 재빌드, 두 곳에 `/sitemap.xml` 제출
 - `brandConnect.ts`의 링크·상품 문구·대가성 문구를 실제 값으로 교체 (현재는 예시 값)
 - AdSense 승인 후 `NEXT_PUBLIC_ADSENSE_ENABLED=true` + 클라이언트 ID·슬롯 ID
@@ -108,7 +110,7 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
 ## 현재 상태와 남은 일
 - 완료: 두 기능 페이지, 첫 변환 공유 안내 팝업, 테스트 36개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
-  - 실제 도메인 연결과 배포
+  - 호스팅 배포 + GoDaddy DNS를 호스팅에 연결 (도메인 rowflip.com은 구매 완료)
   - 개인정보처리방침 페이지 (광고 쿠키 안내 포함, AdSense 신청 전에 준비)
   - 브랜드커넥트 실제 링크·이미지
   - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅
