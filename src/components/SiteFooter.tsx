@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TOOL_PAGES } from "@/config/nav";
+import { INFO_PAGES, TOOL_PAGES } from "@/config/nav";
 import { siteConfig } from "@/config/site";
 
 export function SiteFooter() {
@@ -9,6 +9,11 @@ export function SiteFooter() {
         <nav className="footerNav" aria-label="사이트 기능">
           <span className="footerName">{siteConfig.name}</span>
           {TOOL_PAGES.map((p) => (
+            <Link key={p.id} href={p.href}>
+              {p.label}
+            </Link>
+          ))}
+          {INFO_PAGES.map((p) => (
             <Link key={p.id} href={p.href}>
               {p.label}
             </Link>

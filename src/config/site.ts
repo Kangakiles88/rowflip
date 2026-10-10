@@ -28,6 +28,8 @@ export const siteConfig = {
     "리스트 변환기",
   ],
   locale: "ko_KR",
+  /** 개인정보처리방침의 문의 메일 — 공개되는 값이라 env로만 넣는다(비우면 '준비 중'으로 표시) */
+  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "",
   /** 검색엔진 소유 확인 값 — 페이지 HTML에 공개되는 값이라 코드에 둔다(env가 있으면 env 우선) */
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",

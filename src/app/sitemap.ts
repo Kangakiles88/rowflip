@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
-import { TOOL_PAGES } from "@/config/nav";
+import { INFO_PAGES, TOOL_PAGES } from "@/config/nav";
 import { siteConfig } from "@/config/site";
 
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
-  return TOOL_PAGES.map((p) => ({
+  return [...TOOL_PAGES, ...INFO_PAGES].map((p) => ({
     url: `${siteConfig.url}${p.href}`,
     lastModified,
     changeFrequency: "monthly",

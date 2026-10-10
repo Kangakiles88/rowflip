@@ -4,4 +4,7 @@ export const TOOL_PAGES = [
   { id: "transpose", href: "/transpose/", label: "행열 바꾸기", priority: 0.9 },
 ] as const;
 
+/** 기능이 아닌 안내 페이지 — 푸터와 sitemap에만 들어간다 */
+export const INFO_PAGES = [{ id: "privacy", href: "/privacy/", label: "개인정보처리방침", priority: 0.3 }] as const;
+
 export type ToolPageId = (typeof TOOL_PAGES)[number]["id"];

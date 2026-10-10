@@ -8,6 +8,8 @@
 | `/transpose/` | 엑셀 행열 바꾸기 | 표 전체의 행과 열 전환 → 엑셀 붙여넣기용 / CSV / 마크다운 표 |
 모든 변환은 브라우저 안에서만 처리되며, 입력 데이터는 서버로 전송·저장되지 않습니다.
 
+- `/privacy/` 개인정보처리방침 — 문구는 `src/content/privacy.tsx`, 문의 메일은 `NEXT_PUBLIC_CONTACT_EMAIL`
+
 - Next.js 16 (App Router, 정적 내보내기) · React 19 · TypeScript · CSS Modules
 - 백엔드 없음 — `npm run build` 결과물 `out/` 폴더를 어떤 정적 호스팅에든 올리면 됩니다 (Vercel, Cloudflare Pages, Netlify, S3 등)
 

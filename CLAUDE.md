@@ -11,6 +11,7 @@
 - 현재 페이지
   - `/` 엑셀 가로세로 변환기: 한 열·한 행 목록을 가로↔세로, 쉼표 연결, 중복 제거, 정렬, 접두사/접미사, 따옴표, 번호, SQL IN, JSON·JS·Python 배열, HTML 목록으로
   - `/transpose/` 엑셀 행열 바꾸기: 표 전체의 행과 열 전환 → 엑셀 붙여넣기(탭 구분) / CSV / 마크다운 표
+  - `/privacy/` 개인정보처리방침(문구는 `src/content/privacy.tsx`, 문의 메일은 `NEXT_PUBLIC_CONTACT_EMAIL`). 안내 페이지는 `nav.ts`의 `INFO_PAGES` → 푸터·sitemap에만 들어감
 
 ## 기술 스택
 - Next.js 16 (App Router), React 19, TypeScript strict, CSS Modules + `globals.css` 디자인 토큰. Tailwind·외부 UI 라이브러리 쓰지 않음.
@@ -78,6 +79,7 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
 ## 개인정보 (절대 규칙)
 - 사용자가 붙여넣은 데이터와 변환 결과는 서버 전송, DB, LocalStorage, 로그, 분석 이벤트, 광고 어디에도 넣지 않음.
 - LocalStorage에는 UI 설정만 저장(키 접두사 `rowflip:`). 접두사·접미사 입력값도 저장하지 않음.
+- 저장 키·외부 서비스·분석 도구를 추가하거나 바꾸면 `src/content/privacy.tsx`(표와 본문)와 `EFFECTIVE_DATE`도 같이 고침.
 - `trackPromotionClick`은 광고 종류(type)와 위치(position)만 받음. 인자 타입을 넓히지 말 것.
 
 ## 광고
@@ -113,11 +115,11 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
 - 카카오톡 공유를 쓰려면 카카오 디벨로퍼스에서 앱을 만들고 JavaScript 키를 `NEXT_PUBLIC_KAKAO_JS_KEY`에, 배포 도메인을 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 등록
 
 ## 현재 상태와 남은 일
-- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 두 기능 페이지, 첫 변환 공유 안내 팝업, 테스트 36개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
+- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 두 기능 페이지, 첫 변환 공유 안내 팝업, 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 36개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
-  - 네이버 서치어드바이저: 소유확인 메타태그 반영(`site.ts`) → 소유확인·sitemap 제출 / 구글 서치 콘솔: 도메인 속성(DNS TXT)으로 등록·sitemap 제출
   - Cloudflare AI 로봇 설정 확인(robots.txt에 검색 로봇이 막히지 않았는지)
-  - 개인정보처리방침 페이지 (광고 쿠키 안내 포함, AdSense 신청 전에 준비)
+  - 개인정보처리방침의 문의 메일 정하기 → Cloudflare 빌드 변수 `NEXT_PUBLIC_CONTACT_EMAIL`
+  - AdSense 신청
   - 브랜드커넥트 실제 링크·이미지
   - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅
   - 기능 페이지 후보: 엑셀 빈 줄 제거, 엑셀 중복 제거, 줄바꿈 제거·쉼표를 줄바꿈으로, 엑셀 열 합치기·나누기

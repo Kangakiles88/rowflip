@@ -18,7 +18,7 @@ function Mark() {
   );
 }
 
-export function Header({ current }: { current: ToolPageId }) {
+export function Header({ current }: { current?: ToolPageId }) {
   return (
     <header className={styles.header}>
       <div className={`container ${styles.headerInner}`}>
