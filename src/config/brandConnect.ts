@@ -13,7 +13,8 @@ import type { BrandConnectBannerConfig } from "@/types";
  */
 const brandConnect: BrandConnectBannerConfig = {
   enabled: true,
-  href: "https://example.com/your-brandconnect-link",
+  // 실제 브랜드커넥트 링크를 넣으면 배너가 나타난다 (비어 있으면 숨김)
+  href: "",
   desktopImage: "",
   mobileImage: "",
   imageAlt: "",
