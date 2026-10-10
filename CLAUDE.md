@@ -25,10 +25,10 @@
 ```
 src/
 ├─ app/            layout(공통 메타), page(/), transpose/page, sitemap, robots, manifest, icon
-├─ components/     Header, SiteFooter, JsonLd, Converter, TransposeTool, InputPanel, OutputPanel,
+├─ components/     share/(ShareDialog, ConvertGateButton, useConvertGate), Header, SiteFooter, JsonLd, Converter, TransposeTool, InputPanel, OutputPanel,
 │  │               PresetButtons, CleanupOptions, OutputOptions, Segmented, Toast, tool.module.css
 │  └─ ads/         AdSlot, AdSenseScript, BrandConnectBanner, PromotionArea
-├─ config/         site.ts(사이트명·SEO), nav.ts(페이지 목록), ads.ts, brandConnect.ts
+├─ config/         site.ts(사이트명·SEO), nav.ts(페이지 목록), share.ts(첫 변환 공유 안내), ads.ts, brandConnect.ts
 ├─ content/        seo.tsx(/ 안내·FAQ), transpose.tsx(/transpose/ 메타·안내·FAQ)
 ├─ utils/          parser, transformer, transpose(순수 함수 + 테스트), presets, storage, clipboard, tracking
 └─ types/
@@ -57,6 +57,13 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
 - 한국어, 기능을 그대로 설명하는 짧고 건조한 문장. "마법처럼", "손쉽게" 같은 마케팅 문구 금지.
 - 버튼은 실제 동작 이름("복사", "샘플 넣기", "가로로"). 토스트는 결과("복사되었습니다.").
 - 새로 쓰는 예시 데이터는 실무형(`A-10234`, `1월 매출 1,200`, 사번, 상품코드). apple·banana 같은 예시는 새로 만들지 않음.
+
+## 첫 변환 공유 안내 (바이럴)
+- 처음 변환할 때만 원본과 결과 사이에 [변환하기] 버튼이 나오고, 누르면 약 1.2초 로딩 뒤 공유 부탁 팝업이 뜸. 버튼은 한 번 누르면 사라지고 이후에는 바로 변환.
+- 설정은 `src/config/share.ts`: `enabled`(끄기), `frequency`("session" = 방문마다 한 번, "once" = 이 브라우저에서 처음 한 번), 문구, 로딩 시간.
+- 상태는 `useConvertGate` 훅 하나로 두 페이지가 공유. 저장값은 `excel-garosero:convert-gate:v1 = "1"` 뿐.
+- 공유 채널: 다른 앱으로 공유(휴대폰 기본 공유창), 카카오톡(`NEXT_PUBLIC_KAKAO_JS_KEY` 있을 때만), 네이버, 밴드, 페이스북, X, 링크 복사. 클릭은 `trackShare`(채널·페이지만)로 기록.
+- 팝업은 사용자가 버튼을 눌렀을 때만 뜨게 유지(페이지 열자마자 뜨는 팝업은 검색 순위에 불리).
 
 ## 개인정보 (절대 규칙)
 - 사용자가 붙여넣은 데이터와 변환 결과는 서버 전송, DB, LocalStorage, 로그, 분석 이벤트, 광고 어디에도 넣지 않음.
@@ -93,9 +100,10 @@ public/            og.png, og-transpose.png(1200×630 공유 이미지), ads/(�
 - 구글 서치 콘솔·네이버 서치어드바이저 인증값 입력 후 재빌드, 두 곳에 `/sitemap.xml` 제출
 - `brandConnect.ts`의 링크·상품 문구·대가성 문구를 실제 값으로 교체 (현재는 예시 값)
 - AdSense 승인 후 `NEXT_PUBLIC_ADSENSE_ENABLED=true` + 클라이언트 ID·슬롯 ID
+- 카카오톡 공유를 쓰려면 카카오 디벨로퍼스에서 앱을 만들고 JavaScript 키를 `NEXT_PUBLIC_KAKAO_JS_KEY`에, 배포 도메인을 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 등록
 
 ## 현재 상태와 남은 일
-- 완료: 두 기능 페이지, 테스트 36개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
+- 완료: 두 기능 페이지, 첫 변환 공유 안내 팝업, 테스트 36개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - 실제 도메인 연결과 배포
   - 개인정보처리방침 페이지 (광고 쿠키 안내 포함, AdSense 신청 전에 준비)

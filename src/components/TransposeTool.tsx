@@ -11,6 +11,9 @@ import {
 } from "@/utils/transpose";
 import { InputPanel } from "./InputPanel";
 import { Segmented } from "./Segmented";
+import { ConvertGateButton } from "./share/ConvertGateButton";
+import { ShareDialog } from "./share/ShareDialog";
+import { useConvertGate } from "./share/useConvertGate";
 import { Toast } from "./Toast";
 import styles from "./tool.module.css";
 
@@ -41,6 +44,8 @@ export function TransposeTool() {
   const loaded = useRef(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const textRef = useRef<HTMLTextAreaElement>(null);
+  const gate = useConvertGate();
+  const [shareOpen, setShareOpen] = useState(false);
 
   // 결과 형식만 기억한다 (데이터는 저장하지 않음)
   useEffect(() => {
@@ -75,13 +80,24 @@ export function TransposeTool() {
   const pending = deferredInput !== input;
   const update = (patch: Partial<TransposeOptions>) => setOptions((o) => ({ ...o, ...patch }));
 
+  const hasInput = input.trim() !== "";
+  const startConvert = useCallback(() => {
+    if (!hasInput) return;
+    gate.unlock();
+    setShareOpen(true);
+  }, [hasInput, gate]);
+
   const copy = useCallback(async () => {
+    if (gate.locked) {
+      startConvert();
+      return;
+    }
     if (!result.output) return;
     const ok = await copyText(result.output);
     clearTimeout(toastTimer.current);
     setToast(ok ? "복사되었습니다." : "복사하지 못했습니다. 텍스트 보기에서 직접 선택해 주세요.");
     toastTimer.current = setTimeout(() => setToast(null), 1500);
-  }, [result.output]);
+  }, [gate.locked, startConvert, result.output]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -94,12 +110,14 @@ export function TransposeTool() {
     return () => window.removeEventListener("keydown", onKey);
   }, [copy]);
 
-  const { before, after, rows } = result;
+  const { before, after } = result;
+  const rows = gate.locked ? [] : result.rows;
+  const output = gate.locked ? "" : result.output;
   const shownRows = rows.slice(0, PREVIEW_ROWS);
   const clipped = rows.length > PREVIEW_ROWS || after.cols > PREVIEW_COLS;
 
   return (
-    <div className={`${styles.tool} ${styles.toolTranspose}`}>
+    <div className={`${styles.tool} ${styles.toolTranspose} ${gate.locked ? styles.toolGated : ""}`}>
       <div className={styles.areaInput}>
         <InputPanel
           value={input}
@@ -111,6 +129,8 @@ export function TransposeTool() {
           placeholder={"엑셀이나 구글 시트에서 표를 복사해 여기에 붙여넣으세요.\n\n행은 줄바꿈, 열은 탭으로 구분됩니다."}
         />
       </div>
+
+      {gate.locked && <ConvertGateButton disabled={!hasInput} onClick={startConvert} />}
 
       <div className={styles.areaOutput}>
         <section className={`${styles.pane} ${styles.outputPane}`} aria-labelledby="transpose-output">
@@ -128,7 +148,7 @@ export function TransposeTool() {
                 ]}
                 onChange={setView}
               />
-              <button type="button" className={styles.primary} onClick={copy} disabled={!result.output}>
+              <button type="button" className={styles.primary} onClick={copy} disabled={!output}>
                 복사
                 <kbd className={styles.kbd}>{modKey}↵</kbd>
               </button>
@@ -141,14 +161,22 @@ export function TransposeTool() {
                 ref={textRef}
                 id="result"
                 className={styles.code}
-                value={result.output}
+                value={output}
                 readOnly
                 wrap="off"
                 spellCheck={false}
-                placeholder="원본 표를 붙여넣으면 행과 열이 바뀐 결과가 여기에 표시됩니다."
+                placeholder={
+                  gate.locked
+                    ? "‘변환하기’를 누르면 결과가 여기에 표시됩니다."
+                    : "원본 표를 붙여넣으면 행과 열이 바뀐 결과가 여기에 표시됩니다."
+                }
               />
             ) : rows.length === 0 ? (
-              <p className={styles.emptyNote}>원본 표를 붙여넣으면 행과 열이 바뀐 표가 여기에 표시됩니다.</p>
+              <p className={styles.emptyNote}>
+                {gate.locked
+                  ? "‘변환하기’를 누르면 행과 열이 바뀐 표가 여기에 표시됩니다."
+                  : "원본 표를 붙여넣으면 행과 열이 바뀐 표가 여기에 표시됩니다."}
+              </p>
             ) : (
               <div className={styles.tableWrap}>
                 <table className={styles.grid}>
@@ -179,9 +207,11 @@ export function TransposeTool() {
 
           <div className={styles.status} aria-live="polite">
             <span>
-              {before.rows > 0
-                ? `${fmt(before.rows)}행 × ${fmt(before.cols)}열 → ${fmt(after.rows)}행 × ${fmt(after.cols)}열`
-                : "0행 × 0열"}
+              {gate.locked
+                ? "변환 대기 중"
+                : before.rows > 0
+                  ? `${fmt(before.rows)}행 × ${fmt(before.cols)}열 → ${fmt(after.rows)}행 × ${fmt(after.cols)}열`
+                  : "0행 × 0열"}
             </span>
             {clipped && view === "table" && (
               <span>
@@ -225,6 +255,12 @@ export function TransposeTool() {
       </div>
 
       <Toast message={toast} />
+      <ShareDialog
+        open={shareOpen}
+        onClose={() => setShareOpen(false)}
+        path="/transpose/"
+        summary={`${fmt(after.rows)}행 × ${fmt(after.cols)}열`}
+      />
     </div>
   );
 }

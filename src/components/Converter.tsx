@@ -11,6 +11,9 @@ import { InputPanel } from "./InputPanel";
 import { OutputOptions } from "./OutputOptions";
 import { OutputPanel } from "./OutputPanel";
 import { PresetButtons } from "./PresetButtons";
+import { ConvertGateButton } from "./share/ConvertGateButton";
+import { ShareDialog } from "./share/ShareDialog";
+import { useConvertGate } from "./share/useConvertGate";
 import { Toast } from "./Toast";
 import styles from "./tool.module.css";
 
@@ -23,6 +26,8 @@ export function Converter() {
   const loaded = useRef(false);
   const prefixRef = useRef<HTMLInputElement>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const gate = useConvertGate();
+  const [shareOpen, setShareOpen] = useState(false);
 
   // 저장된 UI 설정 복원 (데이터는 저장하지 않음) — 서버 렌더와 맞추려고 마운트 후에 읽는다.
   useEffect(() => {
@@ -62,11 +67,22 @@ export function Converter() {
     toastTimer.current = setTimeout(() => setToast(null), 1500);
   }, []);
 
+  const hasInput = input.trim() !== "";
+  const startConvert = useCallback(() => {
+    if (!hasInput) return;
+    gate.unlock();
+    setShareOpen(true);
+  }, [hasInput, gate]);
+
   const copy = useCallback(async () => {
+    if (gate.locked) {
+      startConvert();
+      return;
+    }
     if (!result.output) return;
     const ok = await copyText(result.output);
     showToast(ok ? "복사되었습니다." : "복사하지 못했습니다. 결과를 직접 선택해 주세요.");
-  }, [result.output, showToast]);
+  }, [gate.locked, startConvert, result.output, showToast]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -80,7 +96,7 @@ export function Converter() {
   }, [copy]);
 
   return (
-    <div className={styles.tool}>
+    <div className={`${styles.tool} ${gate.locked ? styles.toolGated : ""}`}>
       <div className={styles.areaPresets}>
         <PresetButtons activeId={activePreset} onSelect={applyPreset} />
       </div>
@@ -98,9 +114,12 @@ export function Converter() {
         />
       </div>
 
+      {gate.locked && <ConvertGateButton disabled={!hasInput} onClick={startConvert} />}
+
       <div className={styles.areaOutput}>
         <OutputPanel
-          value={result.output}
+          waiting={gate.locked}
+          value={gate.locked ? "" : result.output}
           stats={result.stats}
           pending={pending}
           modKey={modKey}
@@ -118,6 +137,12 @@ export function Converter() {
       </div>
 
       <Toast message={toast} />
+      <ShareDialog
+        open={shareOpen}
+        onClose={() => setShareOpen(false)}
+        path="/"
+        summary={`${result.stats.outputCount.toLocaleString("ko-KR")}개 항목`}
+      />
     </div>
   );
 }

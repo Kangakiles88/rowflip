@@ -1,0 +1,244 @@
+.dialog {
+  width: min(460px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  overflow: auto;
+}
+.dialog::backdrop {
+  background: rgb(20 20 18 / 0.45);
+}
+.dialog[open] {
+  animation: dialog-in 0.14s ease-out;
+}
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.body {
+  display: grid;
+  gap: 14px;
+  padding: 18px 20px 16px;
+}
+
+.statusRow {
+  min-height: 22px;
+}
+.title {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.summary {
+  font: 12.5px var(--font-mono);
+  font-weight: 400;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.check {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent);
+  position: relative;
+}
+.check::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2.5px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--accent-ink);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.progress {
+  height: 3px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--accent);
+  transform-origin: left;
+  animation: fill linear forwards;
+}
+.progress[data-done] span {
+  animation: none;
+  transform: scaleX(1);
+}
+@keyframes fill {
+  from {
+    transform: scaleX(0.04);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.message {
+  display: grid;
+  gap: 2px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.message p {
+  margin: 0;
+}
+
+.shareGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+.shareBtn {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.shareBtn:hover {
+  border-color: var(--ink-3);
+  background: var(--hover);
+}
+.shareWide {
+  grid-column: 1 / -1;
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--panel);
+}
+.shareWide:hover {
+  background: var(--ink);
+  opacity: 0.9;
+}
+
+.kakao {
+  grid-column: 1 / -1;
+  background: #fee500;
+  border-color: #fee500;
+  color: #191919;
+}
+.kakao:hover {
+  background: #f5dc00;
+  border-color: #f5dc00;
+}
+
+.linkRow {
+  display: flex;
+  gap: 6px;
+}
+.linkInput {
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  padding: 0 10px;
+  font: 12.5px var(--font-mono);
+  color: var(--ink-2);
+  background: var(--gutter);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.copyBtn {
+  flex: none;
+  height: 34px;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+}
+.copyBtn:hover {
+  background: var(--accent-hover);
+}
+.notice {
+  margin: -6px 0 0;
+  min-height: 0;
+  font-size: 12.5px;
+  color: var(--accent);
+}
+.notice:empty {
+  display: none;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.footnote {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+.close {
+  flex: none;
+  height: 32px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+}
+.close:hover {
+  background: var(--hover);
+}
+
+@media (max-width: 420px) {
+  .body {
+    padding: 16px;
+  }
+  .shareGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .shareBtn {
+    height: 40px;
+  }
+  .footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .close {
+    height: 38px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog[open] {
+    animation: none;
+  }
+  .progress span {
+    animation-timing-function: steps(1, end);
+  }
+}

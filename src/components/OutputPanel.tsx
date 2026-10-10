@@ -11,11 +11,13 @@ interface Props {
   modKey: string;
   onCopy: () => void;
   onResetOptions: () => void;
+  /** 첫 변환 전 대기 상태 — 결과 대신 안내를 보여 준다 */
+  waiting?: boolean;
 }
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 
-export function OutputPanel({ value, stats, pending, modKey, onCopy, onResetOptions }: Props) {
+export function OutputPanel({ value, stats, pending, modKey, onCopy, onResetOptions, waiting }: Props) {
   const ref = useRef<HTMLTextAreaElement>(null);
 
   const selectAll = () => {
@@ -54,16 +56,26 @@ export function OutputPanel({ value, stats, pending, modKey, onCopy, onResetOpti
           className={`${styles.code} ${styles.codeWrap}`}
           value={value}
           readOnly
-          placeholder="원본 데이터를 붙여넣으면 변환 결과가 여기에 바로 표시됩니다."
+          placeholder={
+            waiting
+              ? "‘변환하기’를 누르면 결과가 여기에 표시됩니다."
+              : "원본 데이터를 붙여넣으면 변환 결과가 여기에 바로 표시됩니다."
+          }
           spellCheck={false}
         />
       </div>
 
       <div className={styles.status} aria-live="polite">
-        <span>
-          {fmt(stats.outputCount)}개 항목 · {fmt(value.length)}자
-        </span>
-        {removed.length > 0 && <span>{removed.join(" · ")} 제거됨</span>}
+        {waiting ? (
+          <span>변환 대기 중</span>
+        ) : (
+          <>
+            <span>
+              {fmt(stats.outputCount)}개 항목 · {fmt(value.length)}자
+            </span>
+            {removed.length > 0 && <span>{removed.join(" · ")} 제거됨</span>}
+          </>
+        )}
       </div>
     </section>
   );

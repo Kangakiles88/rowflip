@@ -22,3 +22,22 @@ export function trackPromotionClick(event: PromotionClickEvent): void {
     });
   }
 }
+
+/**
+ * 공유 버튼 클릭 이벤트 — 어떤 채널을 눌렀는지와 페이지만 보낸다.
+ * 입력 데이터·결과는 절대 넣지 않는다.
+ */
+export type ShareChannel = "native" | "kakao" | "naver" | "facebook" | "x" | "band" | "copy";
+
+export interface ShareEvent {
+  channel: ShareChannel;
+  page: string;
+}
+
+export function trackShare(event: ShareEvent): void {
+  if (typeof window === "undefined") return;
+  const gtag = (window as unknown as { gtag?: Gtag }).gtag;
+  if (typeof gtag === "function") {
+    gtag("event", "share", { method: event.channel, content_type: "tool_page", item_id: event.page });
+  }
+}

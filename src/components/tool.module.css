@@ -94,6 +94,63 @@
   grid-template-columns: minmax(200px, 1fr) minmax(300px, 3fr);
 }
 
+/* ── 첫 변환 버튼 — 원본과 결과 사이, 한 번 누르면 사라진다 ── */
+.tool.toolGated {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-areas:
+    "presets presets presets"
+    "input gate output"
+    "options options options";
+}
+.toolTranspose.toolGated {
+  grid-template-areas:
+    "input gate output"
+    "options options options";
+}
+.areaGate {
+  grid-area: gate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.gateButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.gateButton:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+.gateButton:disabled {
+  color: var(--ink-3);
+  background: var(--panel);
+  border-color: var(--line-strong);
+  cursor: default;
+}
+.gateArrow::before {
+  content: "→";
+  display: inline-block;
+  font-family: var(--font-mono);
+}
+.gateHint {
+  display: none;
+  font-size: 12px;
+  color: var(--ink-3);
+  text-align: center;
+}
+
 /* ── Presets ─────────────────────────────────── */
 .presets {
   display: flex;
@@ -529,6 +586,36 @@
       "input"
       "output"
       "options";
+  }
+  .tool.toolGated {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "input"
+      "presets"
+      "options"
+      "gate"
+      "output";
+  }
+  .toolTranspose.toolGated {
+    grid-template-areas:
+      "input"
+      "gate"
+      "output"
+      "options";
+  }
+  .areaGate {
+    padding-block: 2px;
+  }
+  .gateButton {
+    width: 100%;
+    height: 46px;
+    font-size: 15px;
+  }
+  .gateArrow::before {
+    transform: rotate(90deg);
+  }
+  .gateHint {
+    display: block;
   }
   .options.optionsTranspose {
     grid-template-columns: minmax(0, 1fr);
