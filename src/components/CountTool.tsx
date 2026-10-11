@@ -2,6 +2,7 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import { COUNT_SAMPLE, countText, DEFAULT_COUNT_OPTIONS, limitValue, type CountOptions } from "@/utils/count";
+import { excelCellsToText } from "@/utils/parser";
 import { InputPanel } from "./InputPanel";
 import { ResultPane } from "./ResultPane";
 import { ConvertGateButton } from "./share/ConvertGateButton";
@@ -32,7 +33,9 @@ export function CountTool() {
   const { options: o, update, gate } = t;
 
   const deferred = useDeferredValue(input);
-  const stats = useMemo(() => countText(deferred, o), [deferred, o]);
+  // 엑셀에서 줄바꿈이 든 셀을 복사하면 "…"로 감싸져 온다 — 따옴표는 글자수에서 뺀다
+  const text = useMemo(() => excelCellsToText(deferred), [deferred]);
+  const stats = useMemo(() => countText(text, o), [text, o]);
   const pending = deferred !== input;
   const hasInput = input.trim() !== "";
 

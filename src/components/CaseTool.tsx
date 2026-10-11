@@ -2,6 +2,7 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import { CASE_SAMPLE, convertCase, type CaseMode } from "@/utils/caseConvert";
+import { excelCellsToText } from "@/utils/parser";
 import { InputPanel } from "./InputPanel";
 import { ResultPane } from "./ResultPane";
 import { Segmented } from "./Segmented";
@@ -40,7 +41,7 @@ export function CaseTool() {
   const { options: o, update, gate } = t;
 
   const deferred = useDeferredValue(input);
-  const output = useMemo(() => convertCase(deferred, o.mode), [deferred, o.mode]);
+  const output = useMemo(() => convertCase(excelCellsToText(deferred), o.mode), [deferred, o.mode]);
   const pending = deferred !== input;
   const hasInput = input.trim() !== "";
   const copy = () => void t.copy(output, hasInput);

@@ -84,3 +84,18 @@ export function extractCells(table: ParsedTable, column: ColumnSelect): string[]
   if (column === "all") return table.rows.flat();
   return table.rows.map((r) => r[column] ?? "");
 }
+
+/**
+ * 엑셀에서 셀을 복사해 글 도구(글자수·줄바꿈 제거 등)에 붙여넣을 때 쓰는 정리.
+ * 엑셀은 줄바꿈이 든 셀을 "…"로 감싸 복사하므로, 한 열짜리 복사본이면 따옴표를 벗기고 셀마다 한 줄로 되돌린다.
+ * 여러 열(탭이 든 표)이나 따옴표가 없는 글은 그대로 둔다.
+ */
+export function excelCellsToText(raw: string): string {
+  if (!raw.includes('"')) return raw;
+  const text = normalizeNewlines(raw);
+  const table = parseTable(text);
+  if (table.colCount !== 1) return raw;
+  const joined = table.rows.map((r) => r[0]).join("\n");
+  // 따옴표로 감싼 셀이 하나도 없었다면 원문 그대로 (끝 줄바꿈 등 보존)
+  return joined === text.replace(/\n$/, "") ? raw : joined;
+}

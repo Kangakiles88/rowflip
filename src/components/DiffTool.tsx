@@ -11,6 +11,7 @@ import {
   type DiffRow,
   type Part,
 } from "@/utils/diff";
+import { excelCellsToText } from "@/utils/parser";
 import { InputPanel } from "./InputPanel";
 import { ResultPane } from "./ResultPane";
 import { Segmented } from "./Segmented";
@@ -91,7 +92,10 @@ export function DiffTool() {
     () => ({ ignoreWhitespace: o.ignoreWhitespace, ignoreCase: o.ignoreCase }),
     [o.ignoreWhitespace, o.ignoreCase],
   );
-  const result = useMemo(() => diffText(dBefore, dAfter, diffOpts), [dBefore, dAfter, diffOpts]);
+  const result = useMemo(
+    () => diffText(excelCellsToText(dBefore), excelCellsToText(dAfter), diffOpts),
+    [dBefore, dAfter, diffOpts],
+  );
   const lines = useMemo(() => visibleLines(result.rows, o.view), [result.rows, o.view]);
   const pending = dBefore !== before || dAfter !== after;
   const hasInput = before.trim() !== "" || after.trim() !== "";

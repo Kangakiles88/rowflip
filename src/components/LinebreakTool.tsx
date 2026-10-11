@@ -8,6 +8,7 @@ import {
   type LinebreakMode,
   type LinebreakOptions,
 } from "@/utils/linebreak";
+import { excelCellsToText } from "@/utils/parser";
 import { InputPanel } from "./InputPanel";
 import { ResultPane } from "./ResultPane";
 import { Segmented } from "./Segmented";
@@ -47,7 +48,8 @@ export function LinebreakTool() {
   const { options: o, update, gate } = t;
 
   const deferred = useDeferredValue(input);
-  const result = useMemo(() => removeLinebreaks(deferred, o), [deferred, o]);
+  const text = useMemo(() => excelCellsToText(deferred), [deferred]);
+  const result = useMemo(() => removeLinebreaks(text, o), [text, o]);
   const pending = deferred !== input;
   const hasInput = input.trim() !== "";
   const copy = () => void t.copy(result.output, hasInput);

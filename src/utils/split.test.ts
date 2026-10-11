@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { excelCellsToText } from "./parser";
 import { DEFAULT_OPTIONS } from "./presets";
 import {
   splitCell,
@@ -106,5 +107,22 @@ describe("transform — 원본 나누기", () => {
   it("엑셀 칸 모드에서 쉼표 목록이면 안내용 추측을 돌려준다", () => {
     expect(transform("a, b, c", DEFAULT_OPTIONS).suggestedSplit).toBe("comma");
     expect(transform("a, b, c", { ...DEFAULT_OPTIONS, inputSplit: "comma" }).suggestedSplit).toBeNull();
+  });
+});
+
+describe("excelCellsToText — 엑셀에서 복사한 셀을 글로", () => {
+  it("줄바꿈이 든 셀 하나는 따옴표를 벗긴다", () => {
+    expect(excelCellsToText('"첫 줄\n둘째 줄"\r\n')).toBe("첫 줄\n둘째 줄");
+    expect(excelCellsToText('"그가 ""네""라고\n답했다"')).toBe('그가 "네"라고\n답했다');
+  });
+  it("여러 셀이면 셀마다 한 줄", () => {
+    expect(excelCellsToText('"a\nb"\nc\n"d\ne"')).toBe("a\nb\nc\nd\ne");
+  });
+  it("따옴표가 그냥 글의 일부면 그대로", () => {
+    expect(excelCellsToText('그는 "네"라고 했다')).toBe('그는 "네"라고 했다');
+    expect(excelCellsToText('"인용"\n다음 줄')).toBe('"인용"\n다음 줄');
+  });
+  it("여러 열 표는 손대지 않는다", () => {
+    expect(excelCellsToText('"a\nb"\tc')).toBe('"a\nb"\tc');
   });
 });

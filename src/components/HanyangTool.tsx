@@ -2,6 +2,7 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import { engToKor, guessHanyangMode, HANYANG_SAMPLE, korToEng, type HanyangMode } from "@/utils/hanyang";
+import { excelCellsToText } from "@/utils/parser";
 import { InputPanel } from "./InputPanel";
 import { ResultPane } from "./ResultPane";
 import { Segmented } from "./Segmented";
@@ -30,8 +31,9 @@ export function HanyangTool() {
   const { options: o, update, gate } = t;
 
   const deferred = useDeferredValue(input);
-  const mode: HanyangMode = o.direction === "auto" ? guessHanyangMode(deferred) : o.direction;
-  const output = useMemo(() => (mode === "eng-to-kor" ? engToKor(deferred) : korToEng(deferred)), [deferred, mode]);
+  const text = useMemo(() => excelCellsToText(deferred), [deferred]);
+  const mode: HanyangMode = o.direction === "auto" ? guessHanyangMode(text) : o.direction;
+  const output = useMemo(() => (mode === "eng-to-kor" ? engToKor(text) : korToEng(text)), [text, mode]);
   const pending = deferred !== input;
   const hasInput = input.trim() !== "";
   const copy = () => void t.copy(output, hasInput);
