@@ -21,7 +21,7 @@
     - `/hanyang/` 한영 타자 변환: 두벌식 영타→한글 조합, 한글→영타, 자동 방향
     - `/case/` 대소문자 변환: 대문자·소문자·문장·단어 첫 글자·반전, camel·Pascal·snake·UPPER_SNAKE·kebab(줄마다)
   - 문서 만들기(묶음 `doc`)
-    - `/certificate/` 엑셀로 상장·수료증 일괄 만들기: 명단(첫 행 머리글) 붙여넣기 → 양식(상장·수료증·위촉장·감사장) 선택 → 칸 연결(머리글 자동 연결 `autoMap`, 수상명은 큰 제목) → 발급일·기관·대표자·자동 번호 → 본문 문구({칸 이름} 치환 + 조사 자동) → A4 한 장에 한 명 미리보기(한 장씩 넘김) → 브라우저 인쇄·PDF 저장(한 번에 500장). 인쇄는 body 아래 포털 `.certPrintRoot`만 보이게(globals.css의 print 규칙), 장 크기는 `--mm` 배수(certificate.module.css). 종이 색은 `--paper*` 토큰(다크 모드에서도 흰 종이). 저장은 양식·글꼴·날짜 형식만(명단·기관명·문구는 저장 안 함). 2단계(HWPX 양식 업로드)·3단계(유료화)는 프로젝트 문서 `claude/handoff-certificate-page.md`
+    - `/certificate/` 엑셀로 상장·수료증 일괄 만들기: 명단(첫 행 머리글) 붙여넣기 → 양식(상장·수료증·위촉장·감사장) 선택 → 칸 연결(머리글 자동 연결 `autoMap`, 수상명은 큰 제목) → 발급일·기관·대표자·자동 번호 → 본문 문구({칸 이름} 치환 + 조사 자동) → A4 한 장에 한 명 미리보기(한 장씩 넘김, 미리보기 클릭·'크게 보기'로 화면 가득 확대 — 휴대폰은 숨김) → 브라우저 인쇄·PDF 저장(한 번에 500장). 인쇄는 body 아래 포털 `.certPrintRoot`만 보이게(globals.css의 print 규칙), 장 크기는 `--mm` 배수(certificate.module.css). 종이 색은 `--paper*` 토큰(다크 모드에서도 흰 종이). 저장은 양식·글꼴·날짜 형식만(명단·기관명·문구는 저장 안 함). 2단계(HWPX 양식 업로드)·3단계(유료화)는 프로젝트 문서 `claude/handoff-certificate-page.md`
   - `/privacy/` 개인정보처리방침(문구는 `src/content/privacy.tsx`, 문의 메일 `contact@rowflip.com` = `site.ts`의 contactEmail, Cloudflare 이메일 라우팅으로 운영자 Gmail에 전달 — 개인 메일 주소는 저장소에 넣지 않음). 안내 페이지는 `nav.ts`의 `INFO_PAGES` → 푸터·sitemap에만 들어감. 푸터에 '의견 보내기'(contactEmail mailto)
 
 ## 기술 스택

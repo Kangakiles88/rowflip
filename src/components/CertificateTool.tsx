@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   autoMap,
@@ -148,6 +148,16 @@ export function CertificateTool() {
     setMounted(true);
   }, []);
 
+  // 크게 보기 — 결과 창이 작아 글씨를 확인하기 어려워서 화면 가득 한 장씩 본다
+  const [zoom, setZoom] = useState(false);
+  const zoomRef = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const d = zoomRef.current;
+    if (!d) return;
+    if (zoom && !d.open) d.showModal();
+    if (!zoom && d.open) d.close();
+  }, [zoom]);
+
   const numberMapped = (mapping.number ?? -1) >= 0;
   const fmt = (n: number) => n.toLocaleString("ko-KR");
 
@@ -167,32 +177,38 @@ export function CertificateTool() {
     </>
   );
 
-  const pager =
-    !gate.locked && items.length > 1 ? (
-      <span className={styles.certPager}>
-        <button
-          type="button"
-          className={styles.ghost}
-          onClick={() => setPage(Math.max(0, current - 1))}
-          disabled={current === 0}
-          aria-label="이전 장"
-        >
-          ‹
-        </button>
-        <span className={styles.certPagerText}>
-          {current + 1} / {fmt(items.length)}
-        </span>
-        <button
-          type="button"
-          className={styles.ghost}
-          onClick={() => setPage(Math.min(items.length - 1, current + 1))}
-          disabled={current >= items.length - 1}
-          aria-label="다음 장"
-        >
-          ›
-        </button>
+  const go = useCallback(
+    (delta: number) => setPage((p) => Math.min(Math.max(0, Math.min(p, items.length - 1) + delta), items.length - 1)),
+    [items.length],
+  );
+  const pagerControls = (
+    <span className={styles.certPager}>
+      <button type="button" className={styles.ghost} onClick={() => go(-1)} disabled={current === 0} aria-label="이전 장">
+        ‹
+      </button>
+      <span className={styles.certPagerText}>
+        {current + 1} / {fmt(items.length)}
       </span>
-    ) : null;
+      <button
+        type="button"
+        className={styles.ghost}
+        onClick={() => go(1)}
+        disabled={current >= items.length - 1}
+        aria-label="다음 장"
+      >
+        ›
+      </button>
+    </span>
+  );
+  const canPreview = !gate.locked && hasInput && !!items[current];
+  const pager = canPreview ? (
+    <>
+      {items.length > 1 && pagerControls}
+      <button type="button" className={`${styles.ghost} ${styles.certZoomBtn}`} onClick={() => setZoom(true)}>
+        크게 보기
+      </button>
+    </>
+  ) : null;
 
   return (
     <div className={`${styles.tool} ${styles.toolTranspose} ${gate.locked ? styles.toolGated : ""}`}>
@@ -227,9 +243,15 @@ export function CertificateTool() {
         >
           {hasInput && items[current] ? (
             <div className={styles.certViewer} id="result">
-              <div className={styles.certSheet}>
+              <button
+                type="button"
+                className={styles.certSheet}
+                onClick={() => setZoom(true)}
+                aria-label="크게 보기"
+                title="크게 보기"
+              >
                 <CertificatePage cert={items[current]} font={o.font} preview />
-              </div>
+              </button>
             </div>
           ) : undefined}
         </ResultPane>
@@ -377,6 +399,35 @@ export function CertificateTool() {
           </div>,
           document.body,
         )}
+
+      <dialog
+        ref={zoomRef}
+        className={styles.certZoom}
+        aria-label="미리보기 크게 보기"
+        onClose={() => setZoom(false)}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) setZoom(false);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowLeft") go(-1);
+          if (e.key === "ArrowRight") go(1);
+        }}
+      >
+        <div className={styles.certZoomHead}>
+          <strong>미리보기</strong>
+          {items.length > 1 && pagerControls}
+          <button type="button" className={styles.ghost} onClick={() => setZoom(false)}>
+            닫기
+          </button>
+        </div>
+        <div className={styles.certZoomBody}>
+          {zoom && canPreview && (
+            <div className={styles.certZoomSheet}>
+              <CertificatePage cert={items[current]} font={o.font} preview />
+            </div>
+          )}
+        </div>
+      </dialog>
 
       <Toast message={t.toast} />
       <ShareDialog
