@@ -137,16 +137,16 @@ a {
 
 .intro h1 {
   margin: 0;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.35;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.3;
 }
 
 .lede {
   margin: 0;
-  max-width: 760px;
-  font-size: 13.5px;
+  max-width: 780px;
+  font-size: 14px;
   color: var(--ink-2);
   text-wrap: pretty;
 }
@@ -156,11 +156,15 @@ a {
   border-top: 1px solid var(--line);
 }
 
+/* 섹션 제목 — 왼쪽 초록 막대로 구획 시작을 표시 */
 .section h2 {
-  margin: 0 0 14px;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  margin: 0 0 16px;
+  padding-left: 11px;
+  border-left: 3px solid var(--accent);
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
 }
 
 /* 사용 방법 — 실제 순서가 있는 3단계라 번호를 쓴다 */
@@ -212,8 +216,8 @@ a {
 
 .guide h3 {
   margin: 0;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   line-height: 1.5;
   text-wrap: balance;
 }
@@ -258,7 +262,7 @@ a {
 }
 
 .faq summary {
-  padding: 11px 0;
+  padding: 13px 4px;
   display: flex;
   justify-content: space-between;
   gap: 16px;
@@ -268,8 +272,14 @@ a {
 
 .faq summary h3 {
   margin: 0;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
+}
+.faq summary:hover {
+  background: var(--hover);
+}
+.faq details[open] summary h3 {
+  color: var(--accent);
 }
 
 .faq summary::-webkit-details-marker {
@@ -279,7 +289,9 @@ a {
 .faq summary::after {
   content: "+";
   font-family: var(--font-mono);
-  color: var(--ink-3);
+  font-size: 17px;
+  line-height: 1.2;
+  color: var(--accent);
 }
 
 .faq details[open] summary::after {
@@ -357,14 +369,17 @@ a {
 }
 .toolDirectory h2 {
   margin: 0;
-  font-size: 14px;
-  font-weight: 700;
+  padding-left: 9px;
+  border-left: 3px solid var(--accent);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.3;
 }
 .toolGroup h3 {
   margin: 0 0 4px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ink-3);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
 }
 .toolDirectory ul {
   margin: 0;
@@ -516,12 +531,15 @@ a {
 }
 
 @media (max-width: 680px) {
+  .section h2 {
+    font-size: 17px;
+  }
   .steps,
   .guide {
     grid-template-columns: minmax(0, 1fr);
   }
   .intro h1 {
-    font-size: 18px;
+    font-size: 21px;
   }
 }
 
