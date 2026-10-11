@@ -104,7 +104,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - `trackPromotionClick`은 광고 종류(type)와 위치(position)만 받음. 인자 타입을 넓히지 말 것.
 
 ## 광고
-- AdSense: 게시자 ID `ca-pub-9884982808493036`은 `ads.ts` 기본값(env `NEXT_PUBLIC_ADSENSE_CLIENT_ID`로 덮어쓰기, "off"면 끔). ID가 있으면 `<head>`에 adsbygoogle 스크립트(정적 HTML에 남게 일반 script 태그) + `google-adsense-account` 메타 + `public/ads.txt`. 자동 광고는 AdSense 화면에서 설정(추천: 인페이지는 도구 영역 제외, 앵커 켬, 비네트·의도 기반 끔). 직접 배치 광고 칸은 `NEXT_PUBLIC_ADSENSE_ENABLED=true` + 슬롯 ID일 때만, 슬롯은 top·bottom 2개만.
+- AdSense: 게시자 ID `ca-pub-1418493009023603`은 `ads.ts` 기본값(env `NEXT_PUBLIC_ADSENSE_CLIENT_ID`로 덮어쓰기, "off"면 끔). ID가 있으면 `<head>`에 adsbygoogle 스크립트(정적 HTML에 남게 일반 script 태그) + `google-adsense-account` 메타 + `public/ads.txt`. 자동 광고는 AdSense 화면에서 설정(추천: 인페이지는 도구 영역 제외, 앵커 켬, 비네트·의도 기반 끔). 직접 배치 광고 칸은 `NEXT_PUBLIC_ADSENSE_ENABLED=true` + 슬롯 ID일 때만, 슬롯은 top·bottom 2개만.
 - 브랜드커넥트: 상품 목록(`products`: name·href·image)은 `src/config/brandConnect.ts`에서만 수정(컴포넌트에 하드코딩 금지). 이미지는 `public/ads/`에 정사각형 96px webp. 링크는 `target="_blank" rel="sponsored noopener noreferrer"`. 대가성 안내 문구(`disclosureText`)는 띠 안에 항상 보이게.
 - 브랜드커넥트 표시: 메뉴 바로 아래·H1 위(`position: "header"`)의 띠(높이 약 75px, 띠 전체가 링크, 가운데 정렬: 추천 상품·사진·상품명·상품 보기 버튼 + 아래 줄 대가성 안내)에 상품 **하나**만. 새로고침마다 다음 상품(`utils/rotation.ts`, 순번은 `rowflip:brand-rotation:v1`, 첫 방문은 무작위 시작). 흐르는 전광판·카드형으로 키우지 말 것(첫 화면 도구 가림).
 - 위치는 `PromotionArea`(header / top / middle / bottom). AdSense는 top·bottom만. 광고가 도구보다 먼저 크게 보이면 안 됨.
@@ -140,7 +140,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 10개(엑셀·목록 4: 가로세로·행열·중복 제거·쉼표→줄바꿈 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자 / 문서 1: 상장·수료증), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 128개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - (확인 완료 2026-10-11) Cloudflare 관리형 robots.txt: Googlebot·Yeti(네이버)·Bingbot·Mediapartners-Google(AdSense) 허용, AI 학습 로봇과 AI 에이전트(ChatGPT-User·Claude-User 등)만 차단. 우리 robots.ts는 그 아래에 붙음
-  - AdSense 신청: 코드·ads.txt·메타 태그 넣음(2026-10-11) → 사이트 연결 확인·검토 요청, 승인 대기
+  - AdSense: 기존 계정(pub-1418493009023603, 예전 수익 있음)으로 변경(2026-10-12). 새로 만든 계정(pub-9884982808493036)은 중복 계정 방지를 위해 사이트 삭제·해지 → 기존 계정에서 rowflip.com 사이트 검토 요청, 승인 대기
   - 브랜드커넥트 상품 5개 연결 완료(의자 2, A4용지, 데스크매트, 책상) — 상품 추가·교체는 brandConnect.ts
   - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅
   - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click·result_copy·result_print(페이지 경로만)만

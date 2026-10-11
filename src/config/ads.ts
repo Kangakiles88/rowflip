@@ -5,7 +5,7 @@
  * - 직접 배치하는 광고 칸(top·bottom)은 NEXT_PUBLIC_ADSENSE_ENABLED=true + 슬롯 ID가 있어야 나온다(승인 후).
  * NEXT_PUBLIC_ 값은 빌드 시점에 코드에 박히므로, 값을 바꾸면 다시 빌드해야 한다.
  */
-const DEFAULT_CLIENT_ID = "ca-pub-9884982808493036";
+const DEFAULT_CLIENT_ID = "ca-pub-1418493009023603";
 const envClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
 const clientId = envClient === "off" ? "" : envClient || DEFAULT_CLIENT_ID;
 
