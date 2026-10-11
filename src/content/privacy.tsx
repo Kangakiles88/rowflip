@@ -20,7 +20,7 @@ export const BROWSER_STORAGE = [
   {
     key: "rowflip:settings:v1",
     where: "로컬 저장소",
-    what: "가로세로 변환기의 옵션(원본 나누기 기준, 구분자, 결과 형식, 정렬, 중복 제거 등)",
+    what: "가로세로 변환기의 옵션(구분자, 결과 형식, 정렬, 중복 제거 등)",
   },
   {
     key: "rowflip:transpose:v1",

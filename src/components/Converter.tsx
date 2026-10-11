@@ -6,7 +6,7 @@ import { copyText } from "@/utils/clipboard";
 import { DEFAULT_OPTIONS, PRESETS, SAMPLE_INPUT } from "@/utils/presets";
 import { loadSettings, saveSettings } from "@/utils/storage";
 import { extractCells, parseTable } from "@/utils/parser";
-import { splitForSingleCell } from "@/utils/split";
+import { splitForSingleCell, type InputSplit } from "@/utils/split";
 import { transform } from "@/utils/transformer";
 import { CleanupOptions } from "./CleanupOptions";
 import { InputPanel } from "./InputPanel";
@@ -45,9 +45,18 @@ export function Converter() {
     if (loaded.current) saveSettings(options);
   }, [options]);
 
+  /**
+   * 자동으로 켠 원본 나누기(세로로·가로로 자동 나눔, '…로 나누기' 안내 버튼)는 그 입력에만 적용한다.
+   * 다른 내용을 붙여넣으면 풀리고, 저장도 하지 않는다 — 예전 입력의 나누기가 새 데이터를 잘못 쪼개지 않게.
+   */
+  const [autoSplit, setAutoSplit] = useState<{ sig: string; split: InputSplit } | null>(null);
+  const inputSplit: InputSplit =
+    options.inputSplit === "cells" && autoSplit && autoSplit.sig === input ? autoSplit.split : options.inputSplit;
+  const effective = useMemo(() => ({ ...options, inputSplit }), [options, inputSplit]);
+
   // 큰 데이터를 붙여넣어도 입력이 끊기지 않도록 변환은 한 박자 늦게 따라온다.
   const deferredInput = useDeferredValue(input);
-  const result = useMemo(() => transform(deferredInput, options), [deferredInput, options]);
+  const result = useMemo(() => transform(deferredInput, effective), [deferredInput, effective]);
   const pending = deferredInput !== input;
 
   const update = useCallback((patch: Partial<TransformOptions>) => {
@@ -60,9 +69,10 @@ export function Converter() {
     if (!preset) return;
     // 값이 한 칸뿐인데 '세로로'·'가로로'를 누르면 돌릴 것이 없으니, 그 칸을 쉼표·띄어쓰기로 나눈다
     const turn = id === "vertical" || id === "horizontal";
-    const autoSplit =
+    const guess =
       turn && options.inputSplit === "cells" ? splitForSingleCell(extractCells(parseTable(input), "all")) : null;
-    setOptions((o) => ({ ...preset.apply(o), ...(autoSplit ? { inputSplit: autoSplit } : {}) }));
+    if (guess) setAutoSplit({ sig: input, split: guess });
+    setOptions((o) => preset.apply(o));
     setActivePreset(id);
     if (id === "url") requestAnimationFrame(() => prefixRef.current?.select());
   };
@@ -117,18 +127,22 @@ export function Converter() {
           colCount={result.stats.colCount}
           column={options.column}
           onColumnChange={(column) => update({ column })}
-          split={options.inputSplit}
-          onSplitChange={(inputSplit) =>
+          split={inputSplit}
+          onSplitChange={(s) => {
+            setAutoSplit(null);
+            update({ inputSplit: s });
+          }}
+          onSplitSuggest={(s) => {
+            setAutoSplit({ sig: input, split: s });
             // 쉼표로 나눈 뒤 다시 쉼표로 이으면 결과가 그대로라 세로 목록으로 바꿔 준다
-            update(
-              inputSplit === "comma" &&
-                options.format === "list" &&
-                (options.separator === "comma" || options.separator === "comma-space")
-                ? { inputSplit, separator: "newline" }
-                : { inputSplit },
+            if (
+              s === "comma" &&
+              options.format === "list" &&
+              (options.separator === "comma" || options.separator === "comma-space")
             )
-          }
-          splitSuggestion={result.suggestedSplit}
+              update({ separator: "newline" });
+          }}
+          splitSuggestion={inputSplit === "cells" ? result.suggestedSplit : null}
         />
       </div>
 

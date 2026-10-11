@@ -22,6 +22,8 @@ interface Props {
   /** 주면 상태 표시줄에 '나누기' 선택이 나온다 */
   split?: InputSplit;
   onSplitChange?: (s: InputSplit) => void;
+  /** 안내 버튼('쉼표로 나누기')을 눌렀을 때 — 없으면 onSplitChange */
+  onSplitSuggest?: (s: InputSplit) => void;
   /** 쉼표 목록처럼 보일 때 바로 바꿀 수 있게 안내 */
   splitSuggestion?: InputSplit | null;
 }
@@ -49,6 +51,7 @@ export function InputPanel({
   title = "원본 데이터",
   split,
   onSplitChange,
+  onSplitSuggest,
   splitSuggestion,
 }: Props) {
   const gutterRef = useRef<HTMLPreElement>(null);
@@ -103,7 +106,7 @@ export function InputPanel({
         {split && onSplitChange && (
           <span className={styles.statusControls}>
             {splitSuggestion && (
-              <button type="button" className={styles.statusAction} onClick={() => onSplitChange(splitSuggestion)}>
+              <button type="button" className={styles.statusAction} onClick={() => (onSplitSuggest ?? onSplitChange)(splitSuggestion)}>
                 {INPUT_SPLITS.find((s) => s.value === splitSuggestion)?.short}로 나누기
               </button>
             )}

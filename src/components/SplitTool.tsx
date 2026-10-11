@@ -17,12 +17,14 @@ import styles from "./tool.module.css";
 
 const STORAGE_KEY = "rowflip:split:v1";
 /** 브라우저에 기억하는 설정 — 직접 입력한 구분자는 저장하지 않는다 */
-const STORED = ["inputSplit", "separator", "trim", "removeEmpty", "dedupe", "unwrap"] as const;
+/** 괄호·따옴표 벗기기는 저장하지 않고 늘 켠 채로 시작한다 — 괄호·따옴표가 없는 목록에는 영향이 없다 */
+const STORED = ["inputSplit", "separator", "trim", "removeEmpty", "dedupe"] as const;
 
 export const SPLIT_DEFAULTS: TransformOptions = {
   ...DEFAULT_OPTIONS,
   inputSplit: "comma",
   separator: "newline",
+  unwrap: true,
 };
 
 const SPLIT_SAMPLE = "A-10234, A-10235, A-10236, B-20001, A-10235";
