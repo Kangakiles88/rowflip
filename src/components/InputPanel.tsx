@@ -16,6 +16,9 @@ interface Props {
   column?: ColumnSelect;
   onColumnChange?: (c: ColumnSelect) => void;
   placeholder?: string;
+  /** 한 페이지에 입력창이 둘 이상일 때 구분용 */
+  inputId?: string;
+  title?: string;
   /** 주면 상태 표시줄에 '나누기' 선택이 나온다 */
   split?: InputSplit;
   onSplitChange?: (s: InputSplit) => void;
@@ -42,6 +45,8 @@ export function InputPanel({
   column = "all",
   onColumnChange,
   placeholder = PLACEHOLDER,
+  inputId = "source",
+  title = "원본 데이터",
   split,
   onSplitChange,
   splitSuggestion,
@@ -53,10 +58,10 @@ export function InputPanel({
   const multiColumn = colCount > 1;
 
   return (
-    <section className={`${styles.pane} ${styles.inputPane}`} aria-labelledby="input-label">
+    <section className={`${styles.pane} ${styles.inputPane}`} aria-labelledby={`${inputId}-label`}>
       <div className={styles.paneHead}>
-        <label id="input-label" htmlFor="source" className={styles.paneTitle}>
-          원본 데이터
+        <label id={`${inputId}-label`} htmlFor={inputId} className={styles.paneTitle}>
+          {title}
         </label>
         <div className={styles.paneActions}>
           <button type="button" className={styles.ghost} onClick={onSample}>
@@ -73,7 +78,7 @@ export function InputPanel({
           {gutter}
         </pre>
         <textarea
-          id="source"
+          id={inputId}
           className={styles.code}
           value={value}
           onChange={(e) => onChange(e.target.value)}

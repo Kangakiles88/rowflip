@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Converter } from "@/components/Converter";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
+import { PageIntro } from "@/components/PageIntro";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ToolDirectory } from "@/components/ToolDirectory";
 import { PromotionArea } from "@/components/ads/PromotionArea";
@@ -31,13 +32,10 @@ export default function Home() {
       <main className="container page">
         <PromotionArea position="header" />
 
-        <div className="intro">
-          <h1>{siteConfig.h1}</h1>
-          <p className="lede">
+        <PageIntro title={siteConfig.h1}>
             엑셀이나 구글 시트에서 복사한 데이터를 붙여넣으면 세로를 가로로, 가로를 세로로 바로 바꿔 줍니다. 줄바꿈을 쉼표로
             잇기, 중복 제거, SQL IN, JSON 배열 변환도 함께 됩니다.
-          </p>
-        </div>
+          </PageIntro>
 
         <PromotionArea position="top" />
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Fragment } from "react";
 import { ActiveTabScroll } from "./ActiveTabScroll";
 import { TOOL_PAGES, type ToolPageId } from "@/config/nav";
 import { siteConfig } from "@/config/site";
@@ -29,23 +30,23 @@ export function Header({ current }: { current?: ToolPageId }) {
             {siteConfig.name}
           </Link>
           <nav id="tool-nav" className={styles.nav} aria-label="기능">
-            {TOOL_PAGES.map((p) => (
-              <Link
-                key={p.id}
-                href={p.href}
-                className={styles.navLink}
-                aria-current={p.id === current ? "page" : undefined}
-              >
-                {p.label}
-              </Link>
+            {TOOL_PAGES.map((p, i) => (
+              <Fragment key={p.id}>
+                {i > 0 && TOOL_PAGES[i - 1].group !== p.group && (
+                  <span className={styles.navDivider} aria-hidden="true" />
+                )}
+                <Link
+                  href={p.href}
+                  className={styles.navLink}
+                  aria-current={p.id === current ? "page" : undefined}
+                >
+                  {p.label}
+                </Link>
+              </Fragment>
             ))}
           </nav>
           <ActiveTabScroll navId="tool-nav" />
         </div>
-        <p className={styles.privacy}>
-          <span className={styles.privacyDot} aria-hidden="true" />
-          입력한 데이터는 서버로 전송되지 않습니다
-        </p>
       </div>
     </header>
   );

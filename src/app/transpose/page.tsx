@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
+import { PageIntro } from "@/components/PageIntro";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ToolDirectory } from "@/components/ToolDirectory";
 import { TransposeTool } from "@/components/TransposeTool";
@@ -45,13 +46,10 @@ export default function TransposePage() {
       <main className="container page">
         <PromotionArea position="header" />
 
-        <div className="intro">
-          <h1>{M.h1}</h1>
-          <p className="lede">
+        <PageIntro title={M.h1}>
             엑셀이나 구글 시트에서 표를 복사해 붙여넣으면 행과 열을 바꾼 표를 바로 보여 줍니다. 결과를 복사해 엑셀에 그대로
             붙여넣거나 CSV, 마크다운 표로 받을 수 있습니다.
-          </p>
-        </div>
+          </PageIntro>
 
         <PromotionArea position="top" />
 

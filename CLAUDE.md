@@ -9,10 +9,17 @@
 - 목표: 구글·네이버 검색 유입 → AdSense·네이버 브랜드커넥트 광고 수익.
 - 원칙: 붙여넣기 → 옵션 선택 → 결과 확인 → 복사. 회원가입·업로드·서버 저장 없음. 모든 처리는 브라우저 안에서.
 - 현재 페이지
+  - 엑셀·목록 도구(묶음 `list`)
   - `/` 엑셀 가로세로 변환기: 한 열·한 행 목록을 가로↔세로(입력창 상태줄의 '나누기'로 쉼표·띄어쓰기 목록도 나눔, 쉼표·코드 목록이면 '…로 나누기' 안내, 값이 한 칸뿐인데 '세로로'·'가로로'를 누르면 쉼표>세미콜론>띄어쓰기로 자동 나눔), 쉼표 연결, 중복 제거, 정렬, 접두사/접미사, 따옴표, 번호, SQL IN, JSON·JS·Python 배열, HTML 목록으로
   - `/transpose/` 엑셀 행열 바꾸기: 표 전체의 행과 열 전환 → 엑셀 붙여넣기(탭 구분) / CSV / 마크다운 표
   - `/dedupe/` 엑셀 중복 제거: 목록·표의 중복 제거 / 중복된 값만 / 개수 세기, 행 전체 또는 특정 열 기준, 처음·마지막 행 남기기
   - `/split/` 쉼표를 줄바꿈으로 변환: 쉼표·세미콜론·띄어쓰기·슬래시·파이프·직접 입력 구분자로 나눠 세로(줄바꿈)/가로(엑셀 한 행), 괄호·따옴표 벗기기(SQL IN·JSON 배열 → 목록)
+  - 텍스트 도구(묶음 `text`)
+    - `/count/` 글자수 세기: 공백 포함·제외, 바이트(한글 2·UTF-8), 단어·줄·문단, 목표 글자수(남음/초과), 줄바꿈 세기 옵션
+    - `/linebreak/` 줄바꿈 제거: 띄어쓰기로·문단 유지·붙이기·빈 줄만 삭제, 연속 공백·줄 앞뒤 공백·영문 하이픈 잇기
+    - `/diff/` 텍스트 비교: 원본·수정본 두 칸 → 줄 단위 Myers diff + 바뀐 줄 안 낱말 강조, 전체/바뀐 부분만, 공백·대소문자 무시, +/- 텍스트 복사
+    - `/hanyang/` 한영 타자 변환: 두벌식 영타→한글 조합, 한글→영타, 자동 방향
+    - `/case/` 대소문자 변환: 대문자·소문자·문장·단어 첫 글자·반전, camel·Pascal·snake·UPPER_SNAKE·kebab(줄마다)
   - `/privacy/` 개인정보처리방침(문구는 `src/content/privacy.tsx`, 문의 메일 `contact@rowflip.com` = `site.ts`의 contactEmail, Cloudflare 이메일 라우팅으로 운영자 Gmail에 전달 — 개인 메일 주소는 저장소에 넣지 않음). 안내 페이지는 `nav.ts`의 `INFO_PAGES` → 푸터·sitemap에만 들어감
 
 ## 기술 스택
@@ -36,14 +43,16 @@
 src/
 ├─ app/            layout(공통 메타), page(/), transpose/page, sitemap, robots, manifest, icon
 ├─ components/     share/(ShareDialog, ConvertGateButton, useConvertGate), Header, SiteFooter, ToolDirectory(다른 도구 목록), JsonLd,
-│  │               Converter, TransposeTool, DedupeTool, SplitTool, SheetPreview, ActiveTabScroll(엑셀식 표 미리보기), InputPanel, OutputPanel,
+│  │               ToolPageLayout(새 기능 페이지 공통 틀 + toolMetadata), PageIntro(H1·개인정보 안내·설명), useToolBasics(옵션 저장·복사·공유 안내·단축키),
+│  │               ResultPane(결과 창), Converter, TransposeTool, DedupeTool, SplitTool, CountTool, LinebreakTool, DiffTool, HanyangTool, CaseTool,
+│  │               SheetPreview(엑셀식 표 미리보기), ActiveTabScroll, InputPanel(inputId·title로 여러 개 가능), OutputPanel,
 │  │               PresetButtons, CleanupOptions, OutputOptions, Segmented, Toast, tool.module.css
 │  └─ ads/         AdSlot, AdSenseScript, BrandConnectBanner, PromotionArea
 ├─ config/         site.ts(브랜드·도메인·SEO), analytics.ts(GA4), nav.ts(페이지 목록), share.ts(첫 변환 공유 안내), ads.ts, brandConnect.ts
-├─ content/        seo.tsx(/ 안내·FAQ), transpose.tsx, dedupe.tsx, split.tsx(각 페이지 메타·안내·FAQ), privacy.tsx
-├─ utils/          parser, split(원본 나누기), rotation(광고 순번), transformer, transpose, dedupe(순수 함수 + 테스트), presets, storage, clipboard, tracking
+├─ content/        seo.tsx(/ 안내·FAQ), transpose, dedupe, split, count, linebreak, diff, hanyang, case(각 페이지 메타·안내·FAQ), privacy
+├─ utils/          parser, split(원본 나누기), rotation(광고 순번), transformer, transpose, dedupe, count, linebreak, diff, hanyang, caseConvert(순수 함수 + 테스트), presets, storage, clipboard, tracking
 └─ types/
-public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×630 공유 이미지), ads/(배너 이미지)
+public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미지), ads/(배너 이미지)
 ```
 
 ## 코드 작성 원칙
@@ -56,13 +65,14 @@ public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×6
 ## 디자인 규칙 (AI가 만든 티가 나지 않게)
 - 마케팅 랜딩 페이지가 아니라 데스크톱 유틸리티처럼. 히어로 섹션 없음. H1은 왼쪽 정렬 약 20px, 바로 아래 도구.
 - 첫 화면(1366×768)에서 입력창과 결과창이 모두 보여야 함.
-- 색은 `globals.css`의 토큰만 사용(`--bg --panel --gutter --hover --line --line-strong --ink --ink-2 --ink-3 --accent(#1e6b47) --accent-soft`). 하드코딩 색 금지. 토큰을 바꾸면 다크 모드 블록(`prefers-color-scheme`, `[data-theme="dark"]`)도 같이 갱신.
+- 색은 `globals.css`의 토큰만 사용(`--bg --panel --gutter --hover --line --line-strong --ink --ink-2 --ink-3 --accent(#1e6b47) --accent-ink --accent-soft --del --del-soft`(삭제·초과 표시)). 하드코딩 색 금지. 토큰을 바꾸면 다크 모드 블록(`prefers-color-scheme`, `[data-theme="dark"]`)도 같이 갱신.
 - 금지: 보라·인디고, 그라데이션, 그림자, 이모지, 아이콘 3열 카드, 가운데 정렬 대형 문구, 알약 배지.
 - border 1px, radius 4~6px. 섹션은 카드로 감싸지 말고 구분선으로 나눔.
 - 폰트: UI는 Pretendard 14px 내외, 데이터 영역은 monospace + 줄 번호. 숫자는 `tabular-nums`.
 - 옵션은 툴바형 컴팩트 컨트롤(세그먼트 버튼, select, 체크박스). 패널 하단에 상태 표시줄(행 수, 글자 수, 제거된 개수 등).
 - 주요 동작에 단축키(Ctrl/⌘+Enter = 복사)와 kbd 힌트. 터치 기기에서는 kbd 숨김.
-- 헤더 기능 메뉴는 탭(현재 페이지 = accent 글자 + 아래 2px 막대). 860px 이하에서는 탭이 로고 아래 한 줄로 내려가고, 넘치면 가로 스크롤(`ActiveTabScroll`이 현재 탭을 화면 안으로). 탭 이름은 짧게(390px에서 4개가 한 줄에 들어가는 길이).
+- 헤더 기능 메뉴는 탭(현재 페이지 = accent 글자 + 아래 2px 막대), 묶음(`TOOL_GROUPS`: 엑셀·목록 / 텍스트) 사이 세로 구분선. 860px 이하에서는 탭이 로고 아래 한 줄로 내려가고, 넘치면 가로 스크롤(`ActiveTabScroll`이 현재 탭을 화면 안으로). 탭 이름은 6자 안팎으로 짧게. '입력한 데이터는 서버로 전송되지 않습니다'는 헤더가 아니라 `PageIntro`(H1 오른쪽).
+- 도구 아래 '다른 도구'(`ToolDirectory`)는 묶음별 제목 + 구분선 목록.
 - 표 결과는 `SheetPreview`(열 이름 A·B·C + 행 번호)로 보여 주고 '표 / 텍스트' 전환.
 - 반응형: 860px 이하 1단. 모바일(390px)에서 가로 스크롤 없어야 함.
 
@@ -105,10 +115,11 @@ public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×6
 
 ## 새 기능 페이지 추가 절차
 1. `src/utils/<기능>.ts` 순수 함수 + `<기능>.test.ts`
-2. `src/components/<기능>Tool.tsx` (기존 컴포넌트·스타일 재사용)
+2. `src/components/<기능>Tool.tsx` — `useToolBasics`(옵션 저장 키 `rowflip:<기능>:v1`) + `InputPanel` + `ResultPane` + `ConvertGateButton`/`ShareDialog`
 3. `src/content/<기능>.tsx`에 META(path, h1, title, description, keywords, features), GUIDES, FAQ
-4. `src/app/<주소>/page.tsx`: metadata + `<JsonLd>` + `<Header current=…>` + `PromotionArea` + `<SiteFooter>`
-5. `src/config/nav.ts`의 `TOOL_PAGES`에 항목 추가(label·title·desc) → 헤더 탭·푸터·sitemap·도구 아래 '다른 도구' 목록 자동 반영. 페이지에는 도구 바로 아래 `<ToolDirectory current=…>`
+4. `src/app/<주소>/page.tsx`: `export const metadata = toolMetadata(META, "/og-<기능>.png", 설명)` + `<ToolPageLayout id meta lede tool guideTitle guides faq related>` (광고 띠·H1·도구·다른 도구·안내·FAQ·JSON-LD를 알아서 배치)
+5. `src/config/nav.ts`의 `TOOL_PAGES`에 항목 추가(group·label·title·desc) → 헤더 탭·푸터·sitemap·'다른 도구' 목록 자동 반영
+5-1. 새 저장 키는 `src/content/privacy.tsx`의 표에도 추가
 6. `public/og-<기능>.png` 공유 이미지
 7. 관련 페이지 본문에서 새 페이지로 내부 링크 추가
 8. `npm run check` 통과, 1366·820·390px 폭에서 확인
@@ -120,14 +131,14 @@ public/            og.png, og-transpose.png, og-dedupe.png, og-split.png(1200×6
 - 카카오톡 공유: JavaScript 키는 `share.ts`에 들어가 있음. 카카오 디벨로퍼스 앱의 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 `https://rowflip.com`이 등록돼 있어야 동작
 
 ## 현재 상태와 남은 일
-- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 4개(가로세로·행열·중복 제거·쉼표→줄바꿈), 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 76개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
+- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 9개(엑셀·목록 4: 가로세로·행열·중복 제거·쉼표→줄바꿈 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 104개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - Cloudflare AI 로봇 설정 확인(robots.txt에 검색 로봇이 막히지 않았는지)
   - AdSense 신청
   - 브랜드커넥트 상품 5개 연결 완료(의자 2, A4용지, 데스크매트, 책상) — 상품 추가·교체는 brandConnect.ts
   - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅
   - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click만
-  - 기능 페이지 후보: 엑셀 빈 줄 제거, 줄바꿈 제거, 엑셀 열 합치기·나누기
+  - 기능 페이지 후보: 숫자 한글 변환(금액), 부가세 계산기, 랜덤 뽑기·팀 나누기, 이메일·전화번호 추출, 전화번호 하이픈, 마크다운 표 만들기, 엑셀 열 합치기·나누기
 
 ## 답변 방식
 - 한국어로 답변. 코드를 바꾸면 바꾼 파일과 이유를 짧게 정리.

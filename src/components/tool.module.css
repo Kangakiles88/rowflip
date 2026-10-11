@@ -7,8 +7,8 @@
 .headerInner {
   min-height: 56px;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-areas: "brand nav privacy";
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: "brand nav";
   align-items: stretch;
   column-gap: 28px;
 }
@@ -26,6 +26,14 @@
 }
 .nav::-webkit-scrollbar {
   display: none;
+}
+.navDivider {
+  flex: none;
+  align-self: center;
+  width: 1px;
+  height: 18px;
+  margin: 0 8px;
+  background: var(--line-strong);
 }
 .navLink {
   display: flex;
@@ -65,8 +73,6 @@
   color: var(--accent);
 }
 .privacy {
-  grid-area: privacy;
-  align-self: center;
   margin: 0;
   display: flex;
   align-items: center;
@@ -112,6 +118,210 @@
 .options.optionsSplit {
   grid-template-columns: minmax(320px, 1.5fr) minmax(240px, 1fr) minmax(170px, 0.8fr);
 }
+.options.optionsTwo {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.options.optionsThree {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* ── 텍스트 비교 ─────────────────────────────
+   [원본 | 수정본] 위, 비교 결과 아래(전체 폭), 옵션 맨 아래 */
+.diffTool {
+  display: grid;
+  gap: 10px;
+}
+/* 첫 변환 버튼은 다른 페이지에서 grid-area: gate를 쓰는데, 여기서는 그냥 한 줄로 */
+.diffTool .areaGate {
+  grid-area: auto;
+}
+.diffTool .gateArrow::before {
+  transform: rotate(90deg);
+}
+.diffInputs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.diffInputs .editor {
+  height: clamp(150px, 26vh, 260px);
+}
+.diffResult .editor {
+  height: auto;
+  min-height: 160px;
+  max-height: 70vh;
+  overflow: auto;
+}
+.diffView {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 0;
+  font: 12.5px/1.6 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.diffRow {
+  display: grid;
+  grid-template-columns: 40px 40px 20px minmax(0, 1fr);
+}
+.diffRow[data-type="del"] {
+  background: var(--del-soft);
+}
+.diffRow[data-type="ins"] {
+  background: var(--accent-soft);
+}
+.diffNo {
+  padding-right: 8px;
+  text-align: right;
+  color: var(--ink-3);
+  user-select: none;
+}
+.diffSign {
+  text-align: center;
+  font-weight: 700;
+  user-select: none;
+}
+.diffRow[data-type="del"] .diffSign {
+  color: var(--del);
+}
+.diffRow[data-type="ins"] .diffSign {
+  color: var(--accent);
+}
+.diffText {
+  padding-right: 12px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.diffMark {
+  text-decoration: none;
+  border-radius: 2px;
+}
+del.diffMark {
+  background: color-mix(in srgb, var(--del) 28%, transparent);
+}
+ins.diffMark {
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+}
+.diffGap {
+  padding: 3px 0 3px 100px;
+  color: var(--ink-3);
+  font-size: 11.5px;
+  background: var(--gutter);
+  border-block: 1px solid var(--line);
+}
+.diffLegend {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+.diffLegend span[data-type] {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+}
+.diffLegend span[data-type="del"] {
+  background: var(--del-soft);
+  color: var(--del);
+}
+.diffLegend span[data-type="ins"] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ── 글자수 세기 결과 ───────────────────────── */
+.stats {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  padding: 14px 16px;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+.statMain {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.statBig {
+  display: grid;
+  gap: 2px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.statBig span {
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+.statBig strong {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.statBig small {
+  margin-left: 3px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.statList {
+  margin: 0;
+  display: grid;
+}
+.statList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 2px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+}
+.statList dt {
+  color: var(--ink-2);
+}
+.statList dd {
+  margin: 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.limit {
+  display: grid;
+  gap: 6px;
+}
+.limitText {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.limitText strong {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.limit[data-over] .limitText strong {
+  color: var(--del);
+}
+.limitBar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--hover);
+  overflow: hidden;
+}
+.limitBar span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+.limit[data-over] .limitBar span {
+  background: var(--del);
+}
+
 .options.optionsDedupe3 {
   grid-template-columns: minmax(300px, 1.6fr) minmax(220px, 1.2fr) minmax(150px, 0.8fr);
 }
@@ -319,7 +529,7 @@
   height: 20px;
   padding: 0 7px;
   font: inherit;
-  color: var(--panel);
+  color: var(--accent-ink);
   background: var(--accent);
   border: 0;
   border-radius: 3px;
@@ -615,26 +825,32 @@
   }
   .options.optionsDedupe,
   .options.optionsDedupe3,
-  .options.optionsSplit {
+  .options.optionsSplit,
+  .options.optionsThree {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 860px) {
+  .diffInputs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .diffRow {
+    grid-template-columns: 30px 30px 16px minmax(0, 1fr);
+  }
+  .diffGap {
+    padding-left: 76px;
+  }
   .headerInner {
     min-height: 0;
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      "brand privacy"
-      "nav nav";
-    column-gap: 12px;
+      "brand"
+      "nav";
   }
   .wordmark {
+    justify-self: start;
     padding-block: 10px;
-  }
-  .privacy {
-    justify-self: end;
-    text-align: right;
   }
   .nav {
     border-top: 1px solid var(--line);
@@ -729,7 +945,9 @@
   .options,
   .options.optionsDedupe,
   .options.optionsDedupe3,
-  .options.optionsSplit {
+  .options.optionsSplit,
+  .options.optionsTwo,
+  .options.optionsThree {
     grid-template-columns: minmax(0, 1fr);
   }
   .paneActions .ghost:first-child {

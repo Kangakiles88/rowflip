@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
+import { PageIntro } from "@/components/PageIntro";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ToolDirectory } from "@/components/ToolDirectory";
 import { DedupeTool } from "@/components/DedupeTool";
@@ -45,13 +46,10 @@ export default function DedupePage() {
       <main className="container page">
         <PromotionArea position="header" />
 
-        <div className="intro">
-          <h1>{M.h1}</h1>
-          <p className="lede">
+        <PageIntro title={M.h1}>
             엑셀이나 구글 시트에서 목록이나 표를 복사해 붙여넣으면 중복값을 지운 결과를 바로 보여 줍니다. 중복된 값만 골라
             보거나 값마다 몇 번 나왔는지 셀 수도 있습니다.
-          </p>
-        </div>
+          </PageIntro>
 
         <PromotionArea position="top" />
 

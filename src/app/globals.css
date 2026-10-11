@@ -12,6 +12,9 @@
   --accent-hover: #185a3b;
   --accent-ink: #ffffff;
   --accent-soft: #dcebe2;
+  /* 텍스트 비교의 삭제 표시 · 목표 글자수 초과 */
+  --del: #b42318;
+  --del-soft: #fbe4e1;
   --radius: 6px;
 
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
@@ -37,6 +40,8 @@
     --accent-hover: #4aab7a;
     --accent-ink: #0f1a14;
     --accent-soft: #1e3328;
+    --del: #f0857a;
+    --del-soft: #3a1f1c;
     color-scheme: dark;
   }
 }
@@ -55,6 +60,8 @@
   --accent-hover: #4aab7a;
   --accent-ink: #0f1a14;
   --accent-soft: #1e3328;
+  --del: #f0857a;
+  --del-soft: #3a1f1c;
   color-scheme: dark;
 }
 
@@ -118,6 +125,14 @@ a {
 .intro {
   display: grid;
   gap: 4px;
+}
+
+.introHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 16px;
 }
 
 .intro h1 {
@@ -331,26 +346,36 @@ a {
   text-underline-offset: 2px;
 }
 
-/* 도구 아래 '다른 도구' 목록 */
+/* 도구 아래 '다른 도구' 목록 — 묶음별 제목 + 구분선으로 나눈 목록 */
+.toolDirectory {
+  display: grid;
+  gap: 14px;
+  padding: 14px 16px 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+}
 .toolDirectory h2 {
-  margin: 0 0 8px;
-  font-size: 13px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.toolGroup h3 {
+  margin: 0 0 4px;
+  font-size: 12px;
   font-weight: 600;
-  color: var(--ink-2);
+  color: var(--ink-3);
 }
 .toolDirectory ul {
   margin: 0;
   padding: 0;
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--panel);
-  overflow: hidden;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  column-gap: 20px;
 }
-.toolDirectory li + li {
-  border-left: 1px solid var(--line);
+.toolDirectory li {
+  border-top: 1px solid var(--line);
 }
 .toolDirectory a {
   height: 100%;
@@ -360,8 +385,8 @@ a {
     "name arrow"
     "desc arrow";
   align-items: center;
-  gap: 2px 12px;
-  padding: 11px 14px;
+  gap: 1px 10px;
+  padding: 9px 4px 10px;
   text-decoration: none;
 }
 .toolDirectory a:hover {
@@ -385,12 +410,6 @@ a {
 }
 .toolDirectory a:hover .toolDirectoryArrow {
   color: var(--accent);
-}
-@media (max-width: 720px) {
-  .toolDirectory li + li {
-    border-left: 0;
-    border-top: 1px solid var(--line);
-  }
 }
 
 /* 개인정보처리방침 등 안내 문서 */

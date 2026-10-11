@@ -38,6 +38,31 @@ export const BROWSER_STORAGE = [
     what: "쉼표를 줄바꿈으로 변환의 옵션(나눌 기준, 결과 모양, 정리 옵션)",
   },
   {
+    key: "rowflip:count:v1",
+    where: "로컬 저장소",
+    what: "글자수 세기의 옵션(줄바꿈 세기, 목표 글자수와 기준)",
+  },
+  {
+    key: "rowflip:linebreak:v1",
+    where: "로컬 저장소",
+    what: "줄바꿈 제거의 옵션(줄바꿈 처리 방식, 공백 정리)",
+  },
+  {
+    key: "rowflip:diff:v1",
+    where: "로컬 저장소",
+    what: "텍스트 비교의 옵션(띄어쓰기·대소문자 무시, 보기 방식)",
+  },
+  {
+    key: "rowflip:hanyang:v1",
+    where: "로컬 저장소",
+    what: "한영 타자 변환의 바꿀 방향",
+  },
+  {
+    key: "rowflip:case:v1",
+    where: "로컬 저장소",
+    what: "대소문자 변환에서 마지막으로 고른 형식",
+  },
+  {
     key: "rowflip:brand-rotation:v1",
     where: "로컬 저장소",
     what: "추천 상품 띠에 마지막으로 보여 준 상품 순번(숫자). 새로고침하면 다음 상품을 보여 주는 데 씁니다.",

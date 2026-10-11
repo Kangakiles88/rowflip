@@ -103,7 +103,7 @@
   padding: 5px 12px;
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--panel);
+  color: var(--accent-ink);
   background: var(--accent);
   border-radius: 4px;
   white-space: nowrap;

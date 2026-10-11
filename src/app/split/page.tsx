@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
+import { PageIntro } from "@/components/PageIntro";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ToolDirectory } from "@/components/ToolDirectory";
 import { SplitTool } from "@/components/SplitTool";
@@ -45,13 +46,10 @@ export default function SplitPage() {
       <main className="container page">
         <PromotionArea position="header" />
 
-        <div className="intro">
-          <h1>{M.h1}</h1>
-          <p className="lede">
+        <PageIntro title={M.h1}>
             쉼표, 세미콜론, 띄어쓰기로 이어진 목록을 붙여넣으면 한 줄에 하나씩 나눠 줍니다. 결과를 복사해 엑셀에 붙여넣으면
             한 칸에 하나씩 들어갑니다.
-          </p>
-        </div>
+          </PageIntro>
 
         <PromotionArea position="top" />
 
