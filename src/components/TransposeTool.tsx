@@ -5,6 +5,8 @@ import { copyText } from "@/utils/clipboard";
 import {
   DEFAULT_TRANSPOSE_OPTIONS,
   TRANSPOSE_SAMPLE,
+  hasMultilineCell,
+  toHtmlTable,
   transposeText,
   type TableFormat,
   type TransposeOptions,
@@ -94,11 +96,14 @@ export function TransposeTool() {
       return;
     }
     if (!result.output) return;
-    const ok = await copyText(result.output);
+    // 셀 안 줄바꿈이 있으면 엑셀용 표 형식도 함께 (윈도우에서 ♪ 문자가 붙는 것 방지)
+    const html =
+      options.format === "excel" && hasMultilineCell(result.rows) ? toHtmlTable(result.rows) : undefined;
+    const ok = await copyText(result.output, html);
     clearTimeout(toastTimer.current);
     setToast(ok ? "복사되었습니다." : "복사하지 못했습니다. 텍스트 보기에서 직접 선택해 주세요.");
     toastTimer.current = setTimeout(() => setToast(null), 1500);
-  }, [gate.locked, startConvert, result.output]);
+  }, [gate.locked, startConvert, result.output, result.rows, options.format]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {

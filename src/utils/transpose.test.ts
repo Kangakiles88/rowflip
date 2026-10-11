@@ -9,6 +9,18 @@ import {
   transposeText,
 } from "./transpose";
 
+describe("toHtmlTable — 셀 안 줄바꿈이 든 표", () => {
+  it("줄바꿈은 같은 칸 <br>, 특수문자는 이스케이프", async () => {
+    const { toHtmlTable, hasMultilineCell } = await import("./transpose");
+    const rows = [["구분", "비고"], ["1월", "신규 고객\n증가 <A&B>"]];
+    expect(hasMultilineCell(rows)).toBe(true);
+    expect(hasMultilineCell([["a", "b"]])).toBe(false);
+    expect(toHtmlTable(rows)).toBe(
+      '<meta charset="utf-8"><table><tr><td>구분</td><td>비고</td></tr><tr><td>1월</td><td>신규 고객<br style="mso-data-placement:same-cell">증가 &lt;A&amp;B&gt;</td></tr></table>',
+    );
+  });
+});
+
 describe("행열 바꾸기", () => {
   it("3행×2열 → 2행×3열", () => {
     const r = transposeText("a\t1\nb\t2\nc\t3\n", D);

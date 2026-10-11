@@ -19,6 +19,7 @@ import {
   type DedupeOptions,
 } from "@/utils/dedupe";
 import { parseTable } from "@/utils/parser";
+import { hasMultilineCell, toHtmlTable } from "@/utils/transpose";
 import { InputPanel } from "./InputPanel";
 import { Segmented } from "./Segmented";
 import { SheetPreview } from "./SheetPreview";
@@ -159,7 +160,8 @@ export function DedupeTool() {
       return;
     }
     if (!result.output) return;
-    const ok = await copyText(result.output);
+    const html = hasMultilineCell(result.rows) ? toHtmlTable(result.rows) : undefined;
+    const ok = await copyText(result.output, html);
     clearTimeout(toastTimer.current);
     setToast(
       ok
@@ -167,7 +169,7 @@ export function DedupeTool() {
         : "복사하지 못했습니다. 결과를 직접 선택해 복사해 주세요.",
     );
     toastTimer.current = setTimeout(() => setToast(null), 1500);
-  }, [gate.locked, startConvert, result.output]);
+  }, [gate.locked, startConvert, result.output, result.rows]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -315,6 +317,11 @@ export function DedupeTool() {
             onChange={(mode) => update({ mode })}
           />
           <p className={styles.hint}>{MODE_HINT[options.mode]}</p>
+          {options.mode !== "unique" && colCount > 1 && key === "row" && (
+            <p className={styles.hintStrong}>
+              지금은 행 전체가 같은 것끼리 봅니다. 고객명처럼 한 열 값으로 세려면 오른쪽 ‘비교 기준’에서 열을 고르세요.
+            </p>
+          )}
         </fieldset>
 
         <fieldset className={styles.group}>

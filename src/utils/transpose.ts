@@ -64,6 +64,23 @@ export function toMarkdown(rows: string[][]): string {
   return [line(head), `| ${head.map(() => "---").join(" | ")} |`, ...body.map(line)].join("\n");
 }
 
+const escapeHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+/**
+ * 엑셀 붙여넣기용 표 형식(HTML). 셀 안 줄바꿈은 엑셀이 같은 칸 안 줄바꿈으로 읽는 <br>로 넣는다.
+ * 줄바꿈이 든 셀이 있을 때만 쓴다(clipboard.ts 참고).
+ */
+export function toHtmlTable(rows: string[][]): string {
+  const cell = (s: string) =>
+    escapeHtml(s)
+      .split("\n")
+      .join('<br style="mso-data-placement:same-cell">');
+  const body = rows.map((r) => `<tr>${r.map((c) => `<td>${cell(c)}</td>`).join("")}</tr>`).join("");
+  return `<meta charset="utf-8"><table>${body}</table>`;
+}
+
+export const hasMultilineCell = (rows: string[][]) => rows.some((r) => r.some((c) => c.includes("\n")));
+
 export function formatTable(rows: string[][], format: TableFormat): string {
   if (format === "csv") return toCsv(rows);
   if (format === "markdown") return toMarkdown(rows);
