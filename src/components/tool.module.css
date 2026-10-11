@@ -525,6 +525,10 @@ ins.diffMark {
   align-items: center;
   gap: 8px;
   color: var(--accent);
+  font-weight: 700;
+}
+.statusNotice .statusSelect {
+  border-color: var(--accent);
 }
 .statusControls {
   display: inline-flex;
@@ -604,6 +608,19 @@ ins.diffMark {
 }
 .gridHead tbody tr:first-child td {
   font-weight: 600;
+  background: var(--accent-soft);
+}
+/* 비교 기준 열 — 무엇으로 셌는지 결과 표에서 바로 보이게 */
+.grid thead th.gridKeyCol {
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+.grid td.gridKeyCol {
+  background: color-mix(in srgb, var(--accent-soft) 60%, transparent);
+  font-weight: 600;
+}
+.gridHead tbody tr:first-child td.gridKeyCol {
   background: var(--accent-soft);
 }
 .emptyNote {

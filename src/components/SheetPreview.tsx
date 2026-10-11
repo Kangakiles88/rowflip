@@ -6,10 +6,13 @@ interface Props {
   maxCols?: number;
   /** 첫 행을 머리글처럼 강조 */
   headerRow?: boolean;
+  /** 비교 기준 열처럼 눈에 띄게 할 열(0부터) */
+  highlightCol?: number;
 }
 
 /** 엑셀처럼 열 이름(A, B, …)과 행 번호가 붙은 결과 미리보기. 큰 표는 앞부분만 그린다. */
-export function SheetPreview({ rows, maxRows = 200, maxCols = 40, headerRow = false }: Props) {
+export function SheetPreview({ rows, maxRows = 200, maxCols = 40, headerRow = false, highlightCol }: Props) {
+  const hl = (c: number) => (c === highlightCol ? styles.gridKeyCol : undefined);
   const shown = rows.slice(0, maxRows);
   const width = shown.reduce((m, r) => Math.max(m, r.length), 0);
   const cols = Math.min(width, maxCols);
@@ -20,7 +23,7 @@ export function SheetPreview({ rows, maxRows = 200, maxCols = 40, headerRow = fa
           <tr>
             <th aria-hidden="true" />
             {Array.from({ length: cols }, (_, c) => (
-              <th key={c} scope="col">
+              <th key={c} scope="col" className={hl(c)} title={c === highlightCol ? "비교 기준 열" : undefined}>
                 {columnLetter(c)}
               </th>
             ))}
@@ -31,7 +34,9 @@ export function SheetPreview({ rows, maxRows = 200, maxCols = 40, headerRow = fa
             <tr key={i}>
               <th scope="row">{i + 1}</th>
               {Array.from({ length: cols }, (_, c) => (
-                <td key={c}>{r[c] ?? ""}</td>
+                <td key={c} className={hl(c)}>
+                  {r[c] ?? ""}
+                </td>
               ))}
             </tr>
           ))}

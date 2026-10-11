@@ -275,6 +275,7 @@ export function DedupeTool() {
                 maxRows={PREVIEW_ROWS}
                 maxCols={PREVIEW_COLS}
                 headerRow={header}
+                highlightCol={typeof key === "number" ? key : undefined}
               />
             ) : (
               <textarea
@@ -295,6 +296,26 @@ export function DedupeTool() {
 
           <div className={styles.status} aria-live="polite">
             <span>{summary}</span>
+            {!gate.locked && colCount > 1 && (
+              // 무엇을 기준으로 비교했는지 결과 바로 아래에 — '행 전체'면 눈에 띄게 하고 그 자리에서 바꿀 수 있게
+              <label className={key === "row" ? styles.statusNotice : undefined}>
+                기준{" "}
+                <select
+                  aria-label="비교 기준 (결과 아래)"
+                  className={styles.statusSelect}
+                  value={String(key)}
+                  onChange={(e) => update({ key: e.target.value === "row" ? "row" : Number(e.target.value) })}
+                >
+                  <option value="row">행 전체</option>
+                  {Array.from({ length: colCount }, (_, i) => (
+                    <option key={i} value={i}>
+                      {columnName(i)}
+                    </option>
+                  ))}
+                </select>
+                {key === "row" && options.mode !== "unique" && <span> ← 한 열로 세려면 여기서 선택</span>}
+              </label>
+            )}
             {!gate.locked && stats.emptyRemoved > 0 && (
               <span>빈 칸 {fmt(stats.emptyRemoved)}개 제외</span>
             )}
