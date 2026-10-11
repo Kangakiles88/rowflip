@@ -20,6 +20,8 @@ interface Props {
   placeholder: string;
   /** 긴 줄을 줄바꿈해서 보여 줄지 */
   wrap?: boolean;
+  /** 주 버튼 이름 — 기본 '복사' (상장 만들기는 '인쇄·PDF 저장') */
+  primaryLabel?: string;
 }
 
 /** 결과 창 — 제목·복사 버튼·결과·상태 표시줄. 첫 변환 전에는 결과를 비우고 안내만 보여 준다. */
@@ -36,6 +38,7 @@ export function ResultPane({
   status,
   placeholder,
   wrap = true,
+  primaryLabel = "복사",
 }: Props) {
   return (
     <section className={`${styles.pane} ${styles.outputPane}`} aria-labelledby="result-title">
@@ -46,7 +49,7 @@ export function ResultPane({
         <div className={styles.paneActions}>
           {actions}
           <button type="button" className={styles.primary} onClick={onCopy} disabled={!canCopy}>
-            복사
+            {primaryLabel}
             <kbd className={styles.kbd}>{modKey}↵</kbd>
           </button>
         </div>

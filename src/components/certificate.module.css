@@ -1,0 +1,107 @@
+/* 상장·수료증 한 장(A4 세로). 크기는 모두 --mm 배수로 적어서
+   인쇄 때는 실제 mm, 미리보기 때는 미리보기 칸 너비에 맞춰 줄어든다. */
+.page {
+  --mm: 1mm;
+  width: calc(210 * var(--mm));
+  height: calc(297 * var(--mm));
+  padding: calc(12 * var(--mm));
+  box-sizing: border-box;
+  overflow: hidden;
+  color: var(--paper-ink);
+  background: var(--paper);
+  font-family: "Batang", "바탕", "AppleMyungjo", "Nanum Myeongjo", "Noto Serif KR", serif;
+  font-variant-numeric: normal;
+}
+.page[data-font="sans"] {
+  font-family: var(--font-sans);
+}
+/* 미리보기 칸 안에서는 칸 너비 = 210mm */
+.preview {
+  --mm: calc(100cqw / 210);
+}
+
+.frame {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: calc(14 * var(--mm)) calc(17 * var(--mm)) calc(16 * var(--mm));
+  border: calc(1.4 * var(--mm)) double var(--paper-line);
+  box-sizing: border-box;
+}
+.number {
+  margin: 0;
+  min-height: calc(5 * var(--mm));
+  font-size: calc(4.2 * var(--mm));
+}
+.title {
+  margin: calc(24 * var(--mm)) 0 calc(22 * var(--mm));
+  font-size: calc(14 * var(--mm));
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  letter-spacing: calc(1.5 * var(--mm));
+  word-break: keep-all;
+}
+.rows {
+  align-self: flex-end;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: calc(6 * var(--mm));
+  row-gap: calc(2.5 * var(--mm));
+  margin: 0 calc(4 * var(--mm)) calc(22 * var(--mm)) 0;
+  max-width: 100%;
+  font-size: calc(5.8 * var(--mm));
+  line-height: 1.35;
+}
+.rows div {
+  display: contents;
+}
+.rows dt {
+  letter-spacing: calc(0.8 * var(--mm));
+}
+.rows dd {
+  margin: 0;
+  font-weight: 700;
+  word-break: keep-all;
+}
+.body {
+  margin: 0;
+  font-size: calc(7 * var(--mm));
+  line-height: 2;
+  text-align: left;
+  word-break: keep-all;
+  white-space: pre-line;
+}
+.date {
+  margin: auto 0 calc(12 * var(--mm));
+  font-size: calc(6 * var(--mm));
+  text-align: center;
+}
+.issuer {
+  margin: 0;
+  font-size: calc(7.4 * var(--mm));
+  font-weight: 700;
+  text-align: center;
+  word-break: keep-all;
+}
+.signer {
+  margin-left: calc(4 * var(--mm));
+  letter-spacing: calc(1.6 * var(--mm));
+}
+/* 미리보기에서만 보이는 빈 칸 안내 — 인쇄에는 나오지 않는다 */
+.placeholder {
+  color: var(--paper-mute);
+  font-weight: 400;
+}
+
+/* 인쇄용 — 한 장에 한 명 */
+.printPage {
+  /* 브라우저가 297mm를 살짝 넘겨 빈 쪽을 끼우지 않게 조금 줄인다 */
+  height: calc(296.5 * var(--mm));
+  break-after: page;
+  page-break-after: always;
+}
+.printPage:last-child {
+  break-after: auto;
+  page-break-after: auto;
+}

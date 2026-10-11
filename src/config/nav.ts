@@ -2,6 +2,7 @@
 export const TOOL_GROUPS = [
   { id: "list", label: "엑셀·목록 도구" },
   { id: "text", label: "텍스트 도구" },
+  { id: "doc", label: "문서 만들기" },
 ] as const;
 
 /** 사이트 안의 기능 페이지 목록 — 헤더 메뉴, 푸터, sitemap, '다른 도구' 목록이 모두 이 목록을 쓴다. */
@@ -86,6 +87,15 @@ export const TOOL_PAGES = [
     title: "대소문자 변환",
     desc: "대문자·소문자·첫 글자 대문자, camelCase·snake_case",
     priority: 0.8,
+  },
+  {
+    id: "certificate",
+    group: "doc",
+    href: "/certificate/",
+    label: "상장 만들기",
+    title: "엑셀로 상장·수료증 일괄 만들기",
+    desc: "명단을 붙여넣어 상장·수료증·위촉장·감사장을 한 번에 인쇄",
+    priority: 0.9,
   },
 ] as const;
 

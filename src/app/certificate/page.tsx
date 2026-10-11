@@ -1,0 +1,33 @@
+import Link from "next/link";
+import { CertificateTool } from "@/components/CertificateTool";
+import { ToolPageLayout, toolMetadata } from "@/components/ToolPageLayout";
+import { CERTIFICATE_FAQ, CERTIFICATE_GUIDES, CERTIFICATE_META as M } from "@/content/certificate";
+
+export const metadata = toolMetadata(M, "/og-certificate.png", "엑셀로 상장·수료증 일괄 만들기 화면");
+
+export default function CertificatePageRoute() {
+  return (
+    <ToolPageLayout
+      id="certificate"
+      meta={M}
+      lede="엑셀 명단을 붙여넣으면 상장·수료증·위촉장·감사장을 한 사람에 한 장씩 만들어 한 번에 인쇄하거나 PDF로 저장합니다."
+      tool={<CertificateTool />}
+      guideTitle="상장·수료증 일괄 만드는 방법"
+      guides={CERTIFICATE_GUIDES}
+      faq={CERTIFICATE_FAQ}
+      related={
+        <>
+          명단에서 같은 사람을 지우려면{" "}
+          <Link className="inlineLink" href="/dedupe/">
+            엑셀 중복 제거
+          </Link>
+          를, 가로로 늘어선 명단을 세로로 바꾸려면{" "}
+          <Link className="inlineLink" href="/">
+            엑셀 가로세로 변환기
+          </Link>
+          를 쓰세요.
+        </>
+      }
+    />
+  );
+}

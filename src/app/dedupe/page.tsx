@@ -85,7 +85,11 @@ export default function DedupePage() {
             <Link className="inlineLink" href="/transpose/">
               엑셀 행열 바꾸기
             </Link>
-            를 쓰세요.
+            를 쓰세요. 정리한 명단으로 상장이나 수료증을 찍으려면{" "}
+            <Link className="inlineLink" href="/certificate/">
+              엑셀로 상장·수료증 일괄 만들기
+            </Link>
+            로 넘어가면 됩니다.
           </p>
         </section>
 

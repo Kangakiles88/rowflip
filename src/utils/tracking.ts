@@ -54,3 +54,15 @@ export function trackCopy(): void {
     gtag("event", "result_copy", { page_path: window.location.pathname });
   }
 }
+
+/**
+ * 인쇄(PDF 저장) 버튼 이벤트 — 상장·수료증 만들기에서 인쇄 창을 연 횟수와 페이지 주소만 보낸다.
+ * 명단·문구는 절대 넣지 않는다.
+ */
+export function trackPrint(): void {
+  if (typeof window === "undefined") return;
+  const gtag = (window as unknown as { gtag?: Gtag }).gtag;
+  if (typeof gtag === "function") {
+    gtag("event", "result_print", { page_path: window.location.pathname });
+  }
+}

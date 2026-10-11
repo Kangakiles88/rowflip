@@ -125,6 +125,69 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+/* ── 상장·수료증 만들기 ─────────────────────── */
+.options.optionsCert {
+  grid-template-columns: minmax(210px, 0.9fr) minmax(220px, 1fr) minmax(280px, 1.25fr) minmax(280px, 1.25fr);
+}
+.certRow {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+.certRow > .select,
+.certRow > .input {
+  width: 100%;
+}
+.certLabel {
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+.certBody {
+  width: 100%;
+  height: auto;
+  min-height: 96px;
+  padding: 6px 8px;
+  line-height: 1.5;
+  resize: vertical;
+  font-family: inherit;
+}
+/* 미리보기 — 결과 창 높이에 A4 한 장이 다 보이게 */
+.editor:has(> .certViewer) {
+  overflow: auto;
+}
+.certViewer {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 12px;
+  overflow: auto;
+  background: var(--gutter);
+}
+.certSheet {
+  flex: none;
+  width: min(100%, calc((clamp(260px, 46vh, 480px) - 26px) * 210 / 297));
+  container-type: inline-size;
+  border: 1px solid var(--line-strong);
+}
+.certPager {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.certPagerText {
+  min-width: 52px;
+  font-size: 12.5px;
+  text-align: center;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ── 텍스트 비교 ─────────────────────────────
    [원본 | 수정본] 위, 비교 결과 아래(전체 폭), 옵션 맨 아래 */
 .diffTool {
@@ -868,7 +931,8 @@ ins.diffMark {
   .options.optionsDedupe,
   .options.optionsDedupe3,
   .options.optionsSplit,
-  .options.optionsThree {
+  .options.optionsThree,
+  .options.optionsCert {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -956,6 +1020,13 @@ ins.diffMark {
     height: 220px;
     flex: none;
   }
+  /* 휴대폰에서는 미리보기를 화면 너비에 맞춰 크게 */
+  .editor:has(> .certViewer) {
+    height: auto;
+  }
+  .certSheet {
+    width: 100%;
+  }
   .options {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -992,7 +1063,8 @@ ins.diffMark {
   .options.optionsDedupe3,
   .options.optionsSplit,
   .options.optionsTwo,
-  .options.optionsThree {
+  .options.optionsThree,
+  .options.optionsCert {
     grid-template-columns: minmax(0, 1fr);
   }
   .paneActions .ghost:first-child {

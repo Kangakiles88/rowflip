@@ -15,6 +15,11 @@
   /* 텍스트 비교의 삭제 표시 · 목표 글자수 초과 */
   --del: #b42318;
   --del-soft: #fbe4e1;
+  /* 상장·수료증 종이 — 인쇄물이라 다크 모드에서도 흰 종이에 검은 글씨 그대로(다크 블록에서 바꾸지 않음) */
+  --paper: #ffffff;
+  --paper-ink: #111111;
+  --paper-line: #3a3a36;
+  --paper-mute: #9a9a92;
   --radius: 6px;
 
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
@@ -546,5 +551,23 @@ a {
 @media (max-width: 520px) {
   .container {
     padding: 0 14px;
+  }
+}
+
+/* ── 상장·수료증 인쇄 ─────────────────────────
+   인쇄할 장들은 body 바로 아래 .certPrintRoot(포털)에 있다. 화면에서는 숨기고,
+   인쇄할 때는 그 밖의 모든 것을 숨겨 A4 한 장에 한 명씩만 나오게 한다. */
+.certPrintRoot {
+  display: none;
+}
+@media print {
+  body:has(> .certPrintRoot) {
+    background: var(--paper);
+  }
+  body:has(> .certPrintRoot) > :not(.certPrintRoot) {
+    display: none !important;
+  }
+  .certPrintRoot {
+    display: block;
   }
 }
