@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { AdSenseScript } from "@/components/ads/AdSenseScript";
+import { adsConfig } from "@/config/ads";
 import { analyticsConfig } from "@/config/analytics";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
@@ -36,6 +37,8 @@ export const metadata: Metadata = {
     ...(google ? { google } : {}),
     ...(naver ? { other: { "naver-site-verification": naver } } : {}),
   },
+  // AdSense 사이트 소유 확인
+  ...(adsConfig.scriptEnabled ? { other: { "google-adsense-account": adsConfig.clientId } } : {}),
 };
 
 export const viewport: Viewport = {
@@ -56,10 +59,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
+        <AdSenseScript />
       </head>
       <body>
         {children}
-        <AdSenseScript />
       </body>
       {analyticsConfig.gaId && <GoogleAnalytics gaId={analyticsConfig.gaId} />}
     </html>
