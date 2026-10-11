@@ -220,8 +220,8 @@ export function privacySections(contactEmail: string): PolicySection[] {
           <li>
             방문 분석: Google Analytics 4. 어떤 페이지를 몇 번 봤는지, 어느 검색엔진이나 사이트에서 들어왔는지, 기기와
             브라우저 종류, 대략적인 지역(국가·도시) 같은 통계를 보기 위해 사용합니다. 이를 위해 Google이{" "}
-            <code>_ga</code>로 시작하는 쿠키를 저장합니다. 공유 버튼을 누르면 어떤 채널(카카오톡, 링크 복사 등)을 눌렀는지도
-            기록하지만, 입력한 데이터나 변환 결과는 어떤 경우에도 보내지 않습니다. 수집을 원하지 않으면{" "}
+            <code>_ga</code>로 시작하는 쿠키를 저장합니다. 공유 버튼을 누르면 어떤 채널(카카오톡, 링크 복사 등)을 눌렀는지,
+            결과 복사 버튼을 누르면 어느 페이지에서 눌렀는지도 기록하지만, 입력한 데이터나 변환 결과는 어떤 경우에도 보내지 않습니다. 수집을 원하지 않으면{" "}
             <a
               className="inlineLink"
               href="https://tools.google.com/dlpage/gaoptout"

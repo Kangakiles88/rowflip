@@ -25,6 +25,8 @@ export const shareConfig = {
   /** 최소 대기 시간(ms) */
   loadingMs: 3000,
   buttonLabel: "변환하기",
+  /** [변환하기] 버튼 아래 짧은 안내 — 버튼을 누르기 전에 왜 버튼이 있는지 알려 준다 */
+  buttonNote: "처음 한 번만 누르면 됩니다",
   loadingText: "변환하는 중",
   doneTitle: "변환이 끝났습니다",
   /** 전광판처럼 흘러가는 안내 문구 (문장마다 사이에 구분점이 들어감) */

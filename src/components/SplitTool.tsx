@@ -3,6 +3,7 @@
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import type { Separator, TransformOptions } from "@/types";
 import { copyText } from "@/utils/clipboard";
+import { trackCopy } from "@/utils/tracking";
 import { DEFAULT_OPTIONS } from "@/utils/presets";
 import { INPUT_SPLITS, type InputSplit } from "@/utils/split";
 import { transform } from "@/utils/transformer";
@@ -101,6 +102,7 @@ export function SplitTool() {
     }
     if (!result.output) return;
     const ok = await copyText(result.output);
+    if (ok) trackCopy();
     clearTimeout(toastTimer.current);
     setToast(ok ? "복사되었습니다." : "복사하지 못했습니다. 결과를 직접 선택해 주세요.");
     toastTimer.current = setTimeout(() => setToast(null), 1500);

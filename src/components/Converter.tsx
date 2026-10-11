@@ -3,6 +3,7 @@
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import type { TransformOptions } from "@/types";
 import { copyText } from "@/utils/clipboard";
+import { trackCopy } from "@/utils/tracking";
 import { DEFAULT_OPTIONS, PRESETS, SAMPLE_INPUT } from "@/utils/presets";
 import { loadSettings, saveSettings } from "@/utils/storage";
 import { extractCells, parseTable } from "@/utils/parser";
@@ -97,6 +98,7 @@ export function Converter() {
     }
     if (!result.output) return;
     const ok = await copyText(result.output);
+    if (ok) trackCopy();
     showToast(ok ? "복사되었습니다." : "복사하지 못했습니다. 결과를 직접 선택해 주세요.");
   }, [gate.locked, startConvert, result.output, showToast]);
 

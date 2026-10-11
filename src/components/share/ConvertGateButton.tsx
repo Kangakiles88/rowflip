@@ -22,7 +22,11 @@ export function ConvertGateButton({ disabled, onClick }: Props) {
         <span>{shareConfig.buttonLabel}</span>
         <span className={styles.gateArrow} aria-hidden="true" />
       </button>
-      {disabled && <span className={styles.gateHint}>원본을 붙여넣으면 누를 수 있습니다</span>}
+      {disabled ? (
+        <span className={styles.gateHint}>원본을 붙여넣으면 누를 수 있습니다</span>
+      ) : (
+        <span className={styles.gateNote}>{shareConfig.buttonNote}</span>
+      )}
     </div>
   );
 }

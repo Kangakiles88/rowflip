@@ -2,6 +2,7 @@
 
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { copyText } from "@/utils/clipboard";
+import { trackCopy } from "@/utils/tracking";
 import {
   DEFAULT_TRANSPOSE_OPTIONS,
   TRANSPOSE_SAMPLE,
@@ -100,6 +101,7 @@ export function TransposeTool() {
     const html =
       options.format === "excel" && hasMultilineCell(result.rows) ? toHtmlTable(result.rows) : undefined;
     const ok = await copyText(result.output, html);
+    if (ok) trackCopy();
     clearTimeout(toastTimer.current);
     setToast(ok ? "복사되었습니다." : "복사하지 못했습니다. 텍스트 보기에서 직접 선택해 주세요.");
     toastTimer.current = setTimeout(() => setToast(null), 1500);

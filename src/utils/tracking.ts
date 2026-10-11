@@ -41,3 +41,16 @@ export function trackShare(event: ShareEvent): void {
     gtag("event", "share", { method: event.channel, content_type: "tool_page", item_id: event.page });
   }
 }
+
+/**
+ * 결과 복사 이벤트 — 어느 페이지에서 복사 버튼(또는 단축키)을 눌렀는지만 보낸다.
+ * 인자를 받지 않으므로 입력 데이터·결과가 섞여 들어갈 수 없다.
+ * 페이지 조회 대비 복사 비율로 사용자가 도구를 끝까지 썼는지 가늠한다.
+ */
+export function trackCopy(): void {
+  if (typeof window === "undefined") return;
+  const gtag = (window as unknown as { gtag?: Gtag }).gtag;
+  if (typeof gtag === "function") {
+    gtag("event", "result_copy", { page_path: window.location.pathname });
+  }
+}

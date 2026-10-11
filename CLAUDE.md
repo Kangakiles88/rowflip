@@ -86,7 +86,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 새로 쓰는 예시 데이터는 실무형(`A-10234`, `1월 매출 1,200`, 사번, 상품코드). apple·banana 같은 예시는 새로 만들지 않음.
 
 ## 첫 변환 공유 안내 (바이럴)
-- 처음 변환할 때만 원본과 결과 사이에 [변환하기] 버튼이 나오고, 누르면 약 1.2초 로딩 뒤 공유 부탁 팝업이 뜸. 버튼은 한 번 누르면 사라지고 이후에는 바로 변환.
+- 처음 변환할 때만 원본과 결과 사이에 [변환하기] 버튼(아래에 '처음 한 번만 누르면 됩니다' = `buttonNote`)이 나오고, 누르면 약 1.2초 로딩 뒤 공유 부탁 팝업이 뜸. 버튼은 한 번 누르면 사라지고 이후에는 바로 변환.
 - 설정은 `src/config/share.ts`: `enabled`(끄기), `frequency`("session" = 방문마다 한 번, "once" = 이 브라우저에서 처음 한 번), 문구, 로딩 시간.
 - 상태는 `useConvertGate` 훅 하나로 모든 기능 페이지가 공유. 저장값은 `rowflip:convert-gate:v1 = "1"` 뿐.
 - 공유 채널: 링크 복사, 카카오톡(JS 키는 `share.ts`에 기본값, 카카오 디벨로퍼스에 rowflip.com 등록 필요), 네이버, 밴드, 페이스북, X, 다른 앱(휴대폰 기본 공유창). 클릭은 `trackShare`(채널·페이지만)로 기록.
@@ -141,7 +141,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
   - AdSense 신청
   - 브랜드커넥트 상품 5개 연결 완료(의자 2, A4용지, 데스크매트, 책상) — 상품 추가·교체는 brandConnect.ts
   - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅
-  - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click만
+  - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click·result_copy(페이지 경로만)만
   - 기능 페이지 후보: 숫자 한글 변환(금액), 부가세 계산기, 랜덤 뽑기·팀 나누기, 이메일·전화번호 추출, 전화번호 하이픈, 마크다운 표 만들기, 엑셀 열 합치기·나누기
 
 ## 답변 방식

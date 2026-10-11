@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { copyText } from "@/utils/clipboard";
+import { trackCopy } from "@/utils/tracking";
 import {
   DEDUPE_SAMPLE,
   DEFAULT_DEDUPE_OPTIONS,
@@ -162,6 +163,7 @@ export function DedupeTool() {
     if (!result.output) return;
     const html = hasMultilineCell(result.rows) ? toHtmlTable(result.rows) : undefined;
     const ok = await copyText(result.output, html);
+    if (ok) trackCopy();
     clearTimeout(toastTimer.current);
     setToast(
       ok
