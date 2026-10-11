@@ -137,7 +137,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 ## 현재 상태와 남은 일
 - 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 9개(엑셀·목록 4: 가로세로·행열·중복 제거·쉼표→줄바꿈 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 104개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
-  - Cloudflare AI 로봇 설정 확인(robots.txt에 검색 로봇이 막히지 않았는지)
+  - (확인 완료 2026-10-11) Cloudflare 관리형 robots.txt: Googlebot·Yeti(네이버)·Bingbot·Mediapartners-Google(AdSense) 허용, AI 학습 로봇과 AI 에이전트(ChatGPT-User·Claude-User 등)만 차단. 우리 robots.ts는 그 아래에 붙음
   - AdSense 신청
   - 브랜드커넥트 상품 5개 연결 완료(의자 2, A4용지, 데스크매트, 책상) — 상품 추가·교체는 brandConnect.ts
   - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅
