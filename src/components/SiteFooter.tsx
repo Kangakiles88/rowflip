@@ -18,6 +18,9 @@ export function SiteFooter() {
               {p.label}
             </Link>
           ))}
+          {siteConfig.contactEmail && (
+            <a href={`mailto:${siteConfig.contactEmail}?subject=${encodeURIComponent("RowFlip 의견")}`}>의견 보내기</a>
+          )}
         </nav>
         <span>모든 데이터 변환은 현재 브라우저에서만 처리됩니다. 입력한 내용은 서버로 전송되거나 저장되지 않습니다.</span>
       </div>

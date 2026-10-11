@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { shareConfig } from "@/config/share";
 import { siteConfig } from "@/config/site";
 import { copyText } from "@/utils/clipboard";
+import { withShareUtm } from "@/utils/shareUrl";
 import { trackShare, type ShareChannel } from "@/utils/tracking";
 import { ShareIcon, type ShareIconName } from "./ShareIcons";
 import styles from "./share.module.css";
@@ -121,30 +122,32 @@ export function ShareDialog({ open, onClose, path, summary }: Props) {
   const enc = encodeURIComponent;
   const page = path;
   const track = (channel: ShareChannel) => trackShare({ channel, page });
+  /** 채널마다 UTM 꼬리표를 붙인 주소 — 공유로 들어온 방문을 GA4에서 채널별로 볼 수 있다 */
+  const u = (channel: ShareChannel) => (url ? withShareUtm(url, channel) : "");
 
   const links: { channel: ShareChannel & ShareIconName; label: string; href: string }[] = [
-    { channel: "naver", label: "네이버", href: `https://share.naver.com/web/shareView?url=${enc(url)}&title=${enc(text)}` },
-    { channel: "band", label: "밴드", href: `https://band.us/plugin/share?body=${enc(`${text}\n${url}`)}&route=${enc(url)}` },
-    { channel: "facebook", label: "페이스북", href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}` },
-    { channel: "x", label: "X", href: `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}` },
+    { channel: "naver", label: "네이버", href: `https://share.naver.com/web/shareView?url=${enc(u("naver"))}&title=${enc(text)}` },
+    { channel: "band", label: "밴드", href: `https://band.us/plugin/share?body=${enc(`${text}\n${u("band")}`)}&route=${enc(url)}` },
+    { channel: "facebook", label: "페이스북", href: `https://www.facebook.com/sharer/sharer.php?u=${enc(u("facebook"))}` },
+    { channel: "x", label: "X", href: `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(u("x"))}` },
   ];
 
   const copyLink = async () => {
     track("copy");
-    const ok = await copyText(url);
+    const ok = await copyText(u("copy"));
     if (ok) {
       setCopied(true);
       setNotice("링크를 복사했습니다. 메신저에 붙여넣어 보내 주세요.");
       setTimeout(() => setCopied(false), 1800);
     } else {
-      setNotice(`복사하지 못했습니다. 주소: ${url}`);
+      setNotice(`복사하지 못했습니다. 주소: ${u("copy")}`);
     }
   };
 
   const nativeShare = async () => {
     track("native");
     try {
-      await navigator.share({ title: document.title, text, url });
+      await navigator.share({ title: document.title, text, url: u("native") });
     } catch {
       /* 사용자가 취소했거나 지원하지 않음 */
     }
@@ -153,7 +156,7 @@ export function ShareDialog({ open, onClose, path, summary }: Props) {
   const kakaoShare = () => {
     track("kakao");
     try {
-      kakao?.Share.sendScrap({ requestUrl: url });
+      kakao?.Share.sendScrap({ requestUrl: u("kakao") });
     } catch {
       setNotice("카카오톡 공유를 열지 못했습니다. 링크 복사를 이용해 주세요.");
     }

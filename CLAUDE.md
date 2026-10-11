@@ -20,7 +20,7 @@
     - `/diff/` 텍스트 비교: 원본·수정본 두 칸 → 줄 단위 Myers diff + 바뀐 줄 안 낱말 강조, 전체/바뀐 부분만, 공백·대소문자 무시, +/- 텍스트 복사
     - `/hanyang/` 한영 타자 변환: 두벌식 영타→한글 조합, 한글→영타, 자동 방향
     - `/case/` 대소문자 변환: 대문자·소문자·문장·단어 첫 글자·반전, camel·Pascal·snake·UPPER_SNAKE·kebab(줄마다)
-  - `/privacy/` 개인정보처리방침(문구는 `src/content/privacy.tsx`, 문의 메일 `contact@rowflip.com` = `site.ts`의 contactEmail, Cloudflare 이메일 라우팅으로 운영자 Gmail에 전달 — 개인 메일 주소는 저장소에 넣지 않음). 안내 페이지는 `nav.ts`의 `INFO_PAGES` → 푸터·sitemap에만 들어감
+  - `/privacy/` 개인정보처리방침(문구는 `src/content/privacy.tsx`, 문의 메일 `contact@rowflip.com` = `site.ts`의 contactEmail, Cloudflare 이메일 라우팅으로 운영자 Gmail에 전달 — 개인 메일 주소는 저장소에 넣지 않음). 안내 페이지는 `nav.ts`의 `INFO_PAGES` → 푸터·sitemap에만 들어감. 푸터에 '의견 보내기'(contactEmail mailto)
 
 ## 기술 스택
 - Next.js 16 (App Router), React 19, TypeScript strict, CSS Modules + `globals.css` 디자인 토큰. Tailwind·외부 UI 라이브러리 쓰지 않음.
@@ -89,7 +89,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 처음 변환할 때만 원본과 결과 사이에 [변환하기] 버튼(아래에 '처음 한 번만 누르면 됩니다' = `buttonNote`)이 나오고, 누르면 약 1.2초 로딩 뒤 공유 부탁 팝업이 뜸. 버튼은 한 번 누르면 사라지고 이후에는 바로 변환.
 - 설정은 `src/config/share.ts`: `enabled`(끄기), `frequency`("session" = 방문마다 한 번, "once" = 이 브라우저에서 처음 한 번), 문구, 로딩 시간.
 - 상태는 `useConvertGate` 훅 하나로 모든 기능 페이지가 공유. 저장값은 `rowflip:convert-gate:v1 = "1"` 뿐.
-- 공유 채널: 링크 복사, 카카오톡(JS 키는 `share.ts`에 기본값, 카카오 디벨로퍼스에 rowflip.com 등록 필요), 네이버, 밴드, 페이스북, X, 다른 앱(휴대폰 기본 공유창). 클릭은 `trackShare`(채널·페이지만)로 기록.
+- 공유 채널: 링크 복사, 카카오톡(JS 키는 `share.ts`에 기본값, 카카오 디벨로퍼스에 rowflip.com 등록 필요), 네이버, 밴드, 페이스북, X, 다른 앱(휴대폰 기본 공유창). 클릭은 `trackShare`(채널·페이지만)로 기록. 공유되는 주소에는 채널별 UTM(`utils/shareUrl.ts`: utm_source=채널, utm_medium=share, utm_campaign=rowflip_share)을 붙여 GA4에서 공유 유입을 채널별로 봄.
 - 팝업 디자인: 위에 전광판처럼 흐르는 안내 문구(`Ticker`) + 진행 막대로 로딩 느낌, 아래에 동그란 아이콘 버튼 + 이름을 한 줄로(휴대폰은 5개 이상이면 두 줄로 고르게). 움직임 줄이기 설정 사용자에게는 멈춘 문단으로 표시.
 - 대기 시간: 전광판 문구가 끝까지 한 번 흘러가는 시간(실제 글자 너비 ÷ `tickerSpeed`)을 계산해 남은 초를 표시. 그동안 ✕·결과 보기·Esc·바깥 클릭으로 닫히지 않고, 0초가 되면 닫기 버튼이 나타남. 공유 버튼은 대기 중에도 누를 수 있음.
 - 브랜드 아이콘은 직접 그리지 않고 `simple-icons`(CC0 아이콘 모음, 버전 고정) 패키지 데이터를 씀(`ShareIcons.tsx`). 밴드는 모음에 없어 일반 '모임' 아이콘.
@@ -135,7 +135,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 카카오톡 공유: JavaScript 키는 `share.ts`에 들어가 있음. 카카오 디벨로퍼스 앱의 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 `https://rowflip.com`이 등록돼 있어야 동작
 
 ## 현재 상태와 남은 일
-- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 9개(엑셀·목록 4: 가로세로·행열·중복 제거·쉼표→줄바꿈 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 104개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
+- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 9개(엑셀·목록 4: 가로세로·행열·중복 제거·쉼표→줄바꿈 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 111개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - (확인 완료 2026-10-11) Cloudflare 관리형 robots.txt: Googlebot·Yeti(네이버)·Bingbot·Mediapartners-Google(AdSense) 허용, AI 학습 로봇과 AI 에이전트(ChatGPT-User·Claude-User 등)만 차단. 우리 robots.ts는 그 아래에 붙음
   - AdSense 신청: 코드·ads.txt·메타 태그 넣음(2026-10-11) → 사이트 연결 확인·검토 요청, 승인 대기
