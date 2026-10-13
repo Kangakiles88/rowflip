@@ -36,6 +36,21 @@ describe("parseItems", () => {
     expect(parseItems("볼펜\t20\t500").items[0]).toMatchObject({ name: "볼펜", qty: 20, price: 500 });
     expect(parseItems("볼펜\t0.5mm\t20\t500").items[0]).toMatchObject({ spec: "0.5mm", qty: 20, price: 500 });
   });
+  it("탭 없이 띄어쓰기로 입력해도(휴대폰) 칸을 나눈다", () => {
+    const r = parseItems("품목 규격 수량 단가\n의자 ea 1 123000");
+    expect(r.spaced).toBe(true);
+    expect(r.hasHeader).toBe(true);
+    expect(r.items).toEqual([{ name: "의자", spec: "ea", qty: 1, price: 123000, note: "" }]);
+  });
+  it("띄어쓰기 입력 — 품목 이름에 띄어쓰기가 있으면 뒤에서부터 숫자를 찾는다", () => {
+    const r = parseItems("사무용 의자 4 189,000\nA4 복사용지 10 27,500 택배\n설치비 50000\n출장비 별도");
+    expect(r.items).toEqual([
+      { name: "사무용 의자", spec: "", qty: 4, price: 189000, note: "" },
+      { name: "A4 복사용지", spec: "", qty: 10, price: 27500, note: "택배" },
+      { name: "설치비", spec: "", qty: 1, price: 50000, note: "" },
+    ]);
+    expect(r.invalidLines).toEqual([4]);
+  });
   it("수량이 비면 1, 숫자가 아니면 건너뛰고 줄 번호를 알려 준다", () => {
     const r = parseItems("품목\t수량\t단가\n설치비\t\t50,000\n출장비\t1\t별도 문의\n\n배송비\t1\t3,000");
     expect(r.items.map((i) => [i.name, i.qty])).toEqual([

@@ -151,6 +151,9 @@ export function EstimateTool() {
       <span>
         품목 {lines.length}개 · 공급가액 {won(totals.supply)} · 세액 {won(totals.tax)} · 합계 {won(totals.total)}원
       </span>
+      {parsed.spaced && parsed.items.length > 0 && (
+        <span className={styles.statusNotice}>띄어쓰기로 칸을 나눴습니다. 품목이 잘못 나뉘면 칸 사이를 탭으로 띄우거나 엑셀에서 복사해 넣으세요.</span>
+      )}
       {bad.length > 0 && (
         <span className={styles.statusNotice}>
           수량·단가가 숫자가 아닌 줄 {bad.length}개는 뺐습니다 ({bad.slice(0, 5).join(", ")}번째 줄)
@@ -171,7 +174,7 @@ export function EstimateTool() {
           onSample={sample}
           onClear={() => setInput("")}
           rowCount={parsed.items.length}
-          colCount={5}
+          colCount={1}
           placeholder={
             "엑셀에서 품목 표를 복사해 붙여넣으세요. 첫 행에 머리글(품목·규격·수량·단가·비고)이 있으면 순서가 달라도 됩니다.\n\n예:\n품목\t규격\t수량\t단가\n사무용 의자\tT-ZERO\t4\t189,000\nA4 복사용지\t80g\t10\t27,500"
           }

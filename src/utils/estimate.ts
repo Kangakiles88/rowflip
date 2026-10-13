@@ -71,11 +71,76 @@ function defaultMap(width: number): Partial<Record<Col, number>> {
   return { name: 0, spec: 1, qty: 2, price: 3, note: 4 };
 }
 
-export function parseItems(raw: string): { items: EstimateItem[]; invalidLines: number[]; hasHeader: boolean } {
+const isNum = (t: string) => parseNumber(t) !== null;
+
+/**
+ * 탭 없이 띄어쓰기로 입력한 줄(휴대폰 직접 입력 등)을 칸으로 나눈다.
+ * 품목 이름에 띄어쓰기가 있을 수 있으므로 뒤에서부터 숫자를 찾는다:
+ * 마지막 숫자 = 단가, 그 앞 숫자 = 수량, 숫자 뒤 글자 = 비고, 숫자 앞 = 품목(+규격).
+ * 머리글과 낱말 수가 같으면 머리글 순서를 그대로 따른다.
+ */
+function splitSpacedRow(line: string, header: Partial<Record<Col, number>> | null, headerWidth: number): Record<Col, string> {
+  const t = line.trim().split(/\s+/);
+  const out: Record<Col, string> = { name: "", spec: "", qty: "", price: "", note: "" };
+  if (header && t.length === headerWidth) {
+    (Object.keys(header) as Col[]).forEach((c) => (out[c] = t[header[c]!] ?? ""));
+    return out;
+  }
+  let end = t.length;
+  while (end > 0 && !isNum(t[end - 1])) end--;
+  // 숫자가 하나도 없으면 단가가 없는 줄 → 건너뛰도록 단가를 비워 둔다
+  if (end === 0) return { ...out, name: t.join(" ") };
+  out.note = t.slice(end).join(" ");
+  out.price = t[end - 1];
+  let rest = end - 1;
+  if (rest > 1 && isNum(t[rest - 1])) {
+    out.qty = t[rest - 1];
+    rest--;
+  }
+  const head = t.slice(0, rest);
+  // 머리글에 규격이 있고 품목 앞부분이 두 낱말 이상이면 마지막 낱말을 규격으로
+  if (header?.spec !== undefined && head.length >= 2) {
+    out.spec = head.pop()!;
+  }
+  out.name = head.join(" ");
+  return out;
+}
+
+export function parseItems(raw: string): {
+  items: EstimateItem[];
+  invalidLines: number[];
+  hasHeader: boolean;
+  /** 탭이 없어 띄어쓰기로 칸을 나눴는지 */
+  spaced: boolean;
+} {
   const table = parseTable(raw);
   const rows = table.rows.map((r) => r.map((c) => c.trim()));
   const firstIdx = rows.findIndex((r) => r.some((c) => c !== ""));
-  if (firstIdx === -1) return { items: [], invalidLines: [], hasHeader: false };
+  if (firstIdx === -1) return { items: [], invalidLines: [], hasHeader: false, spaced: false };
+
+  // 탭이 하나도 없으면(휴대폰에서 직접 입력) 띄어쓰기로 나눈다
+  const spaced = table.colCount <= 1 && rows.some((r) => /\s/.test(r[0] ?? ""));
+  if (spaced) {
+    const headTokens = rows[firstIdx][0].split(/\s+/);
+    const header = headerMap(headTokens);
+    const start = header ? firstIdx + 1 : firstIdx;
+    const items: EstimateItem[] = [];
+    const invalidLines: number[] = [];
+    for (let i = start; i < rows.length; i++) {
+      const line = rows[i][0] ?? "";
+      if (line === "") continue;
+      const c = splitSpacedRow(line, header, headTokens.length);
+      const qty = c.qty === "" ? 1 : parseNumber(c.qty);
+      const price = c.price === "" ? null : parseNumber(c.price);
+      if (qty === null || price === null || c.name === "") {
+        invalidLines.push(i + 1);
+        continue;
+      }
+      items.push({ name: c.name, spec: c.spec, qty, price, note: c.note });
+    }
+    return { items, invalidLines, hasHeader: header !== null, spaced: true };
+  }
+
   const header = headerMap(rows[firstIdx]);
   const map = header ?? defaultMap(table.colCount);
   const start = header ? firstIdx + 1 : firstIdx;
@@ -97,7 +162,7 @@ export function parseItems(raw: string): { items: EstimateItem[]; invalidLines: 
     }
     items.push({ name, spec: get(r, "spec"), qty, price, note: get(r, "note") });
   }
-  return { items, invalidLines, hasHeader: header !== null };
+  return { items, invalidLines, hasHeader: header !== null, spaced: false };
 }
 
 /**
