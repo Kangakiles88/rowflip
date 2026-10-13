@@ -1,0 +1,163 @@
+/* 견적서 한 부. 크기는 --mm 배수 — 인쇄 때는 실제 mm, 미리보기 때는 미리보기 칸 너비(=210mm)에 맞춰 줄어든다.
+   인쇄는 @page 여백 12mm 안에 흘려 쓰고, 품목이 많으면 다음 쪽으로 넘어가며 표 머리글이 반복된다. */
+.doc {
+  --mm: 1mm;
+  color: var(--paper-ink);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-size: calc(3.4 * var(--mm));
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+}
+/* 미리보기: A4 한 장 모양(여백 포함) */
+.preview {
+  --mm: calc(100cqw / 210);
+  min-height: calc(297 * var(--mm));
+  padding: calc(12 * var(--mm));
+  box-sizing: border-box;
+}
+
+.title {
+  margin: 0 0 calc(7 * var(--mm));
+  padding-bottom: calc(2.5 * var(--mm));
+  font-size: calc(8.5 * var(--mm));
+  font-weight: 800;
+  letter-spacing: calc(4 * var(--mm));
+  text-align: center;
+  border-bottom: calc(0.8 * var(--mm)) double var(--paper-line);
+}
+
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: calc(6 * var(--mm));
+  align-items: end;
+  margin-bottom: calc(5 * var(--mm));
+}
+.meta {
+  margin: 0 0 calc(4 * var(--mm));
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: calc(1 * var(--mm)) calc(3 * var(--mm));
+}
+.meta dt {
+  color: var(--paper-ink);
+  font-weight: 600;
+}
+.meta dd {
+  margin: 0;
+}
+.client {
+  margin: 0 0 calc(2 * var(--mm));
+  padding-bottom: calc(1.2 * var(--mm));
+  font-size: calc(5 * var(--mm));
+  font-weight: 700;
+  border-bottom: calc(0.3 * var(--mm)) solid var(--paper-line);
+  word-break: keep-all;
+}
+.client small {
+  margin-left: calc(2 * var(--mm));
+  font-size: calc(3.6 * var(--mm));
+  font-weight: 500;
+}
+.lead {
+  margin: 0;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.table th,
+.table td {
+  padding: calc(1.3 * var(--mm)) calc(1.8 * var(--mm));
+  border: calc(0.25 * var(--mm)) solid var(--paper-line);
+  vertical-align: middle;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.table th {
+  font-weight: 600;
+  background: var(--paper-fill);
+  white-space: nowrap;
+}
+.supplier th:first-child {
+  width: calc(7 * var(--mm));
+  padding: 0;
+  text-align: center;
+  line-height: 1.25;
+}
+.supplier th {
+  width: calc(15 * var(--mm));
+  text-align: center;
+}
+.seal {
+  float: right;
+  color: var(--paper-mute);
+}
+
+.totalBar {
+  margin-bottom: calc(4 * var(--mm));
+}
+.totalBar th {
+  width: calc(34 * var(--mm));
+  text-align: center;
+  line-height: 1.3;
+}
+.totalBar th small {
+  display: block;
+  font-size: calc(2.8 * var(--mm));
+  font-weight: 500;
+}
+.totalBar td {
+  font-size: calc(4.6 * var(--mm));
+  font-weight: 800;
+  text-align: center;
+}
+
+.items th {
+  text-align: center;
+}
+.items td {
+  height: calc(6.4 * var(--mm));
+}
+.num {
+  text-align: right;
+  white-space: nowrap;
+}
+.center {
+  text-align: center;
+}
+.items tr {
+  break-inside: avoid;
+}
+.items tfoot td,
+.items tfoot th {
+  font-weight: 700;
+  background: var(--paper-fill);
+}
+
+.note {
+  margin-top: calc(4 * var(--mm));
+  border: calc(0.25 * var(--mm)) solid var(--paper-line);
+  break-inside: avoid;
+}
+.noteHead {
+  margin: 0;
+  padding: calc(1.3 * var(--mm)) calc(2 * var(--mm));
+  font-size: inherit;
+  font-weight: 600;
+  background: var(--paper-fill);
+  border-bottom: calc(0.25 * var(--mm)) solid var(--paper-line);
+}
+.note p:not(.noteHead) {
+  margin: 0;
+  min-height: calc(16 * var(--mm));
+  padding: calc(2 * var(--mm));
+  white-space: pre-line;
+}
+.placeholder {
+  color: var(--paper-mute);
+  font-weight: 400;
+}

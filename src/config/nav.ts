@@ -1,8 +1,8 @@
-/** 기능 묶음 — 헤더 탭은 묶음 사이에 구분선, '다른 도구' 목록은 묶음별 제목 */
+/** 기능 묶음 — 헤더는 묶음별 펼침 메뉴(short), '다른 도구' 목록은 묶음별 제목(label) */
 export const TOOL_GROUPS = [
-  { id: "list", label: "엑셀·목록 도구" },
-  { id: "text", label: "텍스트 도구" },
-  { id: "doc", label: "문서 만들기" },
+  { id: "list", label: "엑셀·목록 도구", short: "엑셀·목록" },
+  { id: "text", label: "텍스트 도구", short: "텍스트" },
+  { id: "doc", label: "문서 만들기", short: "문서 만들기" },
 ] as const;
 
 /** 사이트 안의 기능 페이지 목록 — 헤더 메뉴, 푸터, sitemap, '다른 도구' 목록이 모두 이 목록을 쓴다. */
@@ -87,6 +87,15 @@ export const TOOL_PAGES = [
     title: "대소문자 변환",
     desc: "대문자·소문자·첫 글자 대문자, camelCase·snake_case",
     priority: 0.8,
+  },
+  {
+    id: "estimate",
+    group: "doc",
+    href: "/estimate/",
+    label: "견적서",
+    title: "견적서 양식 작성",
+    desc: "품목을 붙여넣으면 부가세·합계 계산, 인쇄·PDF 저장",
+    priority: 0.9,
   },
   {
     id: "certificate",

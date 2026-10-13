@@ -17,7 +17,11 @@ export default function AmountPage() {
       faq={AMOUNT_FAQ}
       related={
         <>
-          명단으로 상장·수료증을 만들려면{" "}
+          견적서를 통째로 만들려면{" "}
+          <Link className="inlineLink" href="/estimate/">
+            견적서 양식 작성
+          </Link>
+          을, 명단으로 상장·수료증을 만들려면{" "}
           <Link className="inlineLink" href="/certificate/">
             엑셀로 상장·수료증 일괄 만들기
           </Link>

@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { Fragment } from "react";
-import { ActiveTabScroll } from "./ActiveTabScroll";
-import { TOOL_PAGES, type ToolPageId } from "@/config/nav";
+import type { ToolPageId } from "@/config/nav";
 import { siteConfig } from "@/config/site";
+import { NavMenu } from "./NavMenu";
 import styles from "./tool.module.css";
 
 function Mark() {
@@ -29,23 +28,7 @@ export function Header({ current }: { current?: ToolPageId }) {
             <Mark />
             {siteConfig.name}
           </Link>
-          <nav id="tool-nav" className={styles.nav} aria-label="기능">
-            {TOOL_PAGES.map((p, i) => (
-              <Fragment key={p.id}>
-                {i > 0 && TOOL_PAGES[i - 1].group !== p.group && (
-                  <span className={styles.navDivider} aria-hidden="true" />
-                )}
-                <Link
-                  href={p.href}
-                  className={styles.navLink}
-                  aria-current={p.id === current ? "page" : undefined}
-                >
-                  {p.label}
-                </Link>
-              </Fragment>
-            ))}
-          </nav>
-          <ActiveTabScroll navId="tool-nav" />
+          <NavMenu current={current} />
         </div>
       </div>
     </header>

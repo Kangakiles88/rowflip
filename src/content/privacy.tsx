@@ -73,6 +73,11 @@ export const BROWSER_STORAGE = [
     what: "숫자 한글 변환의 표기 방식과 붙이기 옵션",
   },
   {
+    key: "rowflip:estimate:v1",
+    where: "로컬 저장소",
+    what: "견적서 양식의 부가세 방식과 유효기간(품목·거래처·공급자 정보는 저장하지 않음)",
+  },
+  {
     key: "rowflip:brand-rotation:v1",
     where: "로컬 저장소",
     what: "추천 상품 띠에 마지막으로 보여 준 상품 순번(숫자). 새로고침하면 다음 상품을 보여 주는 데 씁니다.",
