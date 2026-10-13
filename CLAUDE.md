@@ -22,6 +22,7 @@
     - `/case/` 대소문자 변환: 대문자·소문자·문장·단어 첫 글자·반전, camel·Pascal·snake·UPPER_SNAKE·kebab(줄마다)
   - 문서 만들기(묶음 `doc`)
     - `/certificate/` 엑셀로 상장·수료증 일괄 만들기: 명단(첫 행 머리글) 붙여넣기 → 양식(상장·수료증·위촉장·감사장) 선택 → 칸 연결(머리글 자동 연결 `autoMap`, 수상명은 큰 제목) → 발급일·기관·대표자·자동 번호 → 본문 문구({칸 이름} 치환 + 조사 자동) → A4 한 장에 한 명 미리보기(한 장씩 넘김, 미리보기 클릭·'크게 보기'로 화면 가득 확대 — 휴대폰은 숨김) → 브라우저 인쇄·PDF 저장(한 번에 500장). 인쇄는 body 아래 포털 `.certPrintRoot`만 보이게(globals.css의 print 규칙), 장 크기는 `--mm` 배수(certificate.module.css). 종이 색은 `--paper*` 토큰(다크 모드에서도 흰 종이). 저장은 양식·글꼴·날짜 형식만(명단·기관명·문구는 저장 안 함). 2단계(HWPX 양식 업로드)·3단계(유료화)는 프로젝트 문서 `claude/handoff-certificate-page.md`
+    - `/amount/` 숫자 한글 변환(금액 한글 표기): 줄마다 금액 → 금액(일금 ○○원정, 일십·일백 생략 안 함) / 읽기(만 단위 띄어쓰기, 1만=만) / 숫자+단위(1,234만 5,000) / 한자 갖은자(金 壹佰…원整), 숫자 병기(₩…). 자릿수 문자열로 처리(24자리·해 단위까지), 숫자가 아닌 줄은 빈 줄로 두고 줄 수 유지(엑셀 옆 열에 붙여넣기)
   - `/privacy/` 개인정보처리방침(문구는 `src/content/privacy.tsx`, 문의 메일 `contact@rowflip.com` = `site.ts`의 contactEmail, Cloudflare 이메일 라우팅으로 운영자 Gmail에 전달 — 개인 메일 주소는 저장소에 넣지 않음). 안내 페이지는 `nav.ts`의 `INFO_PAGES` → 푸터·sitemap에만 들어감. 푸터에 '의견 보내기'(contactEmail mailto)
 
 ## 기술 스택
@@ -46,13 +47,13 @@ src/
 ├─ app/            layout(공통 메타), page(/), transpose/page, sitemap, robots, manifest, icon
 ├─ components/     share/(ShareDialog, ConvertGateButton, useConvertGate), Header, SiteFooter, ToolDirectory(다른 도구 목록), JsonLd,
 │  │               ToolPageLayout(새 기능 페이지 공통 틀 + toolMetadata), PageIntro(H1·개인정보 안내·설명), useToolBasics(옵션 저장·복사·공유 안내·단축키),
-│  │               ResultPane(결과 창, primaryLabel로 주 버튼 이름 변경), Converter, TransposeTool, DedupeTool, SplitTool, CountTool, LinebreakTool, DiffTool, HanyangTool, CaseTool, CertificateTool(+ CertificatePage, certificate.module.css),
+│  │               ResultPane(결과 창, primaryLabel로 주 버튼 이름 변경), Converter, TransposeTool, DedupeTool, SplitTool, CountTool, LinebreakTool, DiffTool, HanyangTool, CaseTool, CertificateTool(+ CertificatePage, certificate.module.css), AmountTool,
 │  │               SheetPreview(엑셀식 표 미리보기), ActiveTabScroll, InputPanel(inputId·title로 여러 개 가능), OutputPanel,
 │  │               PresetButtons, CleanupOptions, OutputOptions, Segmented, Toast, tool.module.css
 │  └─ ads/         AdSlot, AdSenseScript, BrandConnectBanner, PromotionArea
 ├─ config/         site.ts(브랜드·도메인·SEO), analytics.ts(GA4), nav.ts(페이지 목록), share.ts(첫 변환 공유 안내), ads.ts, brandConnect.ts
-├─ content/        seo.tsx(/ 안내·FAQ), transpose, dedupe, split, count, linebreak, diff, hanyang, case, certificate(각 페이지 메타·안내·FAQ), privacy
-├─ utils/          parser, split(원본 나누기), rotation(광고 순번), transformer, transpose, dedupe, count, linebreak, diff, hanyang, caseConvert, certificate(순수 함수 + 테스트), shareUrl, presets, storage, clipboard, tracking
+├─ content/        seo.tsx(/ 안내·FAQ), transpose, dedupe, split, count, linebreak, diff, hanyang, case, certificate, amount(각 페이지 메타·안내·FAQ), privacy
+├─ utils/          parser, split(원본 나누기), rotation(광고 순번), transformer, transpose, dedupe, count, linebreak, diff, hanyang, caseConvert, certificate, amount(순수 함수 + 테스트), shareUrl, presets, storage, clipboard, tracking
 └─ types/
 public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미지), ads/(배너 이미지)
 ```
@@ -77,7 +78,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 폰트: UI는 Pretendard 14px 내외, 데이터 영역은 monospace + 줄 번호. 숫자는 `tabular-nums`.
 - 옵션은 툴바형 컴팩트 컨트롤(세그먼트 버튼, select, 체크박스). 패널 하단에 상태 표시줄(행 수, 글자 수, 제거된 개수 등).
 - 주요 동작에 단축키(Ctrl/⌘+Enter = 복사)와 kbd 힌트. 터치 기기에서는 kbd 숨김.
-- 헤더 기능 메뉴는 탭(현재 페이지 = accent 글자 + 아래 2px 막대), 묶음(`TOOL_GROUPS`: 엑셀·목록 / 텍스트 / 문서 만들기) 사이 세로 구분선. 860px 이하에서는 탭이 로고 아래 한 줄로 내려가고, 넘치면 가로 스크롤(`ActiveTabScroll`이 현재 탭을 화면 안으로). 탭 이름은 6자 안팎으로 짧게. '입력한 데이터는 서버로 전송되지 않습니다'는 헤더가 아니라 `PageIntro`(H1 오른쪽).
+- 헤더 기능 메뉴는 탭(현재 페이지 = accent 글자 + 아래 2px 막대), 묶음(`TOOL_GROUPS`: 엑셀·목록 / 텍스트 / 문서 만들기) 사이 세로 구분선. 860px 이하에서는 탭이 로고 아래 한 줄로 내려가고, 넘치면 가로 스크롤(`ActiveTabScroll`이 현재 탭을 화면 안으로). 탭 이름은 6자 안팎으로 짧게. 탭 11개에서 1366px 폭이 꽉 참(navLink 좌우 11px) — 더 늘리면 묶음별 펼침 메뉴 등으로 바꿀 것. '입력한 데이터는 서버로 전송되지 않습니다'는 헤더가 아니라 `PageIntro`(H1 오른쪽).
 - 도구 아래 '다른 도구'(`ToolDirectory`)는 묶음별 제목 + 구분선 목록.
 - 표 결과는 `SheetPreview`(열 이름 A·B·C + 행 번호)로 보여 주고 '표 / 텍스트' 전환.
 - 반응형: 860px 이하 1단. 모바일(390px)에서 가로 스크롤 없어야 함.
@@ -137,14 +138,14 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 카카오톡 공유: JavaScript 키는 `share.ts`에 들어가 있음. 카카오 디벨로퍼스 앱의 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 `https://rowflip.com`이 등록돼 있어야 동작
 
 ## 현재 상태와 남은 일
-- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 10개(엑셀·목록 4: 가로세로·행열·중복 제거·쉼표→줄바꿈 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자 / 문서 1: 상장·수료증), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 128개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
+- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 11개(엑셀·목록 4: 가로세로·행열·중복 제거·쉼표→줄바꿈 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자 / 문서 2: 상장·수료증·금액 한글), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 139개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - (확인 완료 2026-10-11) Cloudflare 관리형 robots.txt: Googlebot·Yeti(네이버)·Bingbot·Mediapartners-Google(AdSense) 허용, AI 학습 로봇과 AI 에이전트(ChatGPT-User·Claude-User 등)만 차단. 우리 robots.ts는 그 아래에 붙음
   - AdSense: 기존 계정(pub-1418493009023603, 예전 수익 있음)으로 변경(2026-10-12). 새로 만든 계정(pub-9884982808493036)은 중복 계정 방지를 위해 사이트 삭제·해지 → 기존 계정에서 rowflip.com 사이트 검토 요청, 승인 대기
   - 브랜드커넥트 상품 5개 연결 완료(의자 2, A4용지, 데스크매트, 책상) — 상품 추가·교체는 brandConnect.ts
   - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅
   - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click·result_copy·result_print(페이지 경로만)만
-  - 기능 페이지 후보: 숫자 한글 변환(금액), 부가세 계산기, 랜덤 뽑기·팀 나누기, 이메일·전화번호 추출, 전화번호 하이픈, 마크다운 표 만들기, 엑셀 열 합치기·나누기
+  - 기능 페이지 후보(1~2주에 1~2개씩, 순서): 전화번호 하이픈, 랜덤 뽑기·팀 나누기 → 부가세 계산기, 마크다운 표 만들기 → (보류) 이메일·전화번호 추출, 엑셀 열 합치기·나누기. 이전 목록: 랜덤 뽑기·팀 나누기, 이메일·전화번호 추출, 전화번호 하이픈, 마크다운 표 만들기, 엑셀 열 합치기·나누기
 
 ## 답변 방식
 - 한국어로 답변. 코드를 바꾸면 바꾼 파일과 이유를 짧게 정리.

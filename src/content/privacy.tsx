@@ -68,6 +68,11 @@ export const BROWSER_STORAGE = [
     what: "상장·수료증 만들기에서 고른 양식, 글꼴, 날짜 형식(명단·기관명·본문 문구는 저장하지 않음)",
   },
   {
+    key: "rowflip:amount:v1",
+    where: "로컬 저장소",
+    what: "숫자 한글 변환의 표기 방식과 붙이기 옵션",
+  },
+  {
     key: "rowflip:brand-rotation:v1",
     where: "로컬 저장소",
     what: "추천 상품 띠에 마지막으로 보여 준 상품 순번(숫자). 새로고침하면 다음 상품을 보여 주는 데 씁니다.",

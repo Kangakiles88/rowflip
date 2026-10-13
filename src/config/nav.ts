@@ -97,6 +97,15 @@ export const TOOL_PAGES = [
     desc: "명단을 붙여넣어 상장·수료증·위촉장·감사장을 한 번에 인쇄",
     priority: 0.9,
   },
+  {
+    id: "amount",
+    group: "doc",
+    href: "/amount/",
+    label: "금액 한글",
+    title: "숫자 한글 변환",
+    desc: "금액을 일금 ○○원정, 읽기 표기, 한자 갖은자로",
+    priority: 0.9,
+  },
 ] as const;
 
 /** 기능이 아닌 안내 페이지 — 푸터와 sitemap에만 들어간다 */

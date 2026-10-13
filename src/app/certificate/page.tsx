@@ -25,7 +25,11 @@ export default function CertificatePageRoute() {
           <Link className="inlineLink" href="/">
             엑셀 가로세로 변환기
           </Link>
-          를 쓰세요.
+          를 쓰세요. 상금이나 수강료를 ‘일금 ○○원정’으로 적으려면{" "}
+          <Link className="inlineLink" href="/amount/">
+            숫자 한글 변환
+          </Link>
+          을 쓰면 됩니다.
         </>
       }
     />
