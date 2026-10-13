@@ -1027,11 +1027,12 @@ ins.diffMark {
   }
   .tool {
     grid-template-columns: minmax(0, 1fr);
+    /* 휴대폰: 입력 → 빠른 변환 → 결과 → 옵션 (옵션이 길어서 결과가 입력에서 멀어지지 않게) */
     grid-template-areas:
       "input"
       "presets"
-      "options"
-      "output";
+      "output"
+      "options";
   }
   .toolTranspose {
     grid-template-areas:
@@ -1044,9 +1045,9 @@ ins.diffMark {
     grid-template-areas:
       "input"
       "presets"
-      "options"
       "gate"
-      "output";
+      "output"
+      "options";
   }
   .toolTranspose.toolGated {
     grid-template-areas:
