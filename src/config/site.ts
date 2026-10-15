@@ -26,6 +26,8 @@ export const siteConfig = {
     "SQL IN 변환",
     "JSON 배열 변환",
     "리스트 변환기",
+    "엑셀 순서 거꾸로",
+    "엑셀 역순 정렬",
   ],
   locale: "ko_KR",
   /** 문의 메일 — Cloudflare 이메일 라우팅으로 운영자 메일함에 전달된다(공개용 주소라 코드에 둔다, env가 있으면 env 우선) */

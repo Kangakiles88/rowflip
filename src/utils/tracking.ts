@@ -27,7 +27,7 @@ export function trackPromotionClick(event: PromotionClickEvent): void {
  * 공유 버튼 클릭 이벤트 — 어떤 채널을 눌렀는지와 페이지만 보낸다.
  * 입력 데이터·결과는 절대 넣지 않는다.
  */
-export type ShareChannel = "native" | "kakao" | "naver" | "facebook" | "x" | "band" | "copy";
+export type ShareChannel = "native" | "kakao" | "naver" | "facebook" | "x" | "band" | "copy" | "page_copy";
 
 export interface ShareEvent {
   channel: ShareChannel;

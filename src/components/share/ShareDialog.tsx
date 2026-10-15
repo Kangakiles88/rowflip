@@ -207,7 +207,7 @@ export function ShareDialog({ open, onClose, path, summary }: Props) {
           {readMs !== null && <span key={runId} style={{ animationDuration: `${readMs}ms` }} />}
         </div>
 
-        <p className={styles.sectionTitle}>지인에게 알리기</p>
+        <p className={styles.sectionTitle}>{shareConfig.sectionTitle}</p>
         <ul
           className={styles.targets}
           aria-label="공유하기"

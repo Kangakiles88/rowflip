@@ -3,7 +3,7 @@
  * 페이지마다 canonical이 있어서 꼬리표 붙은 주소가 검색에서 따로 잡히지 않는다.
  * 입력 데이터·결과는 절대 넣지 않는다(채널 이름만).
  */
-export type ShareSource = "kakao" | "naver" | "band" | "facebook" | "x" | "native" | "copy";
+export type ShareSource = "kakao" | "naver" | "band" | "facebook" | "x" | "native" | "copy" | "page_copy";
 
 export function withShareUtm(url: string, source: ShareSource): string {
   const sep = url.includes("?") ? "&" : "?";
