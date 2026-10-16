@@ -127,7 +127,10 @@ export const TOOL_PAGES = [
 ] as const;
 
 /** 기능이 아닌 안내 페이지 — 푸터와 sitemap에만 들어간다 */
-export const INFO_PAGES = [{ id: "privacy", href: "/privacy/", label: "개인정보처리방침", priority: 0.3 }] as const;
+export const INFO_PAGES = [
+  { id: "blog", href: "/blog/", label: "엑셀 작업 팁", priority: 0.6 },
+  { id: "privacy", href: "/privacy/", label: "개인정보처리방침", priority: 0.3 },
+] as const;
 
 export type ToolPageId = (typeof TOOL_PAGES)[number]["id"];
 export type ToolGroupId = (typeof TOOL_GROUPS)[number]["id"];
