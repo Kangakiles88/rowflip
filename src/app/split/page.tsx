@@ -85,6 +85,10 @@ export default function SplitPage() {
             <Link className="inlineLink" href="/dedupe/">
               엑셀 중복 제거
             </Link>
+            를, 엑셀 표의 한 열을 여러 칸으로 나누려면{" "}
+            <Link className="inlineLink" href="/cell-split/">
+              엑셀 셀 나누기
+            </Link>
             를 쓰세요.
           </p>
         </section>

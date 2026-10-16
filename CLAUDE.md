@@ -13,6 +13,7 @@
   - `/` 엑셀 가로세로 변환기: 한 열·한 행 목록을 가로↔세로(입력창 상태줄의 '나누기'로 쉼표·띄어쓰기 목록도 나눔, 쉼표·코드 목록이면 '…로 나누기' 안내, 값이 한 칸뿐인데 '세로로'·'가로로'를 누르면 쉼표>세미콜론>띄어쓰기로 자동 나눔 — 자동 나눔은 그 입력에만 적용, 원본 나누기·괄호 벗기기는 저장하지 않음), 쉼표 연결, 중복 제거, 정렬, 접두사/접미사, 따옴표, 번호, SQL IN, JSON·JS·Python 배열, HTML 목록으로
   - `/transpose/` 엑셀 행열 바꾸기: 표 전체의 행과 열 전환 → 엑셀 붙여넣기(탭 구분) / CSV / 마크다운 표
   - `/dedupe/` 엑셀 중복 제거: 목록·표의 중복 제거 / 중복된 값만 / 개수 세기, 행 전체 또는 특정 열 기준, 처음·마지막 행 남기기. 여러 열 표면 결과 상태줄에 '기준' 선택(행 전체일 때 초록 강조 + 안내), 결과 표에서 기준 열을 초록으로 강조
+  - `/cell-split/` 엑셀 셀 나누기: 표(여러 열 가능)를 붙여넣으면 구분자가 가장 많은 열을 골라(상태줄 '나눌 열'로 변경, 머리글은 `looksLikeHeader`로 자동) 띄어쓰기·쉼표·슬래시·하이픈·셀 안 줄바꿈·직접 입력·글자 수(1=성/이름, 3,4=전화번호)로 나눔. 나누는 곳 모두/첫 번째만/마지막만, 결과 모양 옆 열로/아래 행으로(다른 열 반복), 원래 열 남기기. 지금 기준으로 안 나뉘면 '…로 나누기' 안내(`suggestDelimiter`). 복사는 TSV + HTML 표(`toHtmlTable(rows, looksLikeText)` — 010·16자리 이상 숫자는 텍스트 서식이라 앞자리 0 보존). `utils/cellSplit.ts`
   - `/split/` 쉼표를 줄바꿈으로 변환: 쉼표·세미콜론·띄어쓰기·슬래시·파이프·직접 입력 구분자로 나눠 세로(줄바꿈)/가로(엑셀 한 행), 괄호·따옴표 벗기기(SQL IN·JSON 배열 → 목록, 기본 켜짐)
   - 텍스트 도구(묶음 `text`)
     - `/count/` 글자수 세기: 공백 포함·제외, 바이트(한글 2·UTF-8), 단어·줄·문단, 목표 글자수(남음/초과), 줄바꿈 세기 옵션
@@ -48,13 +49,13 @@ src/
 ├─ app/            layout(공통 메타), page(/), transpose/page, sitemap, robots, manifest, icon
 ├─ components/     share/(ShareDialog, ConvertGateButton, useConvertGate), Header(+ NavMenu 펼침 메뉴), SiteFooter, ToolDirectory(다른 도구 목록), JsonLd,
 │  │               ToolPageLayout(새 기능 페이지 공통 틀 + toolMetadata), PageIntro(H1·개인정보 안내·설명), useToolBasics(옵션 저장·복사·공유 안내·단축키),
-│  │               ResultPane(결과 창, primaryLabel로 주 버튼 이름 변경), Converter, TransposeTool, DedupeTool, SplitTool, CountTool, LinebreakTool, DiffTool, HanyangTool, CaseTool, CertificateTool(+ CertificatePage, certificate.module.css), AmountTool, EstimateTool(+ EstimateDoc, estimate.module.css),
+│  │               ResultPane(결과 창, primaryLabel로 주 버튼 이름 변경), Converter, TransposeTool, DedupeTool, SplitTool, CellSplitTool, CountTool, LinebreakTool, DiffTool, HanyangTool, CaseTool, CertificateTool(+ CertificatePage, certificate.module.css), AmountTool, EstimateTool(+ EstimateDoc, estimate.module.css),
 │  │               SheetPreview(엑셀식 표 미리보기), InputPanel(inputId·title로 여러 개 가능), OutputPanel,
 │  │               PresetButtons, CleanupOptions, OutputOptions, Segmented, Toast, tool.module.css
 │  └─ ads/         AdSlot, AdSenseScript, BrandConnectBanner, PromotionArea
 ├─ config/         site.ts(브랜드·도메인·SEO), analytics.ts(GA4), nav.ts(페이지 목록), share.ts(첫 변환 공유 안내), ads.ts, brandConnect.ts
-├─ content/        seo.tsx(/ 안내·FAQ), transpose, dedupe, split, count, linebreak, diff, hanyang, case, certificate, amount, estimate(각 페이지 메타·안내·FAQ), privacy
-├─ utils/          parser, split(원본 나누기), rotation(광고 순번), transformer, transpose, dedupe, count, linebreak, diff, hanyang, caseConvert, certificate, amount, estimate(순수 함수 + 테스트), shareUrl, presets, storage, clipboard, tracking
+├─ content/        seo.tsx(/ 안내·FAQ), transpose, dedupe, split, cellSplit, count, linebreak, diff, hanyang, case, certificate, amount, estimate(각 페이지 메타·안내·FAQ), privacy
+├─ utils/          parser, split(원본 나누기), rotation(광고 순번), transformer, transpose, dedupe, cellSplit, count, linebreak, diff, hanyang, caseConvert, certificate, amount, estimate(순수 함수 + 테스트), shareUrl, presets, storage, clipboard, tracking
 └─ types/
 public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미지), ads/(배너 이미지)
 ```
@@ -140,7 +141,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 카카오톡 공유: JavaScript 키는 `share.ts`에 들어가 있음. 카카오 디벨로퍼스 앱의 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 `https://rowflip.com`이 등록돼 있어야 동작
 
 ## 현재 상태와 남은 일
-- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 12개(엑셀·목록 4: 가로세로·행열·중복 제거·쉼표→줄바꿈 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자 / 문서 3: 견적서·상장·수료증·금액 한글), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 149개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
+- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 13개(엑셀·목록 5: 가로세로·행열·중복 제거·쉼표→줄바꿈·셀 나누기 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자 / 문서 3: 견적서·상장·수료증·금액 한글), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 167개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - (확인 완료 2026-10-11) Cloudflare 관리형 robots.txt: Googlebot·Yeti(네이버)·Bingbot·Mediapartners-Google(AdSense) 허용, AI 학습 로봇과 AI 에이전트(ChatGPT-User·Claude-User 등)만 차단. 우리 robots.ts는 그 아래에 붙음
   - AdSense: 기존 계정(pub-1418493009023603, 예전 수익 있음)으로 변경(2026-10-12). 새로 만든 계정(pub-9884982808493036)은 중복 계정 방지를 위해 사이트 삭제·해지 → 기존 계정에서 rowflip.com 사이트 검토 요청, 승인 대기
@@ -148,7 +149,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
   - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click·result_copy·result_print(페이지 경로만)만
   - Cloudflare Web Analytics(쿠키 없음): Cloudflare가 자동으로 `beacon.min.js`를 붙임(코드에는 없음). GA와 수치 비교용으로 유지하기로 함(2026-10-16), 개인정보처리방침 5항에 기재
   - PageSpeed 모바일 57(2026-10-16, CLS 0.023). 남은 FCP·LCP는 대부분 애드센스·GA 스크립트 → AdSense 승인 뒤 광고 스크립트를 첫 화면 뒤에 불러오는 방안 검토(심사 중에는 광고 코드 건드리지 않음)
-  - 기능 페이지 후보 — 네이버 월 검색수(마피아넷, 2026-10-13) 기준: 엑셀셀나누기 2,590(+칸나누기 840) → 랜덤뽑기 12,290·팀나누기 1,160(네이버 자체 도구 뜨는지 확인 후) → 거래명세서(견적서 틀 재사용) → 엑셀달력 1,690. 네이버 자체 도구가 맨 위에 뜨는 검색어(사다리타기 28만, 부가세계산기 7.8만)는 단독 페이지로 만들지 않음. 검색량 작음(수백 이하): 빈칸 채우기 470, 공백 제거 420, 하이픈 제거 290, 날짜 변환 230, 마스킹 110, 숫자한글변환 70, CSV 깨짐 20 → 기존 페이지 옵션으로 넣거나 보류
+  - 기능 페이지 후보 — 네이버 월 검색수(마피아넷, 2026-10-13) 기준: (완료 2026-10-17) 엑셀셀나누기 2,590(+칸나누기 840) → 랜덤뽑기 12,290·팀나누기 1,160(네이버 자체 도구 뜨는지 확인 후) → 거래명세서(견적서 틀 재사용) → 엑셀달력 1,690. 네이버 자체 도구가 맨 위에 뜨는 검색어(사다리타기 28만, 부가세계산기 7.8만)는 단독 페이지로 만들지 않음. 검색량 작음(수백 이하): 빈칸 채우기 470, 공백 제거 420, 하이픈 제거 290, 날짜 변환 230, 마스킹 110, 숫자한글변환 70, CSV 깨짐 20 → 기존 페이지 옵션으로 넣거나 보류
 
 ## 답변 방식
 - 한국어로 답변. 코드를 바꾸면 바꾼 파일과 이유를 짧게 정리.

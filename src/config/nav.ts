@@ -44,6 +44,15 @@ export const TOOL_PAGES = [
     priority: 0.9,
   },
   {
+    id: "cellsplit",
+    group: "list",
+    href: "/cell-split/",
+    label: "셀 나누기",
+    title: "엑셀 셀 나누기",
+    desc: "한 칸의 주소·전화번호·이름을 여러 칸이나 여러 행으로",
+    priority: 0.9,
+  },
+  {
     id: "count",
     group: "text",
     href: "/count/",

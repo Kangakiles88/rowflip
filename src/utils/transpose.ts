@@ -70,12 +70,14 @@ const escapeHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;")
  * 엑셀 붙여넣기용 표 형식(HTML). 셀 안 줄바꿈은 엑셀이 같은 칸 안 줄바꿈으로 읽는 <br>로 넣는다.
  * 줄바꿈이 든 셀이 있을 때만 쓴다(clipboard.ts 참고).
  */
-export function toHtmlTable(rows: string[][]): string {
+export function toHtmlTable(rows: string[][], keepAsText?: (cell: string) => boolean): string {
   const cell = (s: string) =>
     escapeHtml(s)
       .split("\n")
       .join('<br style="mso-data-placement:same-cell">');
-  const body = rows.map((r) => `<tr>${r.map((c) => `<td>${cell(c)}</td>`).join("")}</tr>`).join("");
+  // keepAsText가 참인 칸은 엑셀이 숫자로 바꾸지 않게 '텍스트' 서식으로 넣는다(앞자리 0 보존)
+  const td = (c: string) => (keepAsText?.(c) ? `<td style='mso-number-format:"\\@"'>${cell(c)}</td>` : `<td>${cell(c)}</td>`);
+  const body = rows.map((r) => `<tr>${r.map(td).join("")}</tr>`).join("");
   return `<meta charset="utf-8"><table>${body}</table>`;
 }
 

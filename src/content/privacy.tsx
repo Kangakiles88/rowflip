@@ -13,7 +13,7 @@ export const PRIVACY_META = {
 } as const;
 
 /** 시행일 (YYYY-MM-DD) */
-export const EFFECTIVE_DATE = "2026-10-16";
+export const EFFECTIVE_DATE = "2026-10-17";
 
 /** 이 사이트가 브라우저에 남기는 값 — 데이터는 저장하지 않고 화면 설정만 저장한다 */
 export const BROWSER_STORAGE = [
@@ -76,6 +76,11 @@ export const BROWSER_STORAGE = [
     key: "rowflip:estimate:v1",
     where: "로컬 저장소",
     what: "견적서 양식의 부가세 방식과 유효기간(품목·거래처·공급자 정보는 저장하지 않음)",
+  },
+  {
+    key: "rowflip:cellsplit:v1",
+    where: "로컬 저장소",
+    what: "엑셀 셀 나누기의 나눌 기준·글자 수·결과 모양·정리 옵션(직접 입력한 구분자는 저장하지 않음)",
   },
   {
     key: "rowflip:brand-rotation:v1",
