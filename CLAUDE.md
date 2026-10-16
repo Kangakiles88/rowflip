@@ -76,7 +76,8 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 색은 `globals.css`의 토큰만 사용(`--bg --panel --gutter --hover --line --line-strong --ink --ink-2 --ink-3 --accent(#1e6b47) --accent-ink --accent-soft --del --del-soft`(삭제·초과 표시) `--paper --paper-ink --paper-line --paper-mute --paper-fill`(상장·견적서 종이, 다크 모드에서 바꾸지 않음)). 하드코딩 색 금지. 토큰을 바꾸면 다크 모드 블록(`prefers-color-scheme`, `[data-theme="dark"]`)도 같이 갱신.
 - 금지: 보라·인디고, 그라데이션, 그림자, 이모지, 아이콘 3열 카드, 가운데 정렬 대형 문구, 알약 배지.
 - border 1px, radius 4~6px. 섹션은 카드로 감싸지 말고 구분선으로 나눔.
-- 폰트: UI는 Pretendard 14px 내외, 데이터 영역은 monospace + 줄 번호. 숫자는 `tabular-nums`.
+- 폰트: UI는 Pretendard 14px 내외(넓은 화면만), 데이터 영역은 monospace + 줄 번호. 숫자는 `tabular-nums`.
+- 글꼴 성능(PageSpeed): Pretendard는 외부 CDN이 아니라 직접 호스팅 — `npm run fonts`(predev·prebuild에서 자동)가 `node_modules/pretendard`에서 woff2 조각을 `public/fonts/pretendard/`로, @font-face CSS를 `src/app/pretendard.css`로 만듦(둘 다 .gitignore). `font-display: optional`(글꼴 바뀌며 화면 밀림=CLS 방지). 860px 이하는 `--font-sans`를 기기 기본 글꼴로 바꿔 웹 글꼴을 아예 받지 않음(모바일 첫 화면 속도). `<head>`에 외부 CSS를 다시 넣지 말 것(렌더링 차단).
 - 옵션은 툴바형 컴팩트 컨트롤(세그먼트 버튼, select, 체크박스). 패널 하단에 상태 표시줄(행 수, 글자 수, 제거된 개수 등).
 - 주요 동작에 단축키(Ctrl/⌘+Enter = 복사)와 kbd 힌트. 터치 기기에서는 kbd 숨김.
 - 헤더 기능 메뉴는 묶음별 펼침 메뉴(`NavMenu`): 묶음 버튼(`TOOL_GROUPS.short`: 엑셀·목록 / 텍스트 / 문서 만들기, 현재 묶음 = accent 글자 + 아래 2px 막대)을 누르면 그 묶음 도구 목록(제목+설명, 현재 페이지 accent-soft)이 펼쳐짐. 바깥 클릭·Esc로 닫힘, 링크는 닫혀 있어도 HTML에 남김(hidden). 860px 이하에서는 로고 아래 줄에 버튼 3개 같은 너비, 패널은 화면 너비 가득. 도구가 늘어도 메뉴 폭은 그대로. '입력한 데이터는 서버로 전송되지 않습니다'는 헤더가 아니라 `PageIntro`(H1 오른쪽).
@@ -144,7 +145,6 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
   - (확인 완료 2026-10-11) Cloudflare 관리형 robots.txt: Googlebot·Yeti(네이버)·Bingbot·Mediapartners-Google(AdSense) 허용, AI 학습 로봇과 AI 에이전트(ChatGPT-User·Claude-User 등)만 차단. 우리 robots.ts는 그 아래에 붙음
   - AdSense: 기존 계정(pub-1418493009023603, 예전 수익 있음)으로 변경(2026-10-12). 새로 만든 계정(pub-9884982808493036)은 중복 계정 방지를 위해 사이트 삭제·해지 → 기존 계정에서 rowflip.com 사이트 검토 요청, 승인 대기
   - 브랜드커넥트 상품 5개 연결 완료(의자 2, A4용지, 데스크매트, 책상) — 상품 추가·교체는 brandConnect.ts
-  - Pretendard 폰트가 jsDelivr CDN에서 로드됨 → 필요하면 `next/font/local`로 직접 호스팅
   - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click·result_copy·result_print(페이지 경로만)만
   - 기능 페이지 후보 — 네이버 월 검색수(마피아넷, 2026-10-13) 기준: 엑셀셀나누기 2,590(+칸나누기 840) → 랜덤뽑기 12,290·팀나누기 1,160(네이버 자체 도구 뜨는지 확인 후) → 거래명세서(견적서 틀 재사용) → 엑셀달력 1,690. 네이버 자체 도구가 맨 위에 뜨는 검색어(사다리타기 28만, 부가세계산기 7.8만)는 단독 페이지로 만들지 않음. 검색량 작음(수백 이하): 빈칸 채우기 470, 공백 제거 420, 하이픈 제거 290, 날짜 변환 230, 마스킹 110, 숫자한글변환 70, CSV 깨짐 20 → 기존 페이지 옵션으로 넣거나 보류
 

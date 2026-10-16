@@ -3,6 +3,14 @@
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
 
+# Pretendard 글꼴 조각(버전 고정) — 30일
+/fonts/*
+  Cache-Control: public, max-age=2592000
+
+# 브랜드커넥트 상품 사진 — 같은 이름으로 바꿀 수 있어 7일
+/ads/*
+  Cache-Control: public, max-age=604800
+
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

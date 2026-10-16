@@ -13,7 +13,7 @@ export const PRIVACY_META = {
 } as const;
 
 /** 시행일 (YYYY-MM-DD) */
-export const EFFECTIVE_DATE = "2026-10-11";
+export const EFFECTIVE_DATE = "2026-10-16";
 
 /** 이 사이트가 브라우저에 남기는 값 — 데이터는 저장하지 않고 화면 설정만 저장한다 */
 export const BROWSER_STORAGE = [
@@ -226,7 +226,7 @@ export function privacySections(contactEmail: string): PolicySection[] {
             호스팅: Cloudflare. 사이트에 접속하면 보안과 서비스 제공을 위해 IP 주소, 브라우저 종류, 접속 시각 같은 접속
             기록이 Cloudflare에 일시적으로 남을 수 있습니다. 사이트 운영자는 이 기록으로 개인을 식별하지 않습니다.
           </li>
-          <li>글꼴: Pretendard 글꼴을 jsDelivr CDN에서 불러옵니다.</li>
+          <li>글꼴: Pretendard 글꼴은 이 사이트에서 직접 내려받으며, 외부 글꼴 서비스는 쓰지 않습니다.</li>
           <li>
             광고: Google AdSense 광고 스크립트를 모든 페이지에서 불러옵니다. 광고와 쿠키에 관한 내용은 위 4항과 같습니다.
           </li>

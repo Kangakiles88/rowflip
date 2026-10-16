@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "fonts": "node scripts/copy-fonts.mjs",
+    "predev": "npm run fonts",
+    "prebuild": "npm run fonts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -24,6 +27,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
+    "pretendard": "^1.3.9",
     "typescript": "^5",
     "vite": "^8.3.4",
     "vitest": "^5.0.3",

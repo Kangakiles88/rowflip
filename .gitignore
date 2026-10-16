@@ -45,3 +45,7 @@ next-env.d.ts
 # wrangler
 .wrangler/
 .dev.vars*
+
+# 빌드 전에 node_modules/pretendard에서 만들어지는 글꼴 파일
+/public/fonts/pretendard/
+/src/app/pretendard.css

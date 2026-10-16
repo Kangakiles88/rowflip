@@ -4,6 +4,7 @@ import { AdSenseScript } from "@/components/ads/AdSenseScript";
 import { adsConfig } from "@/config/ads";
 import { analyticsConfig } from "@/config/analytics";
 import { siteConfig } from "@/config/site";
+import "./pretendard.css";
 import "./globals.css";
 
 const { google, naver } = siteConfig.verification;
@@ -54,11 +55,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="ko">
       <head>
-        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
-        />
         <AdSenseScript />
       </head>
       <body>
