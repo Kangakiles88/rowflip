@@ -250,6 +250,11 @@ export function privacySections(contactEmail: string): PolicySection[] {
             </a>
             을 설치하거나 브라우저에서 쿠키를 차단하면 됩니다.
           </li>
+          <li>
+            방문 분석: Cloudflare Web Analytics. 페이지 조회 수, 들어온 경로, 기기·브라우저 종류, 페이지가 열리는 속도
+            같은 통계를 Google Analytics와 비교해 보기 위해 사용합니다. 쿠키를 저장하지 않고 개인을 구별하는 정보를 모으지
+            않으며, 입력한 데이터나 변환 결과는 보내지 않습니다.
+          </li>
         </ul>
       ),
     },
