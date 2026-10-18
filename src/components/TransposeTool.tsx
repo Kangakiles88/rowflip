@@ -1,13 +1,13 @@
 "use client";
 
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { copiedMessage, toastDuration } from "@/utils/bookmarkHint";
 import { copyText } from "@/utils/clipboard";
+import { excelHtmlForRows } from "@/utils/excelClipboard";
 import { trackCopy } from "@/utils/tracking";
 import {
   DEFAULT_TRANSPOSE_OPTIONS,
   TRANSPOSE_SAMPLE,
-  hasMultilineCell,
-  toHtmlTable,
   transposeText,
   type TableFormat,
   type TransposeOptions,
@@ -98,13 +98,13 @@ export function TransposeTool() {
     }
     if (!result.output) return;
     // 셀 안 줄바꿈이 있으면 엑셀용 표 형식도 함께 (윈도우에서 ♪ 문자가 붙는 것 방지)
-    const html =
-      options.format === "excel" && hasMultilineCell(result.rows) ? toHtmlTable(result.rows) : undefined;
+    const html = options.format === "excel" ? excelHtmlForRows(result.rows) : undefined;
     const ok = await copyText(result.output, html);
     if (ok) trackCopy();
     clearTimeout(toastTimer.current);
-    setToast(ok ? "복사되었습니다." : "복사하지 못했습니다. 텍스트 보기에서 직접 선택해 주세요.");
-    toastTimer.current = setTimeout(() => setToast(null), 1500);
+    const message = ok ? copiedMessage() : "복사하지 못했습니다. 텍스트 보기에서 직접 선택해 주세요.";
+    setToast(message);
+    toastTimer.current = setTimeout(() => setToast(null), toastDuration(message));
   }, [gate.locked, startConvert, result.output, result.rows, options.format]);
 
   useEffect(() => {

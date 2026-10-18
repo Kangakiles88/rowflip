@@ -78,6 +78,11 @@ export const BROWSER_STORAGE = [
     what: "견적서 양식의 부가세 방식과 유효기간(품목·거래처·공급자 정보는 저장하지 않음)",
   },
   {
+    key: "rowflip:bookmark-hint:v1",
+    where: "로컬 저장소",
+    what: "복사 뒤 북마크 안내를 이미 보여 줬는지(복사 횟수 또는 완료 표시만, 복사한 내용은 저장하지 않음)",
+  },
+  {
     key: "rowflip:cellsplit:v1",
     where: "로컬 저장소",
     what: "엑셀 셀 나누기의 나눌 기준·글자 수·결과 모양·정리 옵션(직접 입력한 구분자는 저장하지 않음)",

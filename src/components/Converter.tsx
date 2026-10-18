@@ -2,7 +2,9 @@
 
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import type { TransformOptions } from "@/types";
+import { copiedMessage, toastDuration } from "@/utils/bookmarkHint";
 import { copyText } from "@/utils/clipboard";
+import { excelHtmlForText } from "@/utils/excelClipboard";
 import { trackCopy } from "@/utils/tracking";
 import { DEFAULT_OPTIONS, PRESETS, SAMPLE_INPUT } from "@/utils/presets";
 import { loadSettings, saveSettings } from "@/utils/storage";
@@ -81,7 +83,7 @@ export function Converter() {
   const showToast = useCallback((message: string) => {
     clearTimeout(toastTimer.current);
     setToast(message);
-    toastTimer.current = setTimeout(() => setToast(null), 1500);
+    toastTimer.current = setTimeout(() => setToast(null), toastDuration(message));
   }, []);
 
   const hasInput = input.trim() !== "";
@@ -97,9 +99,10 @@ export function Converter() {
       return;
     }
     if (!result.output) return;
-    const ok = await copyText(result.output);
+    // 앞자리 0(010, 00123)이 엑셀에서 지워지지 않게 표 형식도 함께
+    const ok = await copyText(result.output, excelHtmlForText(result.output));
     if (ok) trackCopy();
-    showToast(ok ? "복사되었습니다." : "복사하지 못했습니다. 결과를 직접 선택해 주세요.");
+    showToast(ok ? copiedMessage() : "복사하지 못했습니다. 결과를 직접 선택해 주세요.");
   }, [gate.locked, startConvert, result.output, showToast]);
 
   useEffect(() => {

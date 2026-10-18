@@ -12,6 +12,7 @@ import {
   type SplitDirection,
   type SplitLimit,
 } from "@/utils/cellSplit";
+import { copiedMessage } from "@/utils/bookmarkHint";
 import { copyText } from "@/utils/clipboard";
 import { looksLikeHeader } from "@/utils/dedupe";
 import { parseTable } from "@/utils/parser";
@@ -109,7 +110,7 @@ export function CellSplitTool() {
     // 표 형식도 함께 — 엑셀이 010 같은 앞자리 0을 지우지 않게, 셀 안 줄바꿈도 그대로
     const ok = await copyText(result.output, result.html);
     if (ok) trackCopy();
-    t.showToast(ok ? "복사되었습니다." : "복사하지 못했습니다. 텍스트 보기에서 직접 선택해 주세요.");
+    t.showToast(ok ? copiedMessage() : "복사하지 못했습니다. 텍스트 보기에서 직접 선택해 주세요.");
   };
   useCopyShortcut(() => void copy());
 

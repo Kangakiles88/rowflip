@@ -2,7 +2,9 @@
 
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import type { Separator, TransformOptions } from "@/types";
+import { copiedMessage, toastDuration } from "@/utils/bookmarkHint";
 import { copyText } from "@/utils/clipboard";
+import { excelHtmlForText } from "@/utils/excelClipboard";
 import { trackCopy } from "@/utils/tracking";
 import { DEFAULT_OPTIONS } from "@/utils/presets";
 import { INPUT_SPLITS, type InputSplit } from "@/utils/split";
@@ -101,11 +103,12 @@ export function SplitTool() {
       return;
     }
     if (!result.output) return;
-    const ok = await copyText(result.output);
+    const ok = await copyText(result.output, excelHtmlForText(result.output));
     if (ok) trackCopy();
     clearTimeout(toastTimer.current);
-    setToast(ok ? "복사되었습니다." : "복사하지 못했습니다. 결과를 직접 선택해 주세요.");
-    toastTimer.current = setTimeout(() => setToast(null), 1500);
+    const message = ok ? copiedMessage() : "복사하지 못했습니다. 결과를 직접 선택해 주세요.";
+    setToast(message);
+    toastTimer.current = setTimeout(() => setToast(null), toastDuration(message));
   }, [gate.locked, startConvert, result.output]);
 
   useEffect(() => {

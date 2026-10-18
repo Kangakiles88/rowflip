@@ -1,4 +1,7 @@
+import { looksLikeText } from "./excelClipboard";
 import { parseTable } from "./parser";
+
+export { looksLikeText };
 import { toHtmlTable, toTsv } from "./transpose";
 
 /**
@@ -186,8 +189,6 @@ export interface CellSplitResult {
   noMatch: boolean;
 }
 
-/** 앞자리 0이 있는 숫자, 16자리 이상 숫자처럼 엑셀이 숫자로 바꾸면 망가지는 값 */
-export const looksLikeText = (s: string) => /^0\d+$/.test(s) || /^\d{16,}$/.test(s);
 
 /**
  * 표 전체 처리. column이 null이면 구분자가 가장 많이 든 열을 고른다.

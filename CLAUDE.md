@@ -64,6 +64,8 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 변환 로직은 `src/utils/`의 순수 함수로 만들고 UI 컴포넌트에 넣지 않음. 새 로직에는 `*.test.ts` 테스트를 함께 추가.
 - 변환 순서(가로세로): 파싱 → (괄호 벗기기) → 원본 나누기(`split.ts`) → (따옴표 벗기기) → 공백 제거 → 빈 줄 제거 → 중복 제거 → 정렬 → 접두사/접미사 → 따옴표 → 번호 → 연결.
 - 복사: 셀 안 줄바꿈이 든 표(행열 바꾸기 '엑셀 붙여넣기', 중복 제거)는 `copyText(text, toHtmlTable(rows))`로 표 형식(HTML)도 함께 넣음 — 윈도우 브라우저가 줄바꿈을 CR+LF로 바꿔 엑셀 셀에 ♪(CR)가 붙는 문제 방지.
+- 앞자리 0 보존: 표·목록 결과(가로세로·쉼표→줄바꿈·행열·중복 제거·셀 나누기)는 복사할 때 `utils/excelClipboard.ts`로 010·00123·16자리 이상 숫자가 있으면 그 칸을 텍스트 서식(`mso-number-format:"\@"`)으로 넣은 HTML 표를 함께 넣음(`excelHtmlForRows`/`excelHtmlForText`). 글 도구(글자수·줄바꿈 제거 등)에는 넣지 않음(문서 편집기에 표로 붙는 것 방지).
+- 북마크 안내: 복사 성공 토스트는 `copiedMessage()`(`utils/bookmarkHint.ts`) — 이 브라우저에서 두 번째 복사 때 한 번만 'Ctrl+D(맥 ⌘+D)로 북마크' 안내, 터치 기기는 안 함, 저장 키 `rowflip:bookmark-hint:v1`. 긴 토스트는 `toastDuration`으로 4.5초.
 - 텍스트 도구는 입력을 `excelCellsToText`로 먼저 정리(엑셀이 줄바꿈 든 셀을 "…"로 감싸 복사하기 때문).
 - 엑셀 동작 확인: 기능별 원본·기대 결과·자동 비교 시트(RowFlip_엑셀_동작확인.xlsx)로 사람이 실제 엑셀에서 확인.
 - 엑셀 복사 데이터는 탭=열, 줄바꿈=행. 줄바꿈이 든 셀은 큰따옴표로 감싸져 오므로 `parser.ts`의 `parseTable`을 재사용.
@@ -141,7 +143,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 카카오톡 공유: JavaScript 키는 `share.ts`에 들어가 있음. 카카오 디벨로퍼스 앱의 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 `https://rowflip.com`이 등록돼 있어야 동작
 
 ## 현재 상태와 남은 일
-- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 13개(엑셀·목록 5: 가로세로·행열·중복 제거·쉼표→줄바꿈·셀 나누기 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자 / 문서 3: 견적서·상장·수료증·금액 한글), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 167개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
+- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 13개(엑셀·목록 5: 가로세로·행열·중복 제거·쉼표→줄바꿈·셀 나누기 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자 / 문서 3: 견적서·상장·수료증·금액 한글), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 183개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - (확인 완료 2026-10-11) Cloudflare 관리형 robots.txt: Googlebot·Yeti(네이버)·Bingbot·Mediapartners-Google(AdSense) 허용, AI 학습 로봇과 AI 에이전트(ChatGPT-User·Claude-User 등)만 차단. 우리 robots.ts는 그 아래에 붙음
   - AdSense: 기존 계정(pub-1418493009023603, 예전 수익 있음)으로 변경(2026-10-12). 새로 만든 계정(pub-9884982808493036)은 중복 계정 방지를 위해 사이트 삭제·해지 → 기존 계정에서 rowflip.com 사이트 검토 요청, 승인 대기

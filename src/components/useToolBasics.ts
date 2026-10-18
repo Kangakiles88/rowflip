@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { copiedMessage, toastDuration } from "@/utils/bookmarkHint";
 import { copyText } from "@/utils/clipboard";
 import { trackCopy } from "@/utils/tracking";
 import { useConvertGate } from "./share/useConvertGate";
@@ -66,7 +67,7 @@ export function useToolBasics<T extends object>({
   const showToast = useCallback((message: string) => {
     clearTimeout(toastTimer.current);
     setToast(message);
-    toastTimer.current = setTimeout(() => setToast(null), 1500);
+    toastTimer.current = setTimeout(() => setToast(null), toastDuration(message));
   }, []);
 
   const startConvert = useCallback(() => {
@@ -84,7 +85,7 @@ export function useToolBasics<T extends object>({
       if (!text) return;
       const ok = await copyText(text);
       if (ok) trackCopy();
-      showToast(ok ? "복사되었습니다." : "복사하지 못했습니다. 결과를 직접 선택해 주세요.");
+      showToast(ok ? copiedMessage() : "복사하지 못했습니다. 결과를 직접 선택해 주세요.");
     },
     [gate.locked, startConvert, showToast],
   );
