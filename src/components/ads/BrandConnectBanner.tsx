@@ -62,7 +62,7 @@ export function BrandConnectBanner({ config }: Props) {
               상품 보기<span aria-hidden="true"> →</span>
             </span>
           </span>
-          <span className={styles.disclosure}>{config.disclosureText}</span>
+          <span className={styles.disclosure}>{p.disclosure ?? config.disclosureText}</span>
         </a>
       ) : (
         <span className={styles.brandPlaceholder} aria-hidden="true" />

@@ -145,7 +145,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 남은 일
   - (확인 완료 2026-10-11) Cloudflare 관리형 robots.txt: Googlebot·Yeti(네이버)·Bingbot·Mediapartners-Google(AdSense) 허용, AI 학습 로봇과 AI 에이전트(ChatGPT-User·Claude-User 등)만 차단. 우리 robots.ts는 그 아래에 붙음
   - AdSense: 기존 계정(pub-1418493009023603, 예전 수익 있음)으로 변경(2026-10-12). 새로 만든 계정(pub-9884982808493036)은 중복 계정 방지를 위해 사이트 삭제·해지 → 기존 계정에서 rowflip.com 사이트 검토 요청, 승인 대기
-  - 브랜드커넥트 상품 5개 연결 완료(의자 2, A4용지, 데스크매트, 책상) — 상품 추가·교체는 brandConnect.ts
+  - 브랜드커넥트 상품 5개(의자 2, A4용지, 데스크매트, 책상) + 삼성닷컴 제휴 1개(갤럭시 북6, 2026-10-18) — 상품 추가·교체는 brandConnect.ts. 네이버가 아닌 제휴 상품은 `disclosure`로 대가성 안내를 따로 적음
   - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click·result_copy·result_print(페이지 경로만)만
   - Cloudflare Web Analytics(쿠키 없음): Cloudflare가 자동으로 `beacon.min.js`를 붙임(코드에는 없음). GA와 수치 비교용으로 유지하기로 함(2026-10-16), 개인정보처리방침 5항에 기재
   - PageSpeed 모바일 57(2026-10-16, CLS 0.023). 남은 FCP·LCP는 대부분 애드센스·GA 스크립트 → AdSense 승인 뒤 광고 스크립트를 첫 화면 뒤에 불러오는 방안 검토(심사 중에는 광고 코드 건드리지 않음)

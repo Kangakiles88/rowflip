@@ -74,6 +74,8 @@ export interface BrandConnectProduct {
   href: string;
   /** public/ads/ 아래 이미지("/ads/파일명.webp"), 정사각형 권장 */
   image: string;
+  /** 이 상품만 다른 제휴처일 때의 대가성 안내(없으면 공통 disclosureText) */
+  disclosure?: string;
 }
 
 export interface BrandConnectConfig {

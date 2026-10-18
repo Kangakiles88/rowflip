@@ -13,7 +13,7 @@ export const PRIVACY_META = {
 } as const;
 
 /** 시행일 (YYYY-MM-DD) */
-export const EFFECTIVE_DATE = "2026-10-17";
+export const EFFECTIVE_DATE = "2026-10-18";
 
 /** 이 사이트가 브라우저에 남기는 값 — 데이터는 저장하지 않고 화면 설정만 저장한다 */
 export const BROWSER_STORAGE = [
@@ -176,7 +176,7 @@ export function privacySections(contactEmail: string): PolicySection[] {
       body: (
         <>
           <p>
-            사이트는 운영 비용을 위해 Google AdSense 광고와 네이버 브랜드커넥트 상품 링크를 게재할 수 있습니다.
+            사이트는 운영 비용을 위해 Google AdSense 광고와 네이버 브랜드커넥트·삼성닷컴 제휴 상품 링크를 게재할 수 있습니다.
           </p>
           <ul>
             <li>
@@ -211,7 +211,7 @@ export function privacySections(contactEmail: string): PolicySection[] {
               에서 확인할 수 있습니다.
             </li>
             <li>
-              브랜드커넥트 링크를 누르면 네이버 쇼핑 등 외부 페이지로 이동하며, 이후에는 해당 사이트의 개인정보처리방침이
+              브랜드커넥트·제휴 상품 링크를 누르면 네이버 쇼핑, 삼성닷컴 등 외부 페이지로 이동하며, 이후에는 해당 사이트의 개인정보처리방침이
               적용됩니다. 링크를 통해 구매가 이루어지면 사이트 운영자가 일정액의 수수료를 받을 수 있습니다.
             </li>
           </ul>

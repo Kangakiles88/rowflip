@@ -4,6 +4,7 @@ import type { BrandConnectConfig } from "@/types";
  * 네이버 브랜드커넥트 상품 설정 — 상품을 바꿀 때는 이 파일만 수정한다.
  *
  * - products: 띠에는 한 번에 하나만 보이고, 새로고침할 때마다 다음 상품으로 바뀐다(첫 방문은 무작위 시작). 링크(href)가 빈 상품은 빠진다. 하나도 없으면 영역 전체가 숨겨진다.
+ * - disclosure: 네이버가 아닌 제휴 링크(삼성닷컴 등)는 상품마다 대가성 안내를 따로 적는다
  * - image: public/ads/ 폴더에 정사각형 이미지(360×360 webp 권장)를 넣고 "/ads/파일명"으로 지정
  * - position: "header"(메뉴 바로 아래·제목 위, 한 줄 띠) | "top" | "middle" | "bottom"
  *   띠는 높이가 낮아 첫 화면에서 도구를 밀어내지 않는다.
@@ -31,6 +32,12 @@ const brandConnect: BrandConnectConfig = {
       name: "데스커 컴퓨터 책상 2.0 1600×800mm",
       href: "https://naver.me/xvC5iujR",
       image: "/ads/desker-desk-1600.webp",
+    },
+    {
+      name: "갤럭시 북6 노트북",
+      href: "https://www.samsung.com/sec/ace/link/yaM",
+      image: "/ads/galaxy-book6.webp",
+      disclosure: "삼성닷컴 제휴 링크로 구매 시 일정 수수료를 받을 수 있습니다",
     },
   ],
 };
