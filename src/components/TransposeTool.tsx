@@ -134,7 +134,7 @@ export function TransposeTool() {
           onClear={() => setInput("")}
           rowCount={before.rows}
           colCount={before.cols}
-          placeholder={"엑셀이나 구글 시트에서 표를 복사해 여기에 붙여넣으세요.\n\n행은 줄바꿈, 열은 탭으로 구분됩니다."}
+          placeholder={"엑셀·구글 시트·노션에서 표를 복사해 여기에 붙여넣으세요. CSV(쉼표 구분)나 마크다운 표도 됩니다.\n\n팁: 엑셀에서 표 안의 칸 하나를 누르고 Ctrl+A(맥은 ⌘+A)를 누르면 표 전체가 선택됩니다."}
         />
       </div>
 
@@ -198,6 +198,9 @@ export function TransposeTool() {
                   ? `${fmt(before.rows)}행 × ${fmt(before.cols)}열 → ${fmt(after.rows)}행 × ${fmt(after.cols)}열`
                   : "0행 × 0열"}
             </span>
+            {!gate.locked && result.source !== "tab" && (
+              <span>{result.source === "csv" ? "CSV(쉼표 구분)로 읽음" : "마크다운 표로 읽음"}</span>
+            )}
             {clipped && view === "table" && (
               <span>
                 미리보기는 {PREVIEW_ROWS}행 × {PREVIEW_COLS}열까지 · 복사는 전체

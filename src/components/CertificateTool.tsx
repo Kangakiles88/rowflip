@@ -221,7 +221,7 @@ export function CertificateTool() {
           rowCount={total}
           colCount={roster.headers.length}
           placeholder={
-            "엑셀에서 명단을 머리글(첫 행)까지 복사해 붙여넣으세요.\n\n예:\n성명\t소속\t수상명\n김민준\t2학년 3반\t우수상\n이서연\t2학년 1반\t최우수상"
+            "엑셀에서 명단을 머리글(첫 행)까지 복사해 붙여넣으세요.\n\n예:\n성명\t소속\t수상명\n김민준\t2학년 3반\t우수상\n이서연\t2학년 1반\t최우수상\n\n팁: 엑셀에서 표 안의 칸 하나를 누르고 Ctrl+A(맥은 ⌘+A)를 누르면 표 전체가 선택됩니다."
           }
         />
       </div>

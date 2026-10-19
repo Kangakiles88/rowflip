@@ -33,7 +33,9 @@ const PLACEHOLDER = `엑셀이나 텍스트 데이터를 여기에 붙여넣으�
 예:
 A-10234
 A-10235
-A-10236`;
+A-10236
+
+팁: 엑셀에서 첫 칸을 누르고 Ctrl+Shift+↓(맥은 ⌘)를 누르면 열 끝까지 선택됩니다.`;
 
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 

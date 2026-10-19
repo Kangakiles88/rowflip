@@ -176,7 +176,7 @@ export function CellSplitTool() {
           rowCount={table.rowCount}
           colCount={table.colCount}
           placeholder={
-            "엑셀에서 나눌 칸(열)을 복사해 붙여넣으세요. 다른 열을 함께 복사해도 됩니다.\n\n예:\n서울시 강남구 테헤란로 152\n010-2345-6789\nA-10234, A-10235"
+            "엑셀에서 나눌 칸(열)을 복사해 붙여넣으세요. 다른 열을 함께 복사해도 됩니다.\n\n예:\n서울시 강남구 테헤란로 152\n010-2345-6789\nA-10234, A-10235\n\n팁: 엑셀에서 첫 칸을 누르고 Ctrl+Shift+↓(맥은 ⌘)를 누르면 열 끝까지 선택됩니다."
           }
         />
       </div>

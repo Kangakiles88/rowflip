@@ -1,4 +1,4 @@
-import { parseTable } from "./parser";
+import { parseAnyTable } from "./parser";
 
 /**
  * 엑셀 명단 → 상장·수료증 일괄 만들기.
@@ -120,7 +120,7 @@ export interface Roster {
 
 /** 엑셀에서 복사한 명단 — 첫 행은 머리글, 완전히 빈 행은 뺀다 */
 export function parseRoster(raw: string): Roster {
-  const table = parseTable(raw);
+  const table = parseAnyTable(raw);
   const rows = table.rows.map((r) => r.map((c) => c.trim())).filter((r) => r.some((c) => c !== ""));
   if (rows.length === 0) return { headers: [], rows: [] };
   const width = rows.reduce((m, r) => Math.max(m, r.length), 0);

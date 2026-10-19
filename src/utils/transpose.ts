@@ -1,5 +1,4 @@
-import type { ParsedTable } from "../types";
-import { parseTable } from "./parser";
+import { parseAnyTable, type TableSource } from "./parser";
 
 export type TableFormat = "excel" | "csv" | "markdown";
 
@@ -16,6 +15,8 @@ export interface TransposeResult {
   output: string;
   before: { rows: number; cols: number };
   after: { rows: number; cols: number };
+  /** 입력을 어떻게 읽었는지 — 탭(엑셀·구글 시트·노션) / CSV / 마크다운 표 */
+  source: TableSource;
 }
 
 /* ── 순수 함수 ─────────────────────────────────────── */
@@ -92,7 +93,7 @@ export function formatTable(rows: string[][], format: TableFormat): string {
 /* ── 전체 흐름 ───────────────────────────────────────── */
 
 export function transposeText(raw: string, o: TransposeOptions): TransposeResult {
-  const table: ParsedTable = parseTable(raw);
+  const table = parseAnyTable(raw);
   let rows = padRows(table.rows);
   if (o.trim) rows = rows.map((r) => r.map((s) => s.trim()));
   if (o.removeEmptyRows) rows = dropEmptyRows(rows);
@@ -105,6 +106,7 @@ export function transposeText(raw: string, o: TransposeOptions): TransposeResult
     output: formatTable(out, o.format),
     before,
     after: { rows: out.length, cols: out[0]?.length ?? 0 },
+    source: table.source,
   };
 }
 

@@ -71,7 +71,7 @@ export function AmountTool() {
           onClear={() => setInput("")}
           rowCount={input === "" ? 0 : input.replace(/\n$/, "").split("\n").length}
           colCount={1}
-          placeholder={"한글로 바꿀 금액을 붙여넣으세요. 엑셀 한 열을 그대로 붙여넣어도 됩니다.\n\n예:\n1200000\n35,000,000\n₩4,500"}
+          placeholder={"한글로 바꿀 금액을 붙여넣으세요. 엑셀 한 열을 그대로 붙여넣어도 됩니다.\n\n예:\n1200000\n35,000,000\n₩4,500\n\n팁: 엑셀에서 첫 칸을 누르고 Ctrl+Shift+↓(맥은 ⌘)를 누르면 열 끝까지 선택됩니다."}
         />
       </div>
 

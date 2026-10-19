@@ -1,4 +1,4 @@
-import { parseTable } from "./parser";
+import { parseAnyTable, type TableSource } from "./parser";
 import { padRows, toTsv } from "./transpose";
 
 /** unique = 중복 제거 / duplicates = 중복된 값만(한 번씩) / count = 값마다 개수 */
@@ -40,6 +40,8 @@ export interface DedupeResult {
   /** 입력이 한 행짜리 가로 목록이었는지 — 결과도 가로로 돌려준다 */
   horizontal: boolean;
   colCount: number;
+  /** 입력을 어떻게 읽었는지 — 탭 / CSV / 마크다운 표 */
+  source: TableSource;
 }
 
 const EMPTY_STATS: DedupeStats = { total: 0, unique: 0, duplicateValues: 0, removed: 0, emptyRemoved: 0 };
@@ -150,9 +152,9 @@ export function looksLikeHeader(rows: string[][]): boolean {
 
 /** 붙여넣은 텍스트 → 결과. 한 행짜리 가로 목록은 칸 하나하나를 목록으로 보고 결과도 가로로 돌려준다. */
 export function dedupeText(raw: string, o: DedupeOptions): DedupeResult {
-  const table = parseTable(raw);
+  const table = parseAnyTable(raw);
   if (raw.trim() === "") {
-    return { rows: [], output: "", stats: EMPTY_STATS, horizontal: false, colCount: 0 };
+    return { rows: [], output: "", stats: EMPTY_STATS, horizontal: false, colCount: 0, source: "tab" };
   }
 
   const horizontal = table.rowCount === 1 && table.colCount > 1;
@@ -164,7 +166,7 @@ export function dedupeText(raw: string, o: DedupeOptions): DedupeResult {
   if (horizontal && opts.mode !== "count") output = toTsv([rows.map((r) => r[0])]);
   else output = toTsv(rows);
 
-  return { rows, output, stats, horizontal, colCount: horizontal ? 1 : table.colCount };
+  return { rows, output, stats, horizontal, colCount: horizontal ? 1 : table.colCount, source: table.source };
 }
 
 export const DEFAULT_DEDUPE_OPTIONS: DedupeOptions = {

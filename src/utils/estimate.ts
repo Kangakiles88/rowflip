@@ -1,5 +1,5 @@
 import { amountWords, withCommas } from "./amount";
-import { parseTable } from "./parser";
+import { parseAnyTable } from "./parser";
 
 /**
  * 견적서 — 엑셀에서 복사한 품목 표를 읽어 공급가액·세액·합계를 계산한다.
@@ -113,7 +113,7 @@ export function parseItems(raw: string): {
   /** 탭이 없어 띄어쓰기로 칸을 나눴는지 */
   spaced: boolean;
 } {
-  const table = parseTable(raw);
+  const table = parseAnyTable(raw);
   const rows = table.rows.map((r) => r.map((c) => c.trim()));
   const firstIdx = rows.findIndex((r) => r.some((c) => c !== ""));
   if (firstIdx === -1) return { items: [], invalidLines: [], hasHeader: false, spaced: false };

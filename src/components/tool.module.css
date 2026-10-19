@@ -699,6 +699,9 @@ ins.diffMark {
 .code::placeholder {
   color: var(--ink-3);
   font-family: var(--font-sans);
+  /* 입력은 줄을 접지 않지만(엑셀 표 모양 유지) 안내 문구는 칸 너비에 맞춰 접는다 */
+  white-space: pre-wrap;
+  word-break: keep-all;
 }
 .codeWrap {
   white-space: pre-wrap;

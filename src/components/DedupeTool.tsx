@@ -21,7 +21,7 @@ import {
   type DedupeMode,
   type DedupeOptions,
 } from "@/utils/dedupe";
-import { parseTable } from "@/utils/parser";
+import { parseAnyTable } from "@/utils/parser";
 import { InputPanel } from "./InputPanel";
 import { Segmented } from "./Segmented";
 import { SheetPreview } from "./SheetPreview";
@@ -123,7 +123,7 @@ export function DedupeTool() {
   const pending = deferredInput !== input;
 
   // 열 수와 머리글 이름 — 비교 기준 선택에 쓴다
-  const table = useMemo(() => parseTable(deferredInput), [deferredInput]);
+  const table = useMemo(() => parseAnyTable(deferredInput), [deferredInput]);
   const colCount = table.rowCount === 1 ? 1 : table.colCount;
   const key =
     typeof options.key === "number" && options.key >= colCount
@@ -222,7 +222,7 @@ export function DedupeTool() {
           rowCount={table.rowCount}
           colCount={table.colCount}
           placeholder={
-            "중복을 찾을 목록이나 표를 붙여넣으세요.\n\n예:\nA-10234\nA-10235\nA-10234"
+            "중복을 찾을 목록이나 표를 붙여넣으세요. CSV(쉼표 구분)도 됩니다.\n\n예:\nA-10234\nA-10235\nA-10234\n\n팁: 엑셀에서 표 안의 칸 하나를 누르고 Ctrl+A(맥은 ⌘+A)를 누르면 표 전체가 선택됩니다."
           }
         />
       </div>
@@ -296,6 +296,9 @@ export function DedupeTool() {
 
           <div className={styles.status} aria-live="polite">
             <span>{summary}</span>
+            {!gate.locked && result.source !== "tab" && (
+              <span>{result.source === "csv" ? "CSV(쉼표 구분)로 읽음" : "마크다운 표로 읽음"}</span>
+            )}
             {!gate.locked && colCount > 1 && (
               // 무엇을 기준으로 비교했는지 결과 바로 아래에 — '행 전체'면 눈에 띄게 하고 그 자리에서 바꿀 수 있게
               <label className={key === "row" ? styles.statusNotice : undefined}>
