@@ -107,6 +107,15 @@ export const TOOL_PAGES = [
     priority: 0.9,
   },
   {
+    id: "statement",
+    group: "doc",
+    href: "/statement/",
+    label: "거래명세서",
+    title: "거래명세서 양식 작성",
+    desc: "납품 품목·잔액 계산, A4 한 장에 두 부 인쇄·PDF 저장",
+    priority: 0.9,
+  },
+  {
     id: "certificate",
     group: "doc",
     href: "/certificate/",

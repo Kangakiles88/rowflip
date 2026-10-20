@@ -17,7 +17,11 @@ export default function EstimatePage() {
       faq={ESTIMATE_FAQ}
       related={
         <>
-          합계 금액만 ‘일금 ○○원정’으로 바꾸려면{" "}
+          물건을 넘긴 뒤 내역을 적으려면{" "}
+          <Link className="inlineLink" href="/statement/">
+            거래명세서 양식 작성
+          </Link>
+          을, 합계 금액만 ‘일금 ○○원정’으로 바꾸려면{" "}
           <Link className="inlineLink" href="/amount/">
             숫자 한글 변환
           </Link>

@@ -14,6 +14,8 @@ export interface EstimateItem {
   qty: number;
   price: number;
   note: string;
+  /** 거래명세서의 월/일 칸(머리글 '월일·일자·날짜'가 있을 때만) */
+  date?: string;
 }
 
 export interface EstimateLine extends EstimateItem {
@@ -32,7 +34,7 @@ export interface EstimateTotals {
 export const ESTIMATE_SAMPLE =
   "품목\t규격\t수량\t단가\t비고\n사무용 의자\tT-ZERO\t4\t189,000\t\nA4 복사용지\t80g 2,500매\t10\t27,500\t\n모니터암\t듀얼\t2\t64,000\t설치 포함";
 
-type Col = "name" | "spec" | "qty" | "price" | "note";
+type Col = "name" | "spec" | "qty" | "price" | "note" | "date";
 
 const ALIASES: Record<Col, string[]> = {
   name: ["품목", "품명", "상품명", "제품명", "항목", "내역", "품목명"],
@@ -40,7 +42,21 @@ const ALIASES: Record<Col, string[]> = {
   qty: ["수량", "개수", "qty"],
   price: ["단가", "가격", "금액단가", "판매가"],
   note: ["비고", "메모", "참고"],
+  date: ["월일", "월/일", "일자", "날짜", "거래일", "거래일자", "납품일", "출고일"],
 };
+
+/** 날짜처럼 보이는 낱말 — 10/14, 10-14, 2026-10-14, 2026.10.14, 10월 14일 */
+const looksDate = (t: string) => /^(\d{4}[-./])?\d{1,2}[-./]\d{1,2}\.?$|^\d{1,2}월\s*\d{1,2}일$/.test(t.trim());
+
+/** 거래명세서 월/일 칸 — 엑셀 날짜(2026-10-14, 2026.10.14, 10/14, 10월 14일)를 '10/14'로. 모르는 모양은 그대로 */
+export function monthDay(raw: string): string {
+  const t = raw.trim();
+  const m =
+    t.match(/^\d{4}[-./]\s*(\d{1,2})[-./]\s*(\d{1,2})\.?$/) ??
+    t.match(/^(\d{1,2})[-./](\d{1,2})\.?$/) ??
+    t.match(/^(\d{1,2})월\s*(\d{1,2})일$/);
+  return m ? `${Number(m[1])}/${Number(m[2])}` : t;
+}
 
 const norm = (s: string) => s.replace(/\s+/g, "").toLowerCase();
 
@@ -81,7 +97,7 @@ const isNum = (t: string) => parseNumber(t) !== null;
  */
 function splitSpacedRow(line: string, header: Partial<Record<Col, number>> | null, headerWidth: number): Record<Col, string> {
   const t = line.trim().split(/\s+/);
-  const out: Record<Col, string> = { name: "", spec: "", qty: "", price: "", note: "" };
+  const out: Record<Col, string> = { name: "", spec: "", qty: "", price: "", note: "", date: "" };
   if (header && t.length === headerWidth) {
     (Object.keys(header) as Col[]).forEach((c) => (out[c] = t[header[c]!] ?? ""));
     return out;
@@ -98,6 +114,10 @@ function splitSpacedRow(line: string, header: Partial<Record<Col, number>> | nul
     rest--;
   }
   const head = t.slice(0, rest);
+  // 머리글에 월일이 있고 맨 앞 낱말이 날짜 모양이면 월일로
+  if (header?.date !== undefined && head.length >= 2 && looksDate(head[0])) {
+    out.date = head.shift()!;
+  }
   // 머리글에 규격이 있고 품목 앞부분이 두 낱말 이상이면 마지막 낱말을 규격으로
   if (header?.spec !== undefined && head.length >= 2) {
     out.spec = head.pop()!;
@@ -136,7 +156,7 @@ export function parseItems(raw: string): {
         invalidLines.push(i + 1);
         continue;
       }
-      items.push({ name: c.name, spec: c.spec, qty, price, note: c.note });
+      items.push({ name: c.name, spec: c.spec, qty, price, note: c.note, ...(c.date ? { date: monthDay(c.date) } : {}) });
     }
     return { items, invalidLines, hasHeader: header !== null, spaced: true };
   }
@@ -160,7 +180,8 @@ export function parseItems(raw: string): {
       invalidLines.push(i + 1);
       continue;
     }
-    items.push({ name, spec: get(r, "spec"), qty, price, note: get(r, "note") });
+    const date = get(r, "date");
+    items.push({ name, spec: get(r, "spec"), qty, price, note: get(r, "note"), ...(date ? { date: monthDay(date) } : {}) });
   }
   return { items, invalidLines, hasHeader: header !== null, spaced: false };
 }

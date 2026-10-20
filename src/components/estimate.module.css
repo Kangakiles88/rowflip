@@ -9,6 +9,10 @@
   line-height: 1.45;
   font-variant-numeric: tabular-nums;
 }
+/* 인쇄: 표 바깥 테두리가 인쇄 영역 끝에 걸려 잘리지 않게 좌우를 살짝 띄운다 */
+.doc:not(.preview) {
+  padding: 0 calc(0.5 * var(--mm));
+}
 /* 미리보기: A4 한 장 모양(여백 포함) */
 .preview {
   --mm: calc(100cqw / 210);

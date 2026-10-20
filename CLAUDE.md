@@ -23,6 +23,7 @@
     - `/case/` 대소문자 변환: 대문자·소문자·문장·단어 첫 글자·반전, camel·Pascal·snake·UPPER_SNAKE·kebab(줄마다)
   - 문서 만들기(묶음 `doc`)
     - `/estimate/` 견적서 양식 작성: 엑셀 품목 표 붙여넣기(머리글 품목·규격·수량·단가·비고로 열 자동 연결, 없으면 열 수로 순서 추정) → 부가세 별도(10% 원 미만 절사)/포함(÷1.1 반올림, 나머지 세액)/없음 → 합계 '일금 ○○원정 (₩…)' → 받는 곳·견적일·유효기간·견적번호, 공급자 7칸, 비고 → A4 미리보기(크게 보기)·인쇄·PDF(@page 여백 12mm에 흘려 쓰기, 여러 쪽이면 표 머리글 반복, 품목 적으면 빈 줄 10줄까지). `utils/estimate.ts`, `EstimateDoc`(estimate.module.css, `--paper-fill` 토큰). 저장은 부가세 방식·유효기간만(품목·거래처·공급자 정보는 저장 안 함)
+    - `/statement/` 거래명세서 양식 작성: 견적서와 같은 품목 파서(`parseItems`, 머리글 '월일·일자·날짜'면 `date` 칸 → `monthDay`로 10/14) + 공급받는자·공급자 7칸씩 + 전잔액·입금액·잔액(`utils/statement.ts` `statementBalance`) + 인수자 (인). 찍는 부수 '두 부'(A4 한 장 위아래 공급자 보관용·공급받는자 보관용 + 자르는 선, 품목 많으면 한 부씩 한 쪽) / '한 부'. `StatementDoc`(statement.module.css + estimate.module.css 공통), 입력칸·선택지는 `docFields.ts`(견적서와 공유). 저장은 부가세 방식·부수만(`rowflip:statement:v1`)
     - `/certificate/` 엑셀로 상장·수료증 일괄 만들기: 명단(첫 행 머리글) 붙여넣기 → 양식(상장·수료증·위촉장·감사장) 선택 → 칸 연결(머리글 자동 연결 `autoMap`, 수상명은 큰 제목) → 발급일·기관·대표자·자동 번호 → 본문 문구({칸 이름} 치환 + 조사 자동) → A4 한 장에 한 명 미리보기(한 장씩 넘김, 미리보기 클릭·'크게 보기'로 화면 가득 확대 — 휴대폰은 숨김) → 브라우저 인쇄·PDF 저장(한 번에 500장). 인쇄는 body 아래 포털 `.certPrintRoot`만 보이게(globals.css의 print 규칙), 장 크기는 `--mm` 배수(certificate.module.css). 종이 색은 `--paper*` 토큰(다크 모드에서도 흰 종이). 저장은 양식·글꼴·날짜 형식만(명단·기관명·문구는 저장 안 함). 2단계(HWPX 양식 업로드)·3단계(유료화)는 프로젝트 문서 `claude/handoff-certificate-page.md`
     - `/amount/` 숫자 한글 변환(금액 한글 표기): 줄마다 금액 → 금액(일금 ○○원정, 일십·일백 생략 안 함) / 읽기(만 단위 띄어쓰기, 1만=만) / 숫자+단위(1,234만 5,000) / 한자 갖은자(金 壹佰…원整), 숫자 병기(₩…). 자릿수 문자열로 처리(24자리·해 단위까지), 숫자가 아닌 줄은 빈 줄로 두고 줄 수 유지(엑셀 옆 열에 붙여넣기)
   - `/privacy/` 개인정보처리방침(문구는 `src/content/privacy.tsx`, 문의 메일 `contact@rowflip.com` = `site.ts`의 contactEmail, Cloudflare 이메일 라우팅으로 운영자 Gmail에 전달 — 개인 메일 주소는 저장소에 넣지 않음). 안내 페이지는 `nav.ts`의 `INFO_PAGES` → 푸터·sitemap에만 들어감. 푸터에 '의견 보내기'(contactEmail mailto)
@@ -49,13 +50,13 @@ src/
 ├─ app/            layout(공통 메타), page(/), transpose/page, sitemap, robots, manifest, icon
 ├─ components/     share/(ShareDialog, ConvertGateButton, useConvertGate), Header(+ NavMenu 펼침 메뉴), SiteFooter, ToolDirectory(다른 도구 목록), JsonLd,
 │  │               ToolPageLayout(새 기능 페이지 공통 틀 + toolMetadata), PageIntro(H1·개인정보 안내·설명), useToolBasics(옵션 저장·복사·공유 안내·단축키),
-│  │               ResultPane(결과 창, primaryLabel로 주 버튼 이름 변경), Converter, TransposeTool, DedupeTool, SplitTool, CellSplitTool, CountTool, LinebreakTool, DiffTool, HanyangTool, CaseTool, CertificateTool(+ CertificatePage, certificate.module.css), AmountTool, EstimateTool(+ EstimateDoc, estimate.module.css),
+│  │               ResultPane(결과 창, primaryLabel로 주 버튼 이름 변경), Converter, TransposeTool, DedupeTool, SplitTool, CellSplitTool, CountTool, LinebreakTool, DiffTool, HanyangTool, CaseTool, CertificateTool(+ CertificatePage, certificate.module.css), AmountTool, EstimateTool(+ EstimateDoc, estimate.module.css), StatementTool(+ StatementDoc, statement.module.css), docFields(견적서·거래명세서 공통 입력칸),
 │  │               SheetPreview(엑셀식 표 미리보기), InputPanel(inputId·title로 여러 개 가능), OutputPanel,
 │  │               PresetButtons, CleanupOptions, OutputOptions, Segmented, Toast, tool.module.css
 │  └─ ads/         AdSlot, AdSenseScript, BrandConnectBanner, PromotionArea
 ├─ config/         site.ts(브랜드·도메인·SEO), analytics.ts(GA4), nav.ts(페이지 목록), share.ts(첫 변환 공유 안내), ads.ts, brandConnect.ts
-├─ content/        seo.tsx(/ 안내·FAQ), transpose, dedupe, split, cellSplit, count, linebreak, diff, hanyang, case, certificate, amount, estimate(각 페이지 메타·안내·FAQ), privacy
-├─ utils/          parser, split(원본 나누기), rotation(광고 순번), transformer, transpose, dedupe, cellSplit, count, linebreak, diff, hanyang, caseConvert, certificate, amount, estimate(순수 함수 + 테스트), shareUrl, presets, storage, clipboard, tracking
+├─ content/        seo.tsx(/ 안내·FAQ), transpose, dedupe, split, cellSplit, count, linebreak, diff, hanyang, case, certificate, amount, estimate, statement(각 페이지 메타·안내·FAQ), privacy
+├─ utils/          parser, split(원본 나누기), rotation(광고 순번), transformer, transpose, dedupe, cellSplit, count, linebreak, diff, hanyang, caseConvert, certificate, amount, estimate, statement, excelClipboard, bookmarkHint(순수 함수 + 테스트), shareUrl, presets, storage, clipboard, tracking
 └─ types/
 public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미지), ads/(배너 이미지)
 ```
@@ -145,7 +146,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 카카오톡 공유: JavaScript 키는 `share.ts`에 들어가 있음. 카카오 디벨로퍼스 앱의 [플랫폼 > Web]과 [제품 링크 관리 > 웹 도메인]에 `https://rowflip.com`이 등록돼 있어야 동작
 
 ## 현재 상태와 남은 일
-- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 13개(엑셀·목록 5: 가로세로·행열·중복 제거·쉼표→줄바꿈·셀 나누기 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자 / 문서 3: 견적서·상장·수료증·금액 한글), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 189개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
+- 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 14개(엑셀·목록 5: 가로세로·행열·중복 제거·쉼표→줄바꿈·셀 나누기 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자 / 문서 4: 견적서·거래명세서·상장·수료증·금액 한글), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 194개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - (확인 완료 2026-10-11) Cloudflare 관리형 robots.txt: Googlebot·Yeti(네이버)·Bingbot·Mediapartners-Google(AdSense) 허용, AI 학습 로봇과 AI 에이전트(ChatGPT-User·Claude-User 등)만 차단. 우리 robots.ts는 그 아래에 붙음
   - AdSense: 기존 계정(pub-1418493009023603, 예전 수익 있음)으로 변경(2026-10-12). 새로 만든 계정(pub-9884982808493036)은 중복 계정 방지를 위해 사이트 삭제·해지 → 기존 계정에서 rowflip.com 사이트 검토 요청, 승인 대기
@@ -153,7 +154,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
   - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click·result_copy·result_print(페이지 경로만)만
   - Cloudflare Web Analytics(쿠키 없음): Cloudflare가 자동으로 `beacon.min.js`를 붙임(코드에는 없음). GA와 수치 비교용으로 유지하기로 함(2026-10-16), 개인정보처리방침 5항에 기재
   - PageSpeed 모바일 57(2026-10-16, CLS 0.023). 남은 FCP·LCP는 대부분 애드센스·GA 스크립트 → AdSense 승인 뒤 광고 스크립트를 첫 화면 뒤에 불러오는 방안 검토(심사 중에는 광고 코드 건드리지 않음)
-  - 기능 페이지 후보 — 네이버 월 검색수(마피아넷, 2026-10-13) 기준: (완료 2026-10-17) 엑셀셀나누기 2,590(+칸나누기 840) → 랜덤뽑기 12,290·팀나누기 1,160(네이버 자체 도구 뜨는지 확인 후) → 거래명세서(견적서 틀 재사용) → 엑셀달력 1,690. 네이버 자체 도구가 맨 위에 뜨는 검색어(사다리타기 28만, 부가세계산기 7.8만)는 단독 페이지로 만들지 않음. 검색량 작음(수백 이하): 빈칸 채우기 470, 공백 제거 420, 하이픈 제거 290, 날짜 변환 230, 마스킹 110, 숫자한글변환 70, CSV 깨짐 20 → 기존 페이지 옵션으로 넣거나 보류
+  - 기능 페이지 후보 — 네이버 월 검색수(마피아넷, 2026-10-13) 기준: (완료 2026-10-17) 엑셀셀나누기 2,590(+칸나누기 840) → 랜덤뽑기 12,290·팀나누기 1,160(네이버 자체 도구 뜨는지 확인 후) → (완료 2026-10-20) 거래명세서양식 7,550(PC 5,610, 광고 경쟁 높음) → 기부금영수증 일괄 만들기 + 이름별 합계(11월 초까지, 연말정산 성수기 12~2월; 10월 검색량 기부금영수증양식 270·발급 260·교회기부금영수증 50) → 엑셀달력 1,690. 네이버 자체 도구가 맨 위에 뜨는 검색어(사다리타기 28만, 부가세계산기 7.8만)는 단독 페이지로 만들지 않음. 검색량 작음(수백 이하): 빈칸 채우기 470, 공백 제거 420, 하이픈 제거 290, 날짜 변환 230, 마스킹 110, 숫자한글변환 70, CSV 깨짐 20 → 기존 페이지 옵션으로 넣거나 보류
 
 ## 답변 방식
 - 한국어로 답변. 코드를 바꾸면 바꾼 파일과 이유를 짧게 정리.
