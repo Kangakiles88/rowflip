@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import type { ReactNode } from "react";
 import type { ToolPageId } from "@/config/nav";
 import { siteConfig } from "@/config/site";
-import { getPostsForTool, postPath } from "@/content/blog";
 import type { FaqItem, Guide } from "@/content/seo";
 import { Header } from "./Header";
 import { JsonLd } from "./JsonLd";
 import { PageIntro } from "./PageIntro";
+import { RelatedPosts } from "./RelatedPosts";
 import { SiteFooter } from "./SiteFooter";
 import { ToolDirectory } from "./ToolDirectory";
 import { PromotionArea } from "./ads/PromotionArea";
@@ -59,7 +58,6 @@ interface Props {
 
 /** 기능 페이지 공통 틀 — 광고 띠 · 제목 · 도구 · 다른 도구 · 사용 안내 · FAQ */
 export function ToolPageLayout({ id, meta, lede, tool, guideTitle, guides, related, faq }: Props) {
-  const posts = getPostsForTool(id);
   return (
     <>
       <JsonLd path={meta.path} name={meta.h1} description={meta.description} features={[...meta.features]} faq={faq} />
@@ -90,15 +88,7 @@ export function ToolPageLayout({ id, meta, lede, tool, guideTitle, guides, relat
             ))}
           </div>
           <p className="related">{related}</p>
-          {posts.length > 0 && (
-            <ul className="relatedPosts" aria-label="관련 글">
-              {posts.map((p) => (
-                <li key={p.meta.slug}>
-                  <Link href={postPath(p.meta.slug)}>{p.meta.h1}</Link>
-                </li>
-              ))}
-            </ul>
-          )}
+          <RelatedPosts tool={id} />
         </section>
 
         <PromotionArea position="bottom" />

@@ -3,6 +3,7 @@ import { Converter } from "@/components/Converter";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
 import { PageIntro } from "@/components/PageIntro";
+import { RelatedPosts } from "@/components/RelatedPosts";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ToolDirectory } from "@/components/ToolDirectory";
 import { PromotionArea } from "@/components/ads/PromotionArea";
@@ -98,6 +99,7 @@ export default function Home() {
             </Link>
             을 쓰세요.
           </p>
+          <RelatedPosts tool="garosero" />
         </section>
 
         <PromotionArea position="bottom" />
