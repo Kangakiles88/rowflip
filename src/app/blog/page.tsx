@@ -25,7 +25,7 @@ export default function BlogIndexPage() {
   const posts = getPosts();
   return (
     <>
-      <Header />
+      <Header current="blog" />
       <main className="container page">
         <PromotionArea position="header" />
         <div className="intro">

@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { TOOL_GROUPS, TOOL_PAGES, type ToolGroupId, type ToolPageId } from "@/config/nav";
+import { BLOG_NAV, TOOL_GROUPS, TOOL_PAGES, type NavCurrent, type ToolGroupId } from "@/config/nav";
 import styles from "./tool.module.css";
 
 /**
  * 헤더 기능 메뉴 — 묶음(엑셀·목록 / 텍스트 / 문서 만들기) 버튼을 누르면 그 묶음의 도구 목록이 펼쳐진다.
  * 링크는 닫혀 있어도 HTML에 남겨 둔다(검색 로봇이 따라갈 수 있게).
  */
-export function NavMenu({ current }: { current?: ToolPageId }) {
+export function NavMenu({ current }: { current?: NavCurrent }) {
   const [open, setOpen] = useState<ToolGroupId | null>(null);
   const ref = useRef<HTMLElement>(null);
   const currentGroup = TOOL_PAGES.find((p) => p.id === current)?.group;
@@ -70,6 +70,16 @@ export function NavMenu({ current }: { current?: ToolPageId }) {
           </div>
         );
       })}
+      <div className={`${styles.navGroup} ${styles.navGroupLink}`}>
+        <Link
+          href={BLOG_NAV.href}
+          className={styles.navButton}
+          data-current={current === "blog" || undefined}
+          aria-current={current === "blog" ? "page" : undefined}
+        >
+          {BLOG_NAV.label}
+        </Link>
+      </div>
     </nav>
   );
 }

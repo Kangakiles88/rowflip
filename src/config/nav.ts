@@ -135,6 +135,9 @@ export const TOOL_PAGES = [
   },
 ] as const;
 
+/** 헤더 메뉴 맨 오른쪽 링크 — 모든 페이지에서 블로그 목록으로 이어지게(검색 로봇도 따라감) */
+export const BLOG_NAV = { href: "/blog/", label: "Blog" } as const;
+
 /** 기능이 아닌 안내 페이지 — 푸터와 sitemap에만 들어간다 */
 export const INFO_PAGES = [
   { id: "blog", href: "/blog/", label: "엑셀 작업 팁", priority: 0.6 },
@@ -143,3 +146,5 @@ export const INFO_PAGES = [
 
 export type ToolPageId = (typeof TOOL_PAGES)[number]["id"];
 export type ToolGroupId = (typeof TOOL_GROUPS)[number]["id"];
+/** 헤더에서 현재 위치로 표시할 곳 — 기능 페이지 id 또는 블로그 */
+export type NavCurrent = ToolPageId | "blog";

@@ -49,6 +49,10 @@
   color: var(--ink);
   background: var(--hover);
 }
+/* 펼침이 없는 메뉴(Blog)는 링크라서 밑줄만 지운다 */
+a.navButton {
+  text-decoration: none;
+}
 .navButton[data-current] {
   color: var(--accent);
   font-weight: 700;
@@ -1100,6 +1104,13 @@ ins.diffMark {
     justify-content: center;
     height: 44px;
     padding: 0 8px;
+  }
+  /* Blog는 글자가 짧아 묶음 버튼 셋에 자리를 더 준다 */
+  .navGroupLink {
+    flex: 0 0 auto;
+  }
+  .navGroupLink .navButton {
+    padding: 0 14px;
   }
   .navPanel {
     left: 0;

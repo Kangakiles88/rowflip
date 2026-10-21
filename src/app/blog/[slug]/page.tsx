@@ -61,7 +61,7 @@ export default async function BlogPostPage({ params }: Params) {
   return (
     <>
       <BlogJsonLd meta={meta} />
-      <Header />
+      <Header current="blog" />
       <main className="container page">
         <PromotionArea position="header" />
         <nav className="crumbs" aria-label="현재 위치">

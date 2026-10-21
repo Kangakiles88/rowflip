@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ToolPageId } from "@/config/nav";
+import type { NavCurrent } from "@/config/nav";
 import { siteConfig } from "@/config/site";
 import { NavMenu } from "./NavMenu";
 import styles from "./tool.module.css";
@@ -19,7 +19,7 @@ function Mark() {
   );
 }
 
-export function Header({ current }: { current?: ToolPageId }) {
+export function Header({ current }: { current?: NavCurrent }) {
   return (
     <header className={styles.header}>
       <div className={`container ${styles.headerInner}`}>

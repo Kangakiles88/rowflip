@@ -86,7 +86,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 글꼴 성능(PageSpeed): Pretendard는 외부 CDN이 아니라 직접 호스팅 — `npm run fonts`(predev·prebuild에서 자동)가 `node_modules/pretendard`에서 woff2 조각을 `public/fonts/pretendard/`로, @font-face CSS를 `src/app/pretendard.css`로 만듦(둘 다 .gitignore). `font-display: optional`(글꼴 바뀌며 화면 밀림=CLS 방지). 860px 이하는 `--font-sans`를 기기 기본 글꼴로 바꿔 웹 글꼴을 아예 받지 않음(모바일 첫 화면 속도). `<head>`에 외부 CSS를 다시 넣지 말 것(렌더링 차단).
 - 옵션은 툴바형 컴팩트 컨트롤(세그먼트 버튼, select, 체크박스). 패널 하단에 상태 표시줄(행 수, 글자 수, 제거된 개수 등).
 - 주요 동작에 단축키(Ctrl/⌘+Enter = 복사)와 kbd 힌트. 터치 기기에서는 kbd 숨김.
-- 헤더 기능 메뉴는 묶음별 펼침 메뉴(`NavMenu`): 묶음 버튼(`TOOL_GROUPS.short`: 엑셀·목록 / 텍스트 / 문서 만들기, 현재 묶음 = accent 글자 + 아래 2px 막대)을 누르면 그 묶음 도구 목록(제목+설명, 현재 페이지 accent-soft)이 펼쳐짐. 바깥 클릭·Esc로 닫힘, 링크는 닫혀 있어도 HTML에 남김(hidden). 860px 이하에서는 로고 아래 줄에 버튼 3개 같은 너비, 패널은 화면 너비 가득. 도구가 늘어도 메뉴 폭은 그대로. '입력한 데이터는 서버로 전송되지 않습니다'는 헤더가 아니라 `PageIntro`(H1 오른쪽).
+- 헤더 기능 메뉴는 묶음별 펼침 메뉴(`NavMenu`): 묶음 버튼(`TOOL_GROUPS.short`: 엑셀·목록 / 텍스트 / 문서 만들기, 현재 묶음 = accent 글자 + 아래 2px 막대)을 누르면 그 묶음 도구 목록(제목+설명, 현재 페이지 accent-soft)이 펼쳐짐. 바깥 클릭·Esc로 닫힘, 링크는 닫혀 있어도 HTML에 남김(hidden). 묶음 버튼 오른쪽에 펼침 없는 **Blog** 링크(`nav.ts`의 `BLOG_NAV` → `/blog/`, 블로그 목록·글 페이지에서 `current="blog"`로 초록 밑줄) — 모든 페이지에서 블로그로 내부 링크. 860px 이하에서는 로고 아래 줄에 묶음 버튼 3개 같은 너비 + Blog는 글자 폭만큼, 패널은 화면 너비 가득. 도구가 늘어도 메뉴 폭은 그대로. '입력한 데이터는 서버로 전송되지 않습니다'는 헤더가 아니라 `PageIntro`(H1 오른쪽).
 - 도구 아래 '다른 도구'(`ToolDirectory`)는 묶음별 제목 + 구분선 목록.
 - 표 결과는 `SheetPreview`(열 이름 A·B·C + 행 번호)로 보여 주고 '표 / 텍스트' 전환.
 - 반응형: 860px 이하 1단(순서: 입력 → 빠른 변환 → 변환 버튼 → 결과 → 옵션 — 결과가 입력 바로 아래). 모바일(390px)에서 가로 스크롤 없어야 함.
