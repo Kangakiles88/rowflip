@@ -4,6 +4,7 @@ import { excelAddressSplit } from "./posts/excel-address-split";
 import { excelAmountKorean } from "./posts/excel-amount-korean";
 import { excelLenCount } from "./posts/excel-len-count";
 import { excelPhoneNumber } from "./posts/excel-phone-number";
+import { excelUnpivot } from "./posts/excel-unpivot";
 import { excelVatFormula } from "./posts/excel-vat-formula";
 import type { Post } from "./types";
 
@@ -21,7 +22,7 @@ export const BLOG_META = {
  * 블로그 글 목록 — 새 글은 posts/<slug>.tsx를 만들고 여기에 추가한다.
  * 목록·sitemap·기능 페이지 '관련 글'이 모두 이 배열을 쓴다.
  */
-const POSTS: Post[] = [excelAddressSplit, excelAmountKorean, excelVatFormula, excelLenCount, excelPhoneNumber, excelAddQuotes];
+const POSTS: Post[] = [excelAddressSplit, excelAmountKorean, excelVatFormula, excelLenCount, excelPhoneNumber, excelAddQuotes, excelUnpivot];
 
 /** 최신 글이 먼저 오도록 정렬한 목록 */
 export function getPosts(): Post[] {

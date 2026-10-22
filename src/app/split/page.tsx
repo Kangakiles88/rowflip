@@ -9,6 +9,7 @@ import { SplitTool } from "@/components/SplitTool";
 import { PromotionArea } from "@/components/ads/PromotionArea";
 import { siteConfig } from "@/config/site";
 import { SPLIT_FAQ, SPLIT_GUIDES, SPLIT_META as M } from "@/content/split";
+import { RelatedPosts } from "@/components/RelatedPosts";
 
 export const metadata: Metadata = {
   title: M.title,
@@ -91,6 +92,7 @@ export default function SplitPage() {
             </Link>
             를 쓰세요.
           </p>
+          <RelatedPosts tool="split" />
         </section>
 
         <PromotionArea position="bottom" />

@@ -9,6 +9,7 @@ import { TransposeTool } from "@/components/TransposeTool";
 import { PromotionArea } from "@/components/ads/PromotionArea";
 import { siteConfig } from "@/config/site";
 import { TRANSPOSE_FAQ, TRANSPOSE_GUIDES, TRANSPOSE_META as M } from "@/content/transpose";
+import { RelatedPosts } from "@/components/RelatedPosts";
 
 export const metadata: Metadata = {
   title: M.title,
@@ -87,6 +88,7 @@ export default function TransposePage() {
             </Link>
             를 쓰세요.
           </p>
+          <RelatedPosts tool="transpose" />
         </section>
 
         <PromotionArea position="bottom" />

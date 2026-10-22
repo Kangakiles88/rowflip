@@ -9,6 +9,7 @@ import { DedupeTool } from "@/components/DedupeTool";
 import { PromotionArea } from "@/components/ads/PromotionArea";
 import { siteConfig } from "@/config/site";
 import { DEDUPE_FAQ, DEDUPE_GUIDES, DEDUPE_META as M } from "@/content/dedupe";
+import { RelatedPosts } from "@/components/RelatedPosts";
 
 export const metadata: Metadata = {
   title: M.title,
@@ -91,6 +92,7 @@ export default function DedupePage() {
             </Link>
             로 넘어가면 됩니다.
           </p>
+          <RelatedPosts tool="dedupe" />
         </section>
 
         <PromotionArea position="bottom" />
