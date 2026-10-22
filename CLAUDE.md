@@ -97,6 +97,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 새로 쓰는 예시 데이터는 실무형(`A-10234`, `1월 매출 1,200`, 사번, 상품코드). apple·banana 같은 예시는 새로 만들지 않음.
 
 ## 첫 변환 공유 안내 (바이럴)
+- **현재 꺼 둠(2026-10-22, `share.ts` `enabled: false`)**: AdSense '가치가 별로 없는 콘텐츠'로 거절 → 재신청 전까지 결과를 가리는 첫 변환 안내를 끔. 승인 뒤 `true`로 되돌릴 것.
 - 처음 변환할 때만 원본과 결과 사이에 [변환하기] 버튼(아래에 '처음 한 번만 누르면 됩니다' = `buttonNote`)이 나오고, 누르면 약 1.2초 로딩 뒤 공유 부탁 팝업이 뜸. 버튼은 한 번 누르면 사라지고 이후에는 바로 변환.
 - 설정은 `src/config/share.ts`: `enabled`(끄기), `frequency`("session" = 방문마다 한 번, "once" = 이 브라우저에서 처음 한 번), 문구, 로딩 시간.
 - 상태는 `useConvertGate` 훅 하나로 모든 기능 페이지가 공유. 저장값은 `rowflip:convert-gate:v1 = "1"` 뿐.
@@ -149,7 +150,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 14개(엑셀·목록 5: 가로세로·행열·중복 제거·쉼표→줄바꿈·셀 나누기 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자 / 문서 4: 견적서·거래명세서·상장·수료증·금액 한글), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 194개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - (확인 완료 2026-10-11) Cloudflare 관리형 robots.txt: Googlebot·Yeti(네이버)·Bingbot·Mediapartners-Google(AdSense) 허용, AI 학습 로봇과 AI 에이전트(ChatGPT-User·Claude-User 등)만 차단. 우리 robots.ts는 그 아래에 붙음
-  - AdSense: 기존 계정(pub-1418493009023603, 예전 수익 있음)으로 변경(2026-10-12). 새로 만든 계정(pub-9884982808493036)은 중복 계정 방지를 위해 사이트 삭제·해지 → 기존 계정에서 rowflip.com 사이트 검토 요청, 승인 대기
+  - AdSense: 기존 계정(pub-1418493009023603, 예전 수익 있음)으로 변경(2026-10-12). 새로 만든 계정(pub-9884982808493036)은 중복 계정 방지를 위해 사이트 삭제·해지 → 기존 계정에서 rowflip.com 사이트 검토 요청 → 2026-10-22 '가치가 별로 없는 콘텐츠'로 거절. 공유 안내 팝업 끔, 블로그 글 늘리고 색인·검색 유입 생기면(2~4주 뒤) 같은 화면에서 재검토 요청(사이트 삭제 금지)
   - 브랜드커넥트 상품 5개(의자 2, A4용지, 데스크매트, 책상) + 삼성닷컴 제휴 1개(갤럭시 북6, 2026-10-18) — 상품 추가·교체는 brandConnect.ts. 네이버가 아닌 제휴 상품은 `disclosure`로 대가성 안내를 따로 적음
   - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click·result_copy·result_print(페이지 경로만)만
   - Cloudflare Web Analytics(쿠키 없음): Cloudflare가 자동으로 `beacon.min.js`를 붙임(코드에는 없음). GA와 수치 비교용으로 유지하기로 함(2026-10-16), 개인정보처리방침 5항에 기재

@@ -12,7 +12,8 @@
  *   카카오 디벨로퍼스 앱 설정에서 사이트 도메인을 등록해야 동작한다.
  */
 export const shareConfig = {
-  enabled: true,
+  // AdSense 심사 중에는 끔(결과를 가리는 첫 변환 안내가 심사에 불리할 수 있음) — 승인 뒤 true로
+  enabled: false,
   frequency: "session" as "session" | "once",
   /**
    * 로딩(안내) 시간은 전광판 문구가 끝까지 한 번 흘러가는 시간으로 자동 계산된다.
