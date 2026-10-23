@@ -47,7 +47,7 @@ const DEFAULTS: CertOptions = {
   template: "award",
   font: "serif",
   dateStyle: "dot",
-  design: "pattern",
+  design: "paper",
   color: "gold",
   paperMargin: 30,
   shiftX: 0,
@@ -55,12 +55,12 @@ const DEFAULTS: CertOptions = {
   sealSize: 20,
 };
 const DESIGN_CHOICES: { value: CertDesign; label: string; title: string }[] = [
-  { value: "pattern", label: "전통 문양", title: "회문 테두리를 함께 인쇄" },
-  { value: "line", label: "이중선", title: "단정한 이중선 테두리" },
   { value: "paper", label: "상장 용지", title: "테두리 없이 글자만 — 무늬가 인쇄된 상장 용지에" },
+  { value: "pattern", label: "전통 문양", title: "뇌문 테두리를 함께 인쇄" },
+  { value: "line", label: "이중선", title: "단정한 이중선 테두리" },
 ];
 const DESIGN_HINT: Record<CertDesign, string> = {
-  pattern: "일반 A4 용지에 전통 회문 테두리까지 함께 인쇄합니다.",
+  pattern: "일반 A4 용지에 전통 뇌문 테두리까지 함께 인쇄합니다.",
   line: "일반 A4 용지에 단정한 이중선 테두리를 인쇄합니다.",
   paper:
     "문구점에서 산 상장 용지(테두리가 인쇄된 A4)에 글자만 찍습니다. 미리보기의 점선 안에 글자가 들어갑니다. 먼저 일반 종이에 한 장 찍어 용지에 겹쳐 보고 여백을 맞추세요.",
@@ -231,6 +231,7 @@ export function CertificateTool() {
           띄어쓰기로 칸을 나눴습니다({roster.headers.join("·")}). 잘못 나뉘면 칸 사이를 띄어쓰기 두 번으로 띄우거나 엑셀에서 복사해 넣으세요.
         </span>
       )}
+      {!sealSrc && <span>직인은 ‘발급 정보 → 직인 이미지 넣기’로 찍을 수 있습니다</span>}
       {missing.length > 0 ? (
         <span className={styles.statusNotice}>
           본문의 {missing.map((m) => `{${m}}`).join(", ")}에 넣을 값이 없습니다
@@ -458,12 +459,11 @@ export function CertificateTool() {
           <div className={styles.certRow}>
             <span>직인</span>
             <span className={styles.inline}>
-              <label className={styles.ghost}>
-                {sealSrc ? "이미지 바꾸기" : "이미지 넣기"}
+              <label className={styles.fileBtn}>
+                {sealSrc ? "직인 이미지 바꾸기" : "직인 이미지 넣기"}
                 <input
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
-                  hidden
                   onChange={(e) => {
                     void onSealFile(e.target.files?.[0]);
                     e.target.value = "";
@@ -484,7 +484,7 @@ export function CertificateTool() {
                       </option>
                     ))}
                   </select>
-                  <button type="button" className={styles.ghost} onClick={() => setSealSrc(null)}>
+                  <button type="button" className={styles.outlineBtn} onClick={() => setSealSrc(null)}>
                     빼기
                   </button>
                 </>

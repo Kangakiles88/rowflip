@@ -150,6 +150,11 @@ export function CertificatePage({ cert, font, design = "line", color = "ink", pa
         <p className={s.issuer}>
           {issuer}
           {signer && <span className={s.signer}>{signer}</span>}
+          {!seal && preview && (
+            <span className={s.sealSpot}>
+              <span className={s.sealHint}>직인</span>
+            </span>
+          )}
           {seal && (
             <span className={s.sealSpot}>
               {/* eslint-disable-next-line @next/next/no-img-element -- 사용자가 올린 이미지(데이터 주소)라 최적화 대상이 아님 */}

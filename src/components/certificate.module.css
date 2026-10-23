@@ -68,7 +68,7 @@
   margin: 0;
   font-size: calc(7 * var(--mm));
   line-height: 2;
-  text-align: left;
+  text-align: center;
   word-break: keep-all;
   white-space: pre-line;
 }
@@ -168,4 +168,23 @@
   transform: translateY(-50%);
   object-fit: contain;
   mix-blend-mode: multiply;
+}
+
+/* 미리보기에서 직인이 없을 때 자리 안내(인쇄에는 나오지 않음) */
+.sealHint {
+  position: absolute;
+  left: calc(1 * var(--mm));
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(18 * var(--mm));
+  height: calc(18 * var(--mm));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(3.6 * var(--mm));
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--paper-mute);
+  border: 1px dashed var(--paper-mute);
+  border-radius: 50%;
 }
