@@ -13,7 +13,7 @@ export const PRIVACY_META = {
 } as const;
 
 /** 시행일 (YYYY-MM-DD) */
-export const EFFECTIVE_DATE = "2026-10-20";
+export const EFFECTIVE_DATE = "2026-10-23";
 
 /** 이 사이트가 브라우저에 남기는 값 — 데이터는 저장하지 않고 화면 설정만 저장한다 */
 export const BROWSER_STORAGE = [
@@ -65,7 +65,7 @@ export const BROWSER_STORAGE = [
   {
     key: "rowflip:certificate:v1",
     where: "로컬 저장소",
-    what: "상장·수료증 만들기에서 고른 양식, 글꼴, 날짜 형식(명단·기관명·본문 문구는 저장하지 않음)",
+    what: "상장 양식 만들기에서 고른 양식, 글꼴, 테두리·문양 색, 상장 용지 여백·위치, 직인 크기, 날짜 형식(명단·기관명·본문 문구·직인 이미지는 저장하지 않음)",
   },
   {
     key: "rowflip:amount:v1",

@@ -21,6 +21,8 @@
   --paper-line: #3a3a36;
   --paper-mute: #9a9a92;
   --paper-fill: #f1f1ec;
+  /* 상장 전통 문양 테두리(금색). 종이 색처럼 다크 모드에서도 바꾸지 않는다 */
+  --paper-gold: #9c7a2e;
   --radius: 6px;
 
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",

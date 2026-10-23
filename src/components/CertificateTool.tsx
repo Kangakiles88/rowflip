@@ -14,8 +14,9 @@ import {
   type FieldMapping,
   type TemplateId,
 } from "@/utils/certificate";
+import { loadSealImage } from "@/utils/sealImage";
 import { trackPrint } from "@/utils/tracking";
-import { CertificatePage } from "./CertificatePage";
+import { CertificatePage, type CertColor, type CertDesign, type PaperLayout } from "./CertificatePage";
 import { InputPanel } from "./InputPanel";
 import { ResultPane } from "./ResultPane";
 import { Segmented } from "./Segmented";
@@ -32,9 +33,45 @@ interface CertOptions {
   template: TemplateId;
   font: "serif" | "sans";
   dateStyle: DateStyle;
+  design: CertDesign;
+  color: CertColor;
+  /** 상장 용지 모드 여백·이동(mm) — 프린터·용지마다 달라 기억해 둔다 */
+  paperMargin: number;
+  shiftX: number;
+  shiftY: number;
+  /** 직인 크기(mm) — 이미지 자체는 저장하지 않는다 */
+  sealSize: number;
 }
 
-const DEFAULTS: CertOptions = { template: "award", font: "serif", dateStyle: "dot" };
+const DEFAULTS: CertOptions = {
+  template: "award",
+  font: "serif",
+  dateStyle: "dot",
+  design: "pattern",
+  color: "gold",
+  paperMargin: 30,
+  shiftX: 0,
+  shiftY: 0,
+  sealSize: 20,
+};
+const DESIGN_CHOICES: { value: CertDesign; label: string; title: string }[] = [
+  { value: "pattern", label: "전통 문양", title: "회문 테두리를 함께 인쇄" },
+  { value: "line", label: "이중선", title: "단정한 이중선 테두리" },
+  { value: "paper", label: "상장 용지", title: "테두리 없이 글자만 — 무늬가 인쇄된 상장 용지에" },
+];
+const DESIGN_HINT: Record<CertDesign, string> = {
+  pattern: "일반 A4 용지에 전통 회문 테두리까지 함께 인쇄합니다.",
+  line: "일반 A4 용지에 단정한 이중선 테두리를 인쇄합니다.",
+  paper:
+    "문구점에서 산 상장 용지(테두리가 인쇄된 A4)에 글자만 찍습니다. 미리보기의 점선 안에 글자가 들어갑니다. 먼저 일반 종이에 한 장 찍어 용지에 겹쳐 보고 여백을 맞추세요.",
+};
+const COLOR_CHOICES: { value: CertColor; label: string }[] = [
+  { value: "gold", label: "금색" },
+  { value: "ink", label: "먹색" },
+];
+const SEAL_SIZES = [15, 18, 20, 24, 28];
+const clampNum = (v: unknown, min: number, max: number) =>
+  typeof v === "number" && Number.isFinite(v) && v >= min && v <= max;
 const TEMPLATE_CHOICES = TEMPLATES.map((t) => ({ value: t.id, label: t.label }));
 const FONT_CHOICES = [
   { value: "serif" as const, label: "명조" },
@@ -53,8 +90,14 @@ export function CertificateTool() {
     storageKey: "rowflip:certificate:v1",
     defaults: DEFAULTS,
     // 양식·글꼴·날짜 형식만 기억한다. 명단·기관명·본문 문구는 저장하지 않는다
-    storedKeys: ["template", "font", "dateStyle"],
+    storedKeys: ["template", "font", "dateStyle", "design", "color", "paperMargin", "shiftX", "shiftY", "sealSize"],
     sanitize: (s) => {
+      if (s.design && !DESIGN_CHOICES.some((x) => x.value === s.design)) delete s.design;
+      if (s.color && !COLOR_CHOICES.some((x) => x.value === s.color)) delete s.color;
+      if (s.paperMargin !== undefined && !clampNum(s.paperMargin, 5, 70)) delete s.paperMargin;
+      if (s.shiftX !== undefined && !clampNum(s.shiftX, -30, 30)) delete s.shiftX;
+      if (s.shiftY !== undefined && !clampNum(s.shiftY, -30, 30)) delete s.shiftY;
+      if (s.sealSize !== undefined && !SEAL_SIZES.includes(s.sealSize)) delete s.sealSize;
       if (s.template && !TEMPLATES.some((x) => x.id === s.template)) delete s.template;
       if (s.font && s.font !== "serif" && s.font !== "sans") delete s.font;
       if (s.dateStyle && s.dateStyle !== "dot" && s.dateStyle !== "korean") delete s.dateStyle;
@@ -117,6 +160,22 @@ export function CertificateTool() {
     [roster, template, mapping, commonValues],
   );
   const { items, total, missing } = built;
+
+  // 직인 이미지 — 브라우저 안에서만 쓰고 저장하지 않는다(새로고침하면 사라짐)
+  const [sealSrc, setSealSrc] = useState<string | null>(null);
+  const [sealError, setSealError] = useState("");
+  const onSealFile = async (file: File | undefined) => {
+    if (!file) return;
+    setSealError("");
+    try {
+      setSealSrc(await loadSealImage(file));
+    } catch (e) {
+      setSealError(e instanceof Error ? e.message : "이미지를 읽지 못했습니다.");
+    }
+  };
+  const seal = sealSrc ? { src: sealSrc, size: o.sealSize } : null;
+  const paperLayout: PaperLayout = { margin: o.paperMargin, shiftX: o.shiftX, shiftY: o.shiftY };
+  const look = { font: o.font, design: o.design, color: o.color, paper: paperLayout, seal };
 
   const [page, setPage] = useState(0);
   const current = Math.min(page, Math.max(0, items.length - 1));
@@ -250,7 +309,7 @@ export function CertificateTool() {
                 aria-label="크게 보기"
                 title="크게 보기"
               >
-                <CertificatePage cert={items[current]} font={o.font} preview />
+                <CertificatePage cert={items[current]} {...look} preview />
               </button>
             </div>
           ) : undefined}
@@ -270,7 +329,58 @@ export function CertificateTool() {
             <span className={styles.certLabel}>글꼴</span>
             <Segmented label="글꼴" value={o.font} options={FONT_CHOICES} onChange={(font) => update({ font })} />
           </div>
-          <p className={styles.hint}>A4 세로 한 장에 한 사람씩 들어갑니다.</p>
+          <div className={styles.inline}>
+            <span className={styles.certLabel}>테두리</span>
+            <Segmented label="테두리" value={o.design} options={DESIGN_CHOICES} onChange={(design) => update({ design })} />
+          </div>
+          {o.design === "pattern" && (
+            <div className={styles.inline}>
+              <span className={styles.certLabel}>문양 색</span>
+              <Segmented label="문양 색" value={o.color} options={COLOR_CHOICES} onChange={(color) => update({ color })} />
+            </div>
+          )}
+          {o.design === "paper" && (
+            <div className={styles.inline}>
+              <label className={styles.inline}>
+                <span className={styles.certLabel}>여백</span>
+                <input
+                  className={`${styles.input} ${styles.mono}`}
+                  type="number"
+                  min={5}
+                  max={70}
+                  style={{ width: 64 }}
+                  value={o.paperMargin}
+                  onChange={(e) => update({ paperMargin: Math.min(70, Math.max(5, Number(e.target.value) || 0)) })}
+                />
+              </label>
+              <label className={styles.inline}>
+                <span className={styles.certLabel}>좌우</span>
+                <input
+                  className={`${styles.input} ${styles.mono}`}
+                  type="number"
+                  min={-30}
+                  max={30}
+                  style={{ width: 60 }}
+                  value={o.shiftX}
+                  onChange={(e) => update({ shiftX: Math.min(30, Math.max(-30, Number(e.target.value) || 0)) })}
+                />
+              </label>
+              <label className={styles.inline}>
+                <span className={styles.certLabel}>상하</span>
+                <input
+                  className={`${styles.input} ${styles.mono}`}
+                  type="number"
+                  min={-30}
+                  max={30}
+                  style={{ width: 60 }}
+                  value={o.shiftY}
+                  onChange={(e) => update({ shiftY: Math.min(30, Math.max(-30, Number(e.target.value) || 0)) })}
+                />
+              </label>
+              <span className={styles.hint}>mm · +는 오른쪽·아래로</span>
+            </div>
+          )}
+          <p className={styles.hint}>{DESIGN_HINT[o.design]}</p>
         </fieldset>
 
         <fieldset className={styles.group}>
@@ -341,6 +451,49 @@ export function CertificateTool() {
             />
           </label>
           <div className={styles.certRow}>
+            <span>직인</span>
+            <span className={styles.inline}>
+              <label className={styles.ghost}>
+                {sealSrc ? "이미지 바꾸기" : "이미지 넣기"}
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  hidden
+                  onChange={(e) => {
+                    void onSealFile(e.target.files?.[0]);
+                    e.target.value = "";
+                  }}
+                />
+              </label>
+              {sealSrc && (
+                <>
+                  <select
+                    aria-label="직인 크기"
+                    className={styles.select}
+                    value={o.sealSize}
+                    onChange={(e) => update({ sealSize: Number(e.target.value) })}
+                  >
+                    {SEAL_SIZES.map((n) => (
+                      <option key={n} value={n}>
+                        {n}mm
+                      </option>
+                    ))}
+                  </select>
+                  <button type="button" className={styles.ghost} onClick={() => setSealSrc(null)}>
+                    빼기
+                  </button>
+                </>
+              )}
+            </span>
+          </div>
+          {sealError ? (
+            <p className={styles.hintStrong}>{sealError}</p>
+          ) : (
+            <p className={styles.hint}>
+              기관 직인 사진·스캔(PNG·JPG)을 넣으면 흰 바탕을 지우고 대표자 이름 끝에 찍습니다. 이미지는 저장하지 않습니다.
+            </p>
+          )}
+          <div className={styles.certRow}>
             <span>번호</span>
             <span className={styles.inline}>
               <label className={styles.check}>
@@ -394,7 +547,7 @@ export function CertificateTool() {
           <div className="certPrintRoot" aria-hidden="true">
             <style>{"@page { size: A4 portrait; margin: 0; }"}</style>
             {items.map((c, i) => (
-              <CertificatePage key={i} cert={c} font={o.font} />
+              <CertificatePage key={i} cert={c} {...look} />
             ))}
           </div>,
           document.body,
@@ -423,7 +576,7 @@ export function CertificateTool() {
         <div className={styles.certZoomBody}>
           {zoom && canPreview && (
             <div className={styles.certZoomSheet}>
-              <CertificatePage cert={items[current]} font={o.font} preview />
+              <CertificatePage cert={items[current]} {...look} preview />
             </div>
           )}
         </div>

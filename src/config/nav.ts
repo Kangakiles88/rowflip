@@ -119,9 +119,9 @@ export const TOOL_PAGES = [
     id: "certificate",
     group: "doc",
     href: "/certificate/",
-    label: "상장 만들기",
-    title: "엑셀로 상장·수료증 일괄 만들기",
-    desc: "명단을 붙여넣어 상장·수료증·위촉장·감사장을 한 번에 인쇄",
+    label: "상장 양식",
+    title: "상장 양식 만들기",
+    desc: "전통 문양 테두리·직인 넣기, 엑셀 명단으로 상장·수료증 일괄 인쇄",
     priority: 0.9,
   },
   {
