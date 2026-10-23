@@ -1,4 +1,4 @@
-import { useId, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import type { Certificate } from "@/utils/certificate";
 import s from "./certificate.module.css";
 
@@ -26,88 +26,90 @@ interface Props {
   preview?: boolean;
 }
 
-/** 회문 테두리 — 1단위 = 1mm(viewBox 210×297). 색은 currentColor(CSS 토큰) */
-const KEY_H = "M0 6.2 H7 M6.2 6.2 V0.8 H1.6 V4.6 H4.6 V2.4 H3.1"; // 가로 띠 한 칸(아래 선이 이어짐)
-const KEY_V = "M6.2 0 V7 M6.2 6.2 H0.8 V1.6 H4.6 V4.6 H2.4 V3.1"; // 세로 띠 한 칸(오른쪽 선이 이어짐)
+/**
+ * 뇌문(雷紋·회문) 테두리 — 1단위 = 1mm(viewBox 210×297), 색은 currentColor(CSS 토큰).
+ * 칸 하나는 5×5 격자: 안쪽 선(b=4.5)에서 올라와 안으로 감기는 갈고리.
+ * 선과 선 사이가 모두 한 격자로 같아서 띠 전체가 이어진 무늬로 보인다.
+ */
+const HOOK: ReadonlyArray<readonly [number, number]> = [
+  [4.5, 4.5],
+  [4.5, 0.5],
+  [0.5, 0.5],
+  [0.5, 3.5],
+  [3.5, 3.5],
+  [3.5, 1.5],
+  [1.5, 1.5],
+  [1.5, 2.5],
+  [2.5, 2.5],
+];
 
 function PatternBorder() {
-  // 인쇄 포털·미리보기·크게 보기에 같은 SVG가 여러 개라 무늬 id가 겹치지 않게
-  const uid = useId().replace(/:/g, "");
   const W = 210;
   const H = 297;
-  const o = 9; // 바깥 선
-  const band = 7; // 문양 띠 폭
-  const i0 = o + 1.6; // 띠 시작
-  const i1 = i0 + band; // 띠 끝
-  // 띠 길이를 칸 수로 나눠 칸 너비를 살짝 맞춘다 — 모서리에서 무늬가 잘리지 않게
-  const lh = W - i1 * 2;
-  const lv = H - i1 * 2;
-  const th = lh / Math.round(lh / band);
-  const tv = lv / Math.round(lv / band);
-  const line = { fill: "none", stroke: "currentColor", strokeWidth: 0.55, strokeLinecap: "square" as const };
-  const bottomC = H - i1 + band / 2;
-  const rightC = W - i1 + band / 2;
+  const O = 9; // 바깥 굵은 선 위치(mm)
+  const g = 1.3; // 격자 한 칸(mm)
+  const pos = (b: number) => O + (b + 1.7) * g; // 종이 가장자리에서 b 격자 위치
+  const p45 = pos(4.5);
+  // 모서리 상자 사이 길이를 칸 수로 나눠 칸 너비를 살짝 맞춘다 — 모서리에서 무늬가 잘리지 않게
+  const fit = (len: number) => {
+    const n = Math.max(1, Math.round((len / g - 1) / 5));
+    return { n, s: len / (5 * n + 1) };
+  };
+  const hz = fit(W - 2 * p45);
+  const vt = fit(H - 2 * p45);
+  const f = (v: number) => Math.round(v * 100) / 100;
+  // 변마다 (따라가는 방향 a, 안쪽 방향 b) → 종이 좌표. 시계 방향으로 돌아 네 변 무늬 방향이 같다
+  const sides: Array<{ n: number; map: (a: number, b: number) => [number, number] }> = [
+    { n: hz.n, map: (a, b) => [p45 + (a + 0.5) * hz.s, pos(b)] },
+    { n: vt.n, map: (a, b) => [W - pos(b), p45 + (a + 0.5) * vt.s] },
+    { n: hz.n, map: (a, b) => [W - p45 - (a + 0.5) * hz.s, H - pos(b)] },
+    { n: vt.n, map: (a, b) => [pos(b), H - p45 - (a + 0.5) * vt.s] },
+  ];
+  let d = "";
+  for (const side of sides) {
+    for (let i = 0; i < side.n; i++) {
+      HOOK.forEach(([a, b], k) => {
+        const [x, y] = side.map(i * 5 + a, b);
+        d += `${k === 0 ? "M" : "L"}${f(x)} ${f(y)}`;
+      });
+    }
+  }
+  const rect = (b: number, sw: number) => (
+    <rect
+      x={pos(b)}
+      y={pos(b)}
+      width={W - 2 * pos(b)}
+      height={H - 2 * pos(b)}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={sw}
+    />
+  );
+  const hair = 0.42;
+  // 네 모서리 — 겹사각(回)
+  const corners = [
+    [0, 0],
+    [1, 0],
+    [0, 1],
+    [1, 1],
+  ].flatMap(([cx, cy]) =>
+    [-0.5, 0.5, 1.5].map((b) => {
+      const size = (4 - 2 * (b + 0.5)) * g;
+      const x = cx ? W - pos(4.5 - (b + 0.5)) : pos(b);
+      const y = cy ? H - pos(4.5 - (b + 0.5)) : pos(b);
+      return <rect key={`${cx}${cy}${b}`} x={f(x)} y={f(y)} width={f(size + g)} height={f(size + g)} />;
+    }),
+  );
   return (
     <svg className={s.deco} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
-      <defs>
-        <pattern id={`kt${uid}`} width={th} height={band} patternUnits="userSpaceOnUse" x={i1} y={i0}>
-          <path d={KEY_H} transform={`scale(${th / band} 1)`} {...line} />
-        </pattern>
-        {/* 아래 띠는 위 띠를 위아래로 뒤집어 이어지는 선이 안쪽에 오게 */}
-        <pattern
-          id={`kb${uid}`}
-          width={th}
-          height={band}
-          patternUnits="userSpaceOnUse"
-          x={i1}
-          y={H - i1}
-          patternTransform={`translate(0 ${bottomC * 2}) scale(1 -1)`}
-        >
-          <path d={KEY_H} transform={`scale(${th / band} 1)`} {...line} />
-        </pattern>
-        <pattern id={`kl${uid}`} width={band} height={tv} patternUnits="userSpaceOnUse" x={i0} y={i1}>
-          <path d={KEY_V} transform={`scale(1 ${tv / band})`} {...line} />
-        </pattern>
-        <pattern
-          id={`kr${uid}`}
-          width={band}
-          height={tv}
-          patternUnits="userSpaceOnUse"
-          x={W - i1}
-          y={i1}
-          patternTransform={`translate(${rightC * 2} 0) scale(-1 1)`}
-        >
-          <path d={KEY_V} transform={`scale(1 ${tv / band})`} {...line} />
-        </pattern>
-      </defs>
-      {/* 바깥 굵은 선 · 안쪽 가는 선 */}
-      <rect x={o} y={o} width={W - o * 2} height={H - o * 2} fill="none" stroke="currentColor" strokeWidth={1.1} />
-      <rect
-        x={i1 + 1.6}
-        y={i1 + 1.6}
-        width={W - (i1 + 1.6) * 2}
-        height={H - (i1 + 1.6) * 2}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={0.4}
-      />
-      {/* 문양 띠 4변(모서리는 따로) */}
-      <rect x={i1} y={i0} width={lh} height={band} fill={`url(#kt${uid})`} />
-      <rect x={i1} y={H - i1} width={lh} height={band} fill={`url(#kb${uid})`} />
-      <rect x={i0} y={i1} width={band} height={lv} fill={`url(#kl${uid})`} />
-      <rect x={W - i1} y={i1} width={band} height={lv} fill={`url(#kr${uid})`} />
-      {/* 네 모서리 — 겹사각 매듭 */}
-      {[
-        [i0, i0],
-        [W - i1, i0],
-        [i0, H - i1],
-        [W - i1, H - i1],
-      ].map(([x, y]) => (
-        <g key={`${x}-${y}`} fill="none" stroke="currentColor" strokeWidth={0.55}>
-          <rect x={x + 0.6} y={y + 0.6} width={band - 1.2} height={band - 1.2} />
-          <rect x={x + 2.1} y={y + 2.1} width={band - 4.2} height={band - 4.2} />
-        </g>
-      ))}
+      {rect(-1.7, 1)}
+      {rect(-0.5, hair)}
+      {rect(4.5, hair)}
+      {rect(5.7, 0.3)}
+      <g fill="none" stroke="currentColor" strokeWidth={hair}>
+        {corners}
+      </g>
+      <path d={d} fill="none" stroke="currentColor" strokeWidth={hair} strokeLinejoin="miter" strokeLinecap="square" />
     </svg>
   );
 }

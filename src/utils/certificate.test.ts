@@ -30,6 +30,21 @@ describe("parseRoster", () => {
       ["이서연", "2학년 1반"],
     ]);
   });
+  it("탭 없이 띄어쓰기로 친 명단은 머리글 칸 수에 맞춰 나눈다", () => {
+    const r = parseRoster("성명 소속 수상명\n강신만 2학년 3반 대상\n이서연  2학년 1반  최우수상");
+    expect(r.spaced).toBe(true);
+    expect(r.headers).toEqual(["성명", "소속", "수상명"]);
+    expect(r.rows).toEqual([
+      ["강신만", "2학년 3반", "대상"],
+      ["이서연", "2학년 1반", "최우수상"],
+    ]);
+    expect(parseRoster("성명 소속\n김민준 한빛 봉사단").rows).toEqual([["김민준", "한빛 봉사단"]]);
+  });
+  it("머리글이 한 낱말이면 띄어쓰기로 나누지 않는다", () => {
+    const r = parseRoster("성명\n김 민준");
+    expect(r.spaced).toBeUndefined();
+    expect(r.rows).toEqual([["김 민준"]]);
+  });
   it("빈 머리글은 'n열'로", () => {
     expect(parseRoster("성명\t\n김민준\t우수상").headers).toEqual(["성명", "2열"]);
   });

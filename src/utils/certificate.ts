@@ -116,16 +116,43 @@ export function getTemplate(id: TemplateId): CertificateTemplate {
 export interface Roster {
   headers: string[];
   rows: string[][];
+  /** 탭 없이 띄어쓰기로 칸을 나눠 읽었는지(휴대폰에서 직접 친 명단) */
+  spaced?: boolean;
+}
+
+/**
+ * 띄어쓰기로 친 한 줄을 머리글 칸 수에 맞춰 나눈다.
+ * 두 칸 이상 띄운 곳이 있으면 그곳으로, 아니면 낱말로 나누고
+ * 낱말이 남으면 첫 칸(성명)과 끝 칸(수상명 등)은 한 낱말씩, 둘째 칸(소속)이 나머지를 갖는다 — '2학년 3반'
+ */
+export function splitSpacedLine(line: string, width: number): string[] {
+  const t = line.trim();
+  const wide = t.split(/\s{2,}/);
+  if (wide.length === width) return wide;
+  const w = t.split(/\s+/);
+  if (w.length <= width || width < 2) return w;
+  if (width === 2) return [w[0], w.slice(1).join(" ")];
+  const tail = w.slice(w.length - (width - 2));
+  return [w[0], w.slice(1, w.length - (width - 2)).join(" "), ...tail];
 }
 
 /** 엑셀에서 복사한 명단 — 첫 행은 머리글, 완전히 빈 행은 뺀다 */
 export function parseRoster(raw: string): Roster {
   const table = parseAnyTable(raw);
-  const rows = table.rows.map((r) => r.map((c) => c.trim())).filter((r) => r.some((c) => c !== ""));
+  let rows = table.rows.map((r) => r.map((c) => c.trim())).filter((r) => r.some((c) => c !== ""));
   if (rows.length === 0) return { headers: [], rows: [] };
+  let spaced = false;
+  // 탭이 없고 한 칸뿐인데 머리글이 띄어쓰기로 여러 낱말이면 띄어쓰기를 칸 구분으로 본다
+  if (rows.every((r) => r.length === 1) && rows.length >= 2) {
+    const head = rows[0][0].split(/\s+/);
+    if (head.length >= 2) {
+      rows = [head, ...rows.slice(1).map((r) => splitSpacedLine(r[0], head.length))];
+      spaced = true;
+    }
+  }
   const width = rows.reduce((m, r) => Math.max(m, r.length), 0);
   const headers = Array.from({ length: width }, (_, i) => rows[0][i] || `${i + 1}열`);
-  return { headers, rows: rows.slice(1) };
+  return { headers, rows: rows.slice(1), ...(spaced ? { spaced } : {}) };
 }
 
 const norm = (s: string) => s.replace(/\s+/g, "").toLowerCase();

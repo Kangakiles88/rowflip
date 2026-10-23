@@ -226,6 +226,11 @@ export function CertificateTool() {
         {fmt(total)}명 · {fmt(items.length)}장 인쇄
         {total > MAX_PRINT && ` (한 번에 ${fmt(MAX_PRINT)}장까지 — 명단을 나눠 주세요)`}
       </span>
+      {roster.spaced && (
+        <span className={styles.statusNotice}>
+          띄어쓰기로 칸을 나눴습니다({roster.headers.join("·")}). 잘못 나뉘면 칸 사이를 띄어쓰기 두 번으로 띄우거나 엑셀에서 복사해 넣으세요.
+        </span>
+      )}
       {missing.length > 0 ? (
         <span className={styles.statusNotice}>
           본문의 {missing.map((m) => `{${m}}`).join(", ")}에 넣을 값이 없습니다
