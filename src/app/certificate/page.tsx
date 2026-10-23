@@ -10,7 +10,7 @@ export default function CertificatePageRoute() {
     <ToolPageLayout
       id="certificate"
       meta={M}
-      lede="엑셀 명단을 붙여넣으면 상장·수료증·위촉장·감사장을 한 사람에 한 장씩 만들어 한 번에 인쇄하거나 PDF로 저장합니다."
+      lede="엑셀 명단을 붙여넣으면 상장·수료증·위촉장·감사장을 한 사람에 한 장씩 만들어 한 번에 인쇄하거나 PDF로 저장합니다. 테두리가 인쇄된 상장 용지에는 글자만 찍고, 기관 직인 이미지를 넣어 함께 인쇄할 수 있습니다."
       tool={<CertificateTool />}
       guideTitle="상장·수료증 일괄 만드는 방법"
       guides={CERTIFICATE_GUIDES}

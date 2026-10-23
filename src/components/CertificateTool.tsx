@@ -33,7 +33,8 @@ interface CertOptions {
   template: TemplateId;
   font: "serif" | "sans";
   dateStyle: DateStyle;
-  design: CertDesign;
+  /** 테두리 — 저장 이름을 design에서 border로 바꿔, 예전에 저장된 '전통 문양' 대신 기본값(상장 용지)으로 시작 */
+  border: CertDesign;
   color: CertColor;
   /** 상장 용지 모드 여백·이동(mm) — 프린터·용지마다 달라 기억해 둔다 */
   paperMargin: number;
@@ -47,7 +48,7 @@ const DEFAULTS: CertOptions = {
   template: "award",
   font: "serif",
   dateStyle: "dot",
-  design: "paper",
+  border: "paper",
   color: "gold",
   paperMargin: 30,
   shiftX: 0,
@@ -90,9 +91,9 @@ export function CertificateTool() {
     storageKey: "rowflip:certificate:v1",
     defaults: DEFAULTS,
     // 양식·글꼴·날짜 형식만 기억한다. 명단·기관명·본문 문구는 저장하지 않는다
-    storedKeys: ["template", "font", "dateStyle", "design", "color", "paperMargin", "shiftX", "shiftY", "sealSize"],
+    storedKeys: ["template", "font", "dateStyle", "border", "color", "paperMargin", "shiftX", "shiftY", "sealSize"],
     sanitize: (s) => {
-      if (s.design && !DESIGN_CHOICES.some((x) => x.value === s.design)) delete s.design;
+      if (s.border && !DESIGN_CHOICES.some((x) => x.value === s.border)) delete s.border;
       if (s.color && !COLOR_CHOICES.some((x) => x.value === s.color)) delete s.color;
       if (s.paperMargin !== undefined && !clampNum(s.paperMargin, 5, 70)) delete s.paperMargin;
       if (s.shiftX !== undefined && !clampNum(s.shiftX, -30, 30)) delete s.shiftX;
@@ -175,7 +176,7 @@ export function CertificateTool() {
   };
   const seal = sealSrc ? { src: sealSrc, size: o.sealSize } : null;
   const paperLayout: PaperLayout = { margin: o.paperMargin, shiftX: o.shiftX, shiftY: o.shiftY };
-  const look = { font: o.font, design: o.design, color: o.color, paper: paperLayout, seal };
+  const look = { font: o.font, design: o.border, color: o.color, paper: paperLayout, seal };
 
   const [page, setPage] = useState(0);
   const current = Math.min(page, Math.max(0, items.length - 1));
@@ -231,7 +232,7 @@ export function CertificateTool() {
           띄어쓰기로 칸을 나눴습니다({roster.headers.join("·")}). 잘못 나뉘면 칸 사이를 띄어쓰기 두 번으로 띄우거나 엑셀에서 복사해 넣으세요.
         </span>
       )}
-      {!sealSrc && <span>직인은 ‘발급 정보 → 직인 이미지 넣기’로 찍을 수 있습니다</span>}
+      {!sealSrc && <span className={styles.statusNotice}>직인은 ‘발급 정보 → 직인 이미지 넣기’로 찍을 수 있습니다</span>}
       {missing.length > 0 ? (
         <span className={styles.statusNotice}>
           본문의 {missing.map((m) => `{${m}}`).join(", ")}에 넣을 값이 없습니다
@@ -304,7 +305,16 @@ export function CertificateTool() {
           canCopy={hasInput}
           actions={pager}
           placeholder="명단을 붙여넣으면 한 사람에 한 장씩 미리보기가 나옵니다."
-          status={hasInput ? status : <span>첫 행은 머리글(성명·소속 등)로 봅니다</span>}
+          status={
+            hasInput ? (
+              status
+            ) : (
+              <>
+                <span>첫 행은 머리글(성명·소속 등)로 봅니다</span>
+                <span className={styles.statusNotice}>직인 이미지도 넣을 수 있습니다(아래 ‘발급 정보 → 직인 이미지 넣기’)</span>
+              </>
+            )
+          }
         >
           {hasInput && items[current] ? (
             <div className={styles.certViewer} id="result">
@@ -337,15 +347,15 @@ export function CertificateTool() {
           </div>
           <div className={styles.inline}>
             <span className={styles.certLabel}>테두리</span>
-            <Segmented label="테두리" value={o.design} options={DESIGN_CHOICES} onChange={(design) => update({ design })} />
+            <Segmented label="테두리" value={o.border} options={DESIGN_CHOICES} onChange={(border) => update({ border })} />
           </div>
-          {o.design === "pattern" && (
+          {o.border === "pattern" && (
             <div className={styles.inline}>
               <span className={styles.certLabel}>문양 색</span>
               <Segmented label="문양 색" value={o.color} options={COLOR_CHOICES} onChange={(color) => update({ color })} />
             </div>
           )}
-          {o.design === "paper" && (
+          {o.border === "paper" && (
             <div className={styles.inline}>
               <label className={styles.inline}>
                 <span className={styles.certLabel}>여백</span>
@@ -386,7 +396,7 @@ export function CertificateTool() {
               <span className={styles.hint}>mm · +는 오른쪽·아래로</span>
             </div>
           )}
-          <p className={styles.hint}>{DESIGN_HINT[o.design]}</p>
+          <p className={styles.hint}>{DESIGN_HINT[o.border]}</p>
         </fieldset>
 
         <fieldset className={styles.group}>
