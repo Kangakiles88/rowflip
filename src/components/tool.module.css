@@ -221,7 +221,8 @@ a.navButton {
   font-family: inherit;
 }
 /* 미리보기 — 결과 창 높이에 A4 한 장이 다 보이게 */
-.editor:has(> .certViewer) {
+.editor:has(> .certViewer),
+.editor:has(> .viewStack) {
   overflow: auto;
 }
 .certViewer {
@@ -1215,7 +1216,8 @@ ins.diffMark {
     flex: none;
   }
   /* 휴대폰에서는 미리보기를 화면 너비에 맞춰 크게 */
-  .editor:has(> .certViewer) {
+  .editor:has(> .certViewer),
+  .editor:has(> .viewStack .certViewer) {
     height: auto;
   }
   .certSheet {
@@ -1270,4 +1272,29 @@ ins.diffMark {
   .paneActions .certZoomBtn {
     display: none;
   }
+}
+
+/* 결과 창 맨 위 보기 전환 줄(기부금영수증: 영수증 / 이름별 합계) */
+.viewStack {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+.viewStack > :last-child {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+.viewBar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.viewBar .hint {
+  margin: 0;
 }

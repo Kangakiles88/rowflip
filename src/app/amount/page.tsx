@@ -23,9 +23,13 @@ export default function AmountPage() {
           </Link>
           을, 명단으로 상장·수료증을 만들려면{" "}
           <Link className="inlineLink" href="/certificate/">
-            엑셀로 상장·수료증 일괄 만들기
+            상장 양식 만들기
           </Link>
-          를, 금액 목록을 쉼표로 이으려면{" "}
+          를, 헌금 내역으로 기부금영수증을 한꺼번에 찍으려면{" "}
+          <Link className="inlineLink" href="/donation-receipt/">
+            기부금영수증 양식
+          </Link>
+          을, 금액 목록을 쉼표로 이으려면{" "}
           <Link className="inlineLink" href="/">
             엑셀 가로세로 변환기
           </Link>

@@ -125,6 +125,15 @@ export const TOOL_PAGES = [
     priority: 0.9,
   },
   {
+    id: "donation",
+    group: "doc",
+    href: "/donation-receipt/",
+    label: "기부금영수증",
+    title: "기부금영수증 양식",
+    desc: "교회·단체 헌금 내역으로 이름별 합계, 한 사람에 한 장 일괄 발급",
+    priority: 0.9,
+  },
+  {
     id: "amount",
     group: "doc",
     href: "/amount/",

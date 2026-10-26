@@ -29,7 +29,11 @@ export default function CertificatePageRoute() {
           <Link className="inlineLink" href="/amount/">
             숫자 한글 변환
           </Link>
-          을 쓰면 됩니다.
+          을 쓰면 됩니다. 교회·단체에서 연말에 헌금 내역으로 영수증을 찍으려면{" "}
+          <Link className="inlineLink" href="/donation-receipt/">
+            기부금영수증 양식
+          </Link>
+          에서 한 사람에 한 장씩 만들 수 있습니다.
         </>
       }
     />

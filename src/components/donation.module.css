@@ -1,0 +1,132 @@
+/* 기부금 영수증 — 공통 모양(종이·표·숫자)은 estimate.module.css를 함께 쓴다. 크기는 --mm 배수.
+   인쇄는 @page 여백 12mm 안에 한 사람에 한 장씩. 기부내용이 많으면 다음 쪽으로 이어지고 표 머리글이 반복된다. */
+.doc {
+  font-size: calc(3.1 * var(--mm));
+  line-height: 1.4;
+}
+.printPage {
+  break-after: page;
+}
+.printPage:last-child {
+  break-after: auto;
+}
+
+.formNo {
+  margin: 0 0 calc(1.5 * var(--mm));
+  font-size: calc(2.6 * var(--mm));
+  color: var(--paper-ink);
+}
+.serial {
+  width: auto;
+  margin-bottom: calc(2 * var(--mm));
+}
+.serial th {
+  width: calc(18 * var(--mm));
+  text-align: center;
+}
+.serial td {
+  min-width: calc(28 * var(--mm));
+  font-family: var(--font-mono);
+}
+.title {
+  margin: 0 0 calc(5 * var(--mm));
+  padding-bottom: calc(2.5 * var(--mm));
+  font-size: calc(8 * var(--mm));
+  font-weight: 800;
+  letter-spacing: calc(3 * var(--mm));
+  text-align: center;
+  border-bottom: calc(0.8 * var(--mm)) double var(--paper-line);
+}
+
+.sec {
+  margin: calc(3 * var(--mm)) 0 calc(1 * var(--mm));
+  font-weight: 700;
+}
+.colTh {
+  width: calc(30 * var(--mm));
+}
+.colTh2 {
+  width: calc(30 * var(--mm));
+}
+.grid th {
+  text-align: center;
+  white-space: normal;
+  line-height: 1.25;
+  font-size: calc(2.8 * var(--mm));
+}
+.grid td {
+  height: calc(7 * var(--mm));
+}
+.mono {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.items th {
+  line-height: 1.2;
+}
+.items th small {
+  font-size: calc(2.4 * var(--mm));
+  font-weight: 500;
+}
+.items td {
+  height: calc(6.2 * var(--mm));
+}
+
+.sign {
+  margin-top: calc(5 * var(--mm));
+  break-inside: avoid;
+}
+.statement {
+  margin: calc(2 * var(--mm)) 0 calc(1.5 * var(--mm));
+  word-break: keep-all;
+}
+.date {
+  margin: 0 0 calc(1.5 * var(--mm));
+  text-align: right;
+}
+.signer {
+  min-height: calc(16 * var(--mm));
+  margin: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: calc(4 * var(--mm));
+}
+.role {
+  color: var(--paper-ink);
+}
+.who {
+  font-weight: 700;
+  font-size: calc(3.6 * var(--mm));
+}
+.mark {
+  position: relative;
+  color: var(--paper-mute);
+  white-space: nowrap;
+}
+/* 직인 — '(서명 또는 인)' 위에 겹쳐 찍는다 */
+.seal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+/* 미리보기에서 직인이 없을 때 자리 안내(인쇄에는 나오지 않음) */
+.sealHint {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(16 * var(--mm));
+  height: calc(16 * var(--mm));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(3.2 * var(--mm));
+  color: var(--paper-mute);
+  border: 1px dashed var(--paper-mute);
+  border-radius: 50%;
+}

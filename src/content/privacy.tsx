@@ -13,7 +13,7 @@ export const PRIVACY_META = {
 } as const;
 
 /** 시행일 (YYYY-MM-DD) */
-export const EFFECTIVE_DATE = "2026-10-23";
+export const EFFECTIVE_DATE = "2026-10-27";
 
 /** 이 사이트가 브라우저에 남기는 값 — 데이터는 저장하지 않고 화면 설정만 저장한다 */
 export const BROWSER_STORAGE = [
@@ -86,6 +86,11 @@ export const BROWSER_STORAGE = [
     key: "rowflip:statement:v1",
     where: "로컬 저장소",
     what: "거래명세서 양식의 부가세 방식과 찍는 부수(품목·거래처·금액은 저장하지 않음)",
+  },
+  {
+    key: "rowflip:donation:v1",
+    where: "로컬 저장소",
+    what: "기부금영수증 양식의 기부금 코드·기부내용 적는 방식·정렬·주민번호 가리기·직인 크기(내역·이름·주민등록번호·단체 정보·직인 이미지는 저장하지 않음)",
   },
   {
     key: "rowflip:cellsplit:v1",
