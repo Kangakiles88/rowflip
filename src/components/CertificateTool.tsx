@@ -33,7 +33,7 @@ interface CertOptions {
   template: TemplateId;
   font: "serif" | "sans";
   dateStyle: DateStyle;
-  /** 테두리 — 저장 이름을 design에서 border로 바꿔, 예전에 저장된 '전통 문양' 대신 기본값(상장 용지)으로 시작 */
+  /** 테두리 — 저장하지 않는다. 열 때마다 항상 '상장 용지'로 시작 */
   border: CertDesign;
   color: CertColor;
   /** 상장 용지 모드 여백·이동(mm) — 프린터·용지마다 달라 기억해 둔다 */
@@ -85,13 +85,60 @@ function todayIso(): string {
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 
+/**
+ * mm 숫자 입력 — 쓰는 동안은 글자 그대로 두고(지우기·'-' 입력 가능),
+ * 범위 안의 숫자일 때만 반영한다. 칸을 벗어나면 범위에 맞춰 정리한다.
+ */
+function MmInput({
+  value,
+  min,
+  max,
+  width,
+  onChange,
+}: {
+  value: number;
+  min: number;
+  max: number;
+  width: number;
+  onChange: (n: number) => void;
+}) {
+  const [text, setText] = useState(String(value));
+  const [editing, setEditing] = useState(false);
+  const shown = editing ? text : String(value);
+  return (
+    <input
+      className={`${styles.input} ${styles.mono}`}
+      type="text"
+      inputMode="numeric"
+      style={{ width }}
+      value={shown}
+      onFocus={() => {
+        setText(String(value));
+        setEditing(true);
+      }}
+      onChange={(e) => {
+        const t = e.target.value.replace(/[^\d-]/g, "");
+        setText(t);
+        const n = Number(t);
+        if (t !== "" && t !== "-" && Number.isFinite(n) && n >= min && n <= max) onChange(n);
+      }}
+      onBlur={() => {
+        setEditing(false);
+        const n = Number(text);
+        if (text === "" || text === "-" || !Number.isFinite(n)) return;
+        onChange(Math.min(max, Math.max(min, Math.round(n))));
+      }}
+    />
+  );
+}
+
 export function CertificateTool() {
   const [input, setInput] = useState("");
   const t = useToolBasics<CertOptions>({
     storageKey: "rowflip:certificate:v1",
     defaults: DEFAULTS,
     // 양식·글꼴·날짜 형식만 기억한다. 명단·기관명·본문 문구는 저장하지 않는다
-    storedKeys: ["template", "font", "dateStyle", "border", "color", "paperMargin", "shiftX", "shiftY", "sealSize"],
+    storedKeys: ["template", "font", "dateStyle", "color", "paperMargin", "shiftX", "shiftY", "sealSize"],
     sanitize: (s) => {
       if (s.border && !DESIGN_CHOICES.some((x) => x.value === s.border)) delete s.border;
       if (s.color && !COLOR_CHOICES.some((x) => x.value === s.color)) delete s.color;
@@ -359,39 +406,15 @@ export function CertificateTool() {
             <div className={styles.inline}>
               <label className={styles.inline}>
                 <span className={styles.certLabel}>여백</span>
-                <input
-                  className={`${styles.input} ${styles.mono}`}
-                  type="number"
-                  min={5}
-                  max={70}
-                  style={{ width: 64 }}
-                  value={o.paperMargin}
-                  onChange={(e) => update({ paperMargin: Math.min(70, Math.max(5, Number(e.target.value) || 0)) })}
-                />
+                <MmInput value={o.paperMargin} min={5} max={70} width={64} onChange={(paperMargin) => update({ paperMargin })} />
               </label>
               <label className={styles.inline}>
                 <span className={styles.certLabel}>좌우</span>
-                <input
-                  className={`${styles.input} ${styles.mono}`}
-                  type="number"
-                  min={-30}
-                  max={30}
-                  style={{ width: 60 }}
-                  value={o.shiftX}
-                  onChange={(e) => update({ shiftX: Math.min(30, Math.max(-30, Number(e.target.value) || 0)) })}
-                />
+                <MmInput value={o.shiftX} min={-30} max={30} width={60} onChange={(shiftX) => update({ shiftX })} />
               </label>
               <label className={styles.inline}>
                 <span className={styles.certLabel}>상하</span>
-                <input
-                  className={`${styles.input} ${styles.mono}`}
-                  type="number"
-                  min={-30}
-                  max={30}
-                  style={{ width: 60 }}
-                  value={o.shiftY}
-                  onChange={(e) => update({ shiftY: Math.min(30, Math.max(-30, Number(e.target.value) || 0)) })}
-                />
+                <MmInput value={o.shiftY} min={-30} max={30} width={60} onChange={(shiftY) => update({ shiftY })} />
               </label>
               <span className={styles.hint}>mm · +는 오른쪽·아래로</span>
             </div>
