@@ -10,7 +10,7 @@ export default function DiffPage() {
     <ToolPageLayout
       id="diff"
       meta={M}
-      lede="원본과 수정본을 붙여넣으면 지운 줄, 더한 줄, 줄 안에서 바뀐 낱말을 색으로 표시해 줍니다. 계약서·보고서·원고의 수정 전후를 비교할 때 쓰세요."
+      lede="원본과 수정본을 붙여넣으면 지운 줄, 더한 줄, 줄 안에서 바뀐 낱말을 색으로 표시해 줍니다. 글자 비교, 문장·문자열 비교부터 계약서·보고서·원고 같은 문서 비교까지 수정 전후를 확인할 때 쓰세요."
       tool={<DiffTool />}
       guideTitle="텍스트 비교하는 방법"
       guides={DIFF_GUIDES}

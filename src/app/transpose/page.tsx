@@ -48,7 +48,7 @@ export default function TransposePage() {
         <PromotionArea position="header" />
 
         <PageIntro title={M.h1}>
-            엑셀이나 구글 시트에서 표를 복사해 붙여넣으면 행과 열을 바꾼 표를 바로 보여 줍니다. 결과를 복사해 엑셀에 그대로
+            엑셀 행 열 바꾸기를 수식이나 선택하여 붙여넣기 없이 합니다. 엑셀이나 구글 시트에서 표를 복사해 붙여넣으면 행과 열을 바꾼 표를 바로 보여 줍니다. 결과를 복사해 엑셀에 그대로
             붙여넣거나 CSV, 마크다운 표로 받을 수 있습니다.
           </PageIntro>
 

@@ -10,7 +10,7 @@ export default function CellSplitPage() {
     <ToolPageLayout
       id="cellsplit"
       meta={M}
-      lede="한 칸에 들어 있는 주소, 전화번호, 이름, 셀 안 줄바꿈 목록을 붙여넣으면 여러 칸으로 나눠 줍니다. 복사해서 엑셀에 붙여넣으면 나눈 칸 그대로 들어갑니다."
+      lede="한 칸에 들어 있는 주소, 전화번호, 이름, 셀 안 줄바꿈 목록을 붙여넣으면 띄어쓰기·쉼표 기준으로 한 셀을 두 칸, 세 칸으로 나눠 줍니다. 복사해서 엑셀에 붙여넣으면 나눈 칸 그대로 들어갑니다."
       tool={<CellSplitTool />}
       guideTitle="엑셀에서 셀 나누는 방법"
       guides={CELL_SPLIT_GUIDES}
