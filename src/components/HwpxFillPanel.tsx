@@ -145,6 +145,12 @@ export function HwpxFillPanel({ source }: { source: EstimateFillSource }) {
         </>
       )}
 
+      {file && tableIndex !== null && !source.lines.length && (
+        <p className={styles.hintStrong}>
+          왼쪽 입력 칸에 엑셀 품목(품목·규격·수량·단가)을 먼저 붙여넣으세요. 그 품목을 이 양식 표에 채웁니다. ‘샘플 넣기’로
+          먼저 시험해 볼 수 있습니다.
+        </p>
+      )}
       {file && (
         <div className={styles.inline}>
           <button type="button" className={styles.outlineBtn} onClick={download} disabled={!source.lines.length && tableIndex !== null}>
