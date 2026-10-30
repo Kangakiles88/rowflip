@@ -21,6 +21,15 @@ export function whiteToTransparent(data: Uint8ClampedArray, threshold = 235, sof
 
 /** 파일 → 흰 배경을 지운 PNG 데이터 주소. 긴 변을 maxSide 픽셀로 줄인다 */
 export async function loadSealImage(file: File, maxSide = 600): Promise<string> {
+  return loadImageFile(file, { maxSide, clearWhite: true });
+}
+
+/** 회사 로고 — 색이 흰색인 부분이 있을 수 있어 배경은 그대로 두고 크기만 줄인다 */
+export async function loadLogoImage(file: File, maxSide = 800): Promise<string> {
+  return loadImageFile(file, { maxSide, clearWhite: false });
+}
+
+async function loadImageFile(file: File, { maxSide, clearWhite }: { maxSide: number; clearWhite: boolean }): Promise<string> {
   const url = URL.createObjectURL(file);
   try {
     const img = await new Promise<HTMLImageElement>((resolve, reject) => {
@@ -38,9 +47,11 @@ export async function loadSealImage(file: File, maxSide = 600): Promise<string> 
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("이미지를 처리하지 못했습니다.");
     ctx.drawImage(img, 0, 0, w, h);
-    const pixels = ctx.getImageData(0, 0, w, h);
-    whiteToTransparent(pixels.data);
-    ctx.putImageData(pixels, 0, 0);
+    if (clearWhite) {
+      const pixels = ctx.getImageData(0, 0, w, h);
+      whiteToTransparent(pixels.data);
+      ctx.putImageData(pixels, 0, 0);
+    }
     return canvas.toDataURL("image/png");
   } finally {
     URL.revokeObjectURL(url);

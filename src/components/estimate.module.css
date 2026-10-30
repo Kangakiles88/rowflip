@@ -22,6 +22,7 @@
 }
 
 .title {
+  position: relative;
   margin: 0 0 calc(7 * var(--mm));
   padding-bottom: calc(2.5 * var(--mm));
   font-size: calc(8.5 * var(--mm));
@@ -97,8 +98,27 @@
   text-align: center;
 }
 .seal {
+  position: relative;
   float: right;
   color: var(--paper-mute);
+}
+/* 직인 이미지: (인) 글자 가운데에 겹쳐 찍는다 */
+.sealImg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  pointer-events: none;
+}
+/* 회사 로고: 제목 줄 왼쪽 끝(제목은 가운데 그대로) */
+.logo {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: calc(50 * var(--mm));
+  object-fit: contain;
 }
 
 .totalBar {

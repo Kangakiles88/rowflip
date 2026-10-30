@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { priceVatLabel, qtyText, totalInWords, totalVatLabel, won, type EstimateLine, type EstimateTotals, type VatMode } from "@/utils/estimate";
+import { LogoMark, SealMark, type DocLogo, type DocSeal } from "./DocImages";
 import s from "./estimate.module.css";
 
 export interface Supplier {
@@ -22,6 +23,8 @@ export interface EstimateDocData {
   totals: EstimateTotals;
   vat: VatMode;
   note: string;
+  seal?: DocSeal | null;
+  logo?: DocLogo | null;
 }
 
 /** 빈 표 줄을 채워 견적서다운 모양을 만든다(품목이 적을 때) */
@@ -40,7 +43,10 @@ export function EstimateDoc({ data, preview = false }: { data: EstimateDocData; 
 
   return (
     <article className={`${s.doc} ${preview ? s.preview : ""}`}>
-      <p className={s.title}>견적서</p>
+      <p className={s.title}>
+        <LogoMark logo={data.logo} />
+        견적서
+      </p>
 
       <div className={s.top}>
         <div>
@@ -82,7 +88,7 @@ export function EstimateDoc({ data, preview = false }: { data: EstimateDocData; 
               <th scope="row">성명</th>
               <td>
                 {v(sp.ceo, "대표자")}
-                <span className={s.seal}>(인)</span>
+                <SealMark seal={data.seal} />
               </td>
             </tr>
             <tr>

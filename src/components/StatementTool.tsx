@@ -8,6 +8,7 @@ import { moneyInput, STATEMENT_SAMPLE, statementBalance } from "@/utils/statemen
 import { trackPrint } from "@/utils/tracking";
 import { EMPTY_PARTY, isoDate, PARTY_FIELDS, SAMPLE_SUPPLIER, VAT_CHOICES, VAT_HINT } from "./docFields";
 import type { Supplier } from "./EstimateDoc";
+import { DocImageFields, useDocImages } from "./DocImages";
 import { InputPanel } from "./InputPanel";
 import { ResultPane } from "./ResultPane";
 import { Segmented } from "./Segmented";
@@ -66,6 +67,7 @@ export function StatementTool() {
   const [note, setNote] = useState("");
   const [buyer, setBuyer] = useState<Supplier>(EMPTY_PARTY);
   const [supplier, setSupplier] = useState<Supplier>(EMPTY_PARTY);
+  const images = useDocImages();
 
   // 오늘 날짜는 브라우저에서 정한다(정적 HTML에 빌드 날짜가 박히지 않게)
   useEffect(() => {
@@ -91,6 +93,9 @@ export function StatementTool() {
     vat: o.vat,
     note,
     copies: o.copies,
+
+    seal: images.seal,
+    logo: images.logo,
   };
 
   const print = useCallback(() => {
@@ -258,6 +263,8 @@ export function StatementTool() {
 
         {partyGroup("공급받는자 (받는 쪽)", buyer, setBuyer)}
         {partyGroup("공급자 (보내는 쪽)", supplier, setSupplier)}
+
+        <DocImageFields state={images} />
 
         <fieldset className={styles.group}>
           <legend className={styles.groupTitle}>부가세 · 인쇄</legend>

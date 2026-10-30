@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { priceVatLabel, qtyText, totalInWords, totalVatLabel, won, type EstimateLine, type EstimateTotals, type VatMode } from "@/utils/estimate";
 import type { StatementBalance } from "@/utils/statement";
 import type { Supplier } from "./EstimateDoc";
+import { LogoMark, SealMark, type DocLogo, type DocSeal } from "./DocImages";
 import e from "./estimate.module.css";
 import s from "./statement.module.css";
 
@@ -18,13 +19,25 @@ export interface StatementDocData {
   vat: VatMode;
   note: string;
   copies: StatementCopies;
+  seal?: DocSeal | null;
+  logo?: DocLogo | null;
 }
 
 
 /** 품목이 적을 때 빈 줄을 채워 명세서 모양을 맞춘다 — 두 부 찍기는 반쪽에 들어가게 적게 */
 const MIN_ROWS = { one: 15, two: 6 } as const;
 
-function Party({ title, p, v }: { title: string; p: Supplier; v: (value: string, hint: string) => ReactNode }) {
+function Party({
+  title,
+  p,
+  v,
+  seal,
+}: {
+  title: string;
+  p: Supplier;
+  v: (value: string, hint: string) => ReactNode;
+  seal?: DocSeal | null;
+}) {
   return (
     <table className={`${e.table} ${s.party}`}>
       <tbody>
@@ -43,7 +56,7 @@ function Party({ title, p, v }: { title: string; p: Supplier; v: (value: string,
           <th scope="row">성명</th>
           <td>
             {v(p.ceo, "대표자")}
-            <span className={e.seal}>(인)</span>
+            <SealMark seal={seal} />
           </td>
         </tr>
         <tr>
@@ -76,6 +89,7 @@ function Copy({ data, label, preview }: { data: StatementDocData; label?: string
   return (
     <section className={s.copy}>
       <div className={s.head}>
+        <LogoMark logo={data.logo} />
         <p className={s.title}>거래명세서</p>
         {label && <span className={s.copyLabel}>({label})</span>}
       </div>
@@ -92,7 +106,7 @@ function Copy({ data, label, preview }: { data: StatementDocData; label?: string
 
       <div className={s.parties}>
         <Party title="공급받는자" p={data.buyer} v={v} />
-        <Party title="공급자" p={data.supplier} v={v} />
+        <Party title="공급자" p={data.supplier} v={v} seal={data.seal} />
       </div>
 
       <table className={`${e.table} ${e.totalBar} ${s.totalBar}`}>

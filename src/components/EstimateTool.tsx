@@ -7,6 +7,7 @@ import { computeEstimate, ESTIMATE_SAMPLE, parseItems, won, type VatMode } from 
 import { trackPrint } from "@/utils/tracking";
 import { EMPTY_PARTY, isoDate, PARTY_FIELDS, SAMPLE_SUPPLIER, VAT_CHOICES, VAT_HINT } from "./docFields";
 import { EstimateDoc, type EstimateDocData, type Supplier } from "./EstimateDoc";
+import { DocImageFields, useDocImages } from "./DocImages";
 import { InputPanel } from "./InputPanel";
 import { ResultPane } from "./ResultPane";
 import { Segmented } from "./Segmented";
@@ -51,6 +52,7 @@ export function EstimateTool() {
   const [number, setNumber] = useState("");
   const [note, setNote] = useState("");
   const [supplier, setSupplier] = useState<Supplier>(EMPTY_PARTY);
+  const images = useDocImages();
   const setSp = (key: keyof Supplier, value: string) => setSupplier((sp) => ({ ...sp, [key]: value }));
 
   // 오늘 날짜는 브라우저에서 정한다(정적 HTML에 빌드 날짜가 박히지 않게)
@@ -75,6 +77,8 @@ export function EstimateTool() {
     totals,
     vat: o.vat,
     note,
+    seal: images.seal,
+    logo: images.logo,
   };
 
   const print = useCallback(() => {
@@ -239,6 +243,8 @@ export function EstimateTool() {
             </label>
           ))}
         </fieldset>
+
+        <DocImageFields state={images} />
 
         <fieldset className={styles.group}>
           <legend className={styles.groupTitle}>부가세</legend>
