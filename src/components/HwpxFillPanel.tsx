@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { fillTemplate, HwpxError, inspectTemplate, ITEM_FIELDS, type ItemField, type TemplateInfo } from "@/utils/hwpx";
+import { fillTemplate, HwpxError, inputHeaderFor, inspectTemplate, ITEM_FIELDS, type ItemField, type TemplateInfo } from "@/utils/hwpx";
 import {
   ESTIMATE_TOKENS,
   estimateFillLines,
@@ -15,7 +15,14 @@ import styles from "./tool.module.css";
  * 견적서를 사용자의 한글(HWPX) 양식에 채워 내려받기.
  * 양식 파일은 브라우저 메모리에만 두고 서버로 보내거나 저장하지 않는다.
  */
-export function HwpxFillPanel({ source }: { source: EstimateFillSource }) {
+export function HwpxFillPanel({
+  source,
+  onHeader,
+}: {
+  source: EstimateFillSource;
+  /** 양식을 열면 그 표의 칸 순서로 만든 머리글 줄을 넘긴다(입력 칸이 비어 있을 때 채움) */
+  onHeader?: (header: string) => void;
+}) {
   const [file, setFile] = useState<{ name: string; bytes: Uint8Array; info: TemplateInfo } | null>(null);
   const [tableIndex, setTableIndex] = useState<number | null>(null);
   const [fields, setFields] = useState<Record<number, ItemField>>({});
@@ -31,6 +38,7 @@ export function HwpxFillPanel({ source }: { source: EstimateFillSource }) {
       setFile({ name: f.name, bytes, info });
       setTableIndex(info.tables[0]?.index ?? null);
       setFields({});
+      if (info.tables[0]) onHeader?.(inputHeaderFor(info.tables[0].columns));
     } catch (e) {
       setFile(null);
       setError(e instanceof HwpxError ? e.message : "양식을 읽지 못했습니다. 한글에서 HWPX로 다시 저장해 보세요.");
@@ -147,8 +155,8 @@ export function HwpxFillPanel({ source }: { source: EstimateFillSource }) {
 
       {file && tableIndex !== null && !source.lines.length && (
         <p className={styles.hintStrong}>
-          왼쪽 입력 칸에 엑셀 품목(품목·규격·수량·단가)을 먼저 붙여넣으세요. 그 품목을 이 양식 표에 채웁니다. ‘샘플 넣기’로
-          먼저 시험해 볼 수 있습니다.
+          왼쪽 입력 칸에 품목을 넣으세요. 첫 줄에 양식에 맞춘 머리글을 넣어 두었으니, 엑셀에서 붙여넣거나 다음 줄부터
+          ‘의자 T-ZERO 1 134000’처럼 같은 순서로 띄어 쓰면 됩니다.
         </p>
       )}
       {file && (

@@ -270,7 +270,7 @@ export function EstimateTool() {
           <p className={styles.hint}>인쇄 창 ‘설정 더보기’에서 ‘머리글과 바닥글’을 끄면 종이에 주소·날짜가 찍히지 않습니다.</p>
         </fieldset>
 
-        <HwpxFillPanel source={data} />
+        <HwpxFillPanel source={data} onHeader={(h) => setInput((cur) => (cur.trim() ? cur : `${h}\n`))} />
       </div>
 
       <dialog

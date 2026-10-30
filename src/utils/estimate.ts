@@ -98,7 +98,10 @@ const isNum = (t: string) => parseNumber(t) !== null;
 function splitSpacedRow(line: string, header: Partial<Record<Col, number>> | null, headerWidth: number): Record<Col, string> {
   const t = line.trim().split(/\s+/);
   const out: Record<Col, string> = { name: "", spec: "", qty: "", price: "", note: "", date: "" };
-  if (header && t.length === headerWidth) {
+  // 낱말 수가 머리글과 같고 수량·단가 자리가 숫자일 때만 머리글 순서를 따른다
+  // ('사무용 의자 T-ZERO 4 189,000'처럼 품목 이름에 띄어쓰기가 있으면 낱말 수가 우연히 같을 수 있음)
+  const fits = (c: Col) => header?.[c] === undefined || isNum(t[header[c]!] ?? "");
+  if (header && t.length === headerWidth && fits("qty") && fits("price")) {
     (Object.keys(header) as Col[]).forEach((c) => (out[c] = t[header[c]!] ?? ""));
     return out;
   }
@@ -168,9 +171,24 @@ export function parseItems(raw: string): {
 
   const items: EstimateItem[] = [];
   const invalidLines: number[] = [];
+  const headerWidth = rows[firstIdx].length;
   for (let i = start; i < rows.length; i++) {
     const r = rows[i];
     if (r.every((c) => c === "")) continue;
+    // 머리글은 탭으로 나뉘었는데 이 줄은 띄어쓰기로 직접 친 경우(양식을 열면 머리글을 자동으로 넣어 둠)
+    if (header && r[0] && /\s/.test(r[0]) && r.slice(1).every((c) => c === "")) {
+      const c = splitSpacedRow(r[0], header, headerWidth);
+      if (c.price !== "") {
+        const qty = c.qty === "" ? 1 : parseNumber(c.qty);
+        const price = parseNumber(c.price);
+        if (qty === null || price === null || c.name === "") {
+          invalidLines.push(i + 1);
+          continue;
+        }
+        items.push({ name: c.name, spec: c.spec, qty, price, note: c.note, ...(c.date ? { date: monthDay(c.date) } : {}) });
+        continue;
+      }
+    }
     const name = get(r, "name");
     const qtyRaw = get(r, "qty");
     const priceRaw = get(r, "price");

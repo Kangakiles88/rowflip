@@ -9,6 +9,7 @@ import {
   guessField,
   HP,
   HwpxError,
+  inputHeaderFor,
   inspectTemplate,
   openHwpx,
   parseXml,
@@ -47,6 +48,14 @@ describe("guessField", () => {
     expect(guessField("합계금액")).toBe("total");
     expect(guessField("비고")).toBe("note");
     expect(guessField("담당")).toBe("");
+  });
+});
+
+describe("inputHeaderFor", () => {
+  it("양식 칸 순서대로, 금액·번호는 빼고", () => {
+    const f = (...xs: string[]) => xs.map((field) => ({ field: field as never }));
+    expect(inputHeaderFor(f("no", "name", "spec", "qty", "price", "supply", "note"))).toBe("품목\t규격\t수량\t단가\t비고");
+    expect(inputHeaderFor(f("no", "nameSpec", "qty", "supply", "tax", "note"))).toBe("품목\t규격\t수량\t단가\t비고");
   });
 });
 

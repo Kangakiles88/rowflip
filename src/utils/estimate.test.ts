@@ -30,6 +30,14 @@ describe("parseItems", () => {
     expect(r.items).toHaveLength(3);
     expect(r.items[2].note).toBe("설치 포함");
   });
+  it("탭 머리글 아래 띄어쓰기로 친 줄", () => {
+    const r = parseItems("품목\t규격\t수량\t단가\t비고\n사무용 의자 T-ZERO 4 189,000\n모니터암 듀얼 2 64000 설치 포함\n볼펜\t\t20\t500");
+    expect(r.items).toEqual([
+      { name: "사무용 의자", spec: "T-ZERO", qty: 4, price: 189000, note: "" },
+      { name: "모니터암", spec: "듀얼", qty: 2, price: 64000, note: "설치 포함" },
+      { name: "볼펜", spec: "", qty: 20, price: 500, note: "" },
+    ]);
+  });
   it("머리글 순서가 달라도", () => {
     const r = parseItems("단가\t품명\t수량\n5,000\t볼펜\t20");
     expect(r.items[0]).toEqual({ name: "볼펜", spec: "", qty: 20, price: 5000, note: "" });

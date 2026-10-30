@@ -449,3 +449,23 @@ export function fillTemplate(bytes: Uint8Array, opt: FillOptions): { bytes: Uint
     report: { ...result, usedTokens: [...used], unknownTokens: [...unknown] },
   };
 }
+
+/** 양식 표의 칸 순서대로 견적서 입력 칸 첫 줄(머리글, 탭 구분)을 만든다. 계산에 필요한 단가는 없으면 붙인다 */
+export function inputHeaderFor(columns: { field: ItemField }[]): string {
+  const label: Partial<Record<ItemField, string[]>> = {
+    name: ["품목"],
+    spec: ["규격"],
+    nameSpec: ["품목", "규격"],
+    qty: ["수량"],
+    price: ["단가"],
+    note: ["비고"],
+  };
+  const out: string[] = [];
+  for (const c of columns) for (const l of label[c.field] ?? []) if (!out.includes(l)) out.push(l);
+  if (!out.includes("품목")) out.unshift("품목");
+  if (!out.includes("단가")) {
+    const at = out.indexOf("비고");
+    out.splice(at === -1 ? out.length : at, 0, "단가");
+  }
+  return out.join("\t");
+}
