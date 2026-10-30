@@ -226,3 +226,18 @@ export function totalInWords(total: number): string {
   if (total < 0) return `₩${won(total)}`;
   return `일금 ${amountWords(String(Math.round(total)), "formal")}원정 (₩${won(total)})`;
 }
+
+/**
+ * 합계금액 옆 표기 — 별도·포함 모두 합계에는 세액이 들어 있으므로 '부가세 포함'.
+ * 어느 방식으로 계산했는지는 단가 머리글(`priceVatLabel`)로 알린다.
+ */
+export function totalVatLabel(mode: VatMode): string {
+  return mode === "none" ? "(부가세 없음)" : "(부가세 포함)";
+}
+
+/** 단가 머리글 아래 표기 — 단가에 세금이 들어 있는지. 부가세 없음이면 비움 */
+export function priceVatLabel(mode: VatMode): string {
+  if (mode === "exclusive") return "부가세 별도";
+  if (mode === "inclusive") return "부가세 포함";
+  return "";
+}

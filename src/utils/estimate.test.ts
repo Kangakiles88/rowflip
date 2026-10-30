@@ -5,8 +5,10 @@ import {
   ESTIMATE_SAMPLE,
   parseItems,
   parseNumber,
+  priceVatLabel,
   qtyText,
   totalInWords,
+  totalVatLabel,
   won,
 } from "./estimate";
 
@@ -89,5 +91,18 @@ describe("표기", () => {
     expect(qtyText(2.5)).toBe("2.5");
     expect(qtyText(1000)).toBe("1,000");
     expect(totalInWords(1100000)).toBe("일금 일백일십만원정 (₩1,100,000)");
+  });
+});
+
+describe("부가세 표기", () => {
+  it("합계는 세액이 들어 있으면 부가세 포함", () => {
+    expect(totalVatLabel("exclusive")).toBe("(부가세 포함)");
+    expect(totalVatLabel("inclusive")).toBe("(부가세 포함)");
+    expect(totalVatLabel("none")).toBe("(부가세 없음)");
+  });
+  it("단가 머리글은 계산 방식을 그대로", () => {
+    expect(priceVatLabel("exclusive")).toBe("부가세 별도");
+    expect(priceVatLabel("inclusive")).toBe("부가세 포함");
+    expect(priceVatLabel("none")).toBe("");
   });
 });

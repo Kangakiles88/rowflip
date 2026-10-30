@@ -123,6 +123,14 @@
 .items th {
   text-align: center;
 }
+/* 단가 머리글 아래 '부가세 별도/포함' */
+.colNote {
+  display: block;
+  font-size: calc(2.4 * var(--mm));
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
 .items td {
   height: calc(6.4 * var(--mm));
 }

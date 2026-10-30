@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { qtyText, totalInWords, won, type EstimateLine, type EstimateTotals, type VatMode } from "@/utils/estimate";
+import { priceVatLabel, qtyText, totalInWords, totalVatLabel, won, type EstimateLine, type EstimateTotals, type VatMode } from "@/utils/estimate";
 import type { StatementBalance } from "@/utils/statement";
 import type { Supplier } from "./EstimateDoc";
 import e from "./estimate.module.css";
@@ -20,11 +20,6 @@ export interface StatementDocData {
   copies: StatementCopies;
 }
 
-const VAT_LABEL: Record<VatMode, string> = {
-  exclusive: "(공급가액+세액)",
-  inclusive: "(부가세 포함)",
-  none: "(부가세 없음)",
-};
 
 /** 품목이 적을 때 빈 줄을 채워 명세서 모양을 맞춘다 — 두 부 찍기는 반쪽에 들어가게 적게 */
 const MIN_ROWS = { one: 15, two: 6 } as const;
@@ -105,7 +100,7 @@ function Copy({ data, label, preview }: { data: StatementDocData; label?: string
           <tr>
             <th scope="row">
               합계금액
-              <small>{VAT_LABEL[vat]}</small>
+              <small>{totalVatLabel(vat)}</small>
             </th>
             <td>{totalInWords(totals.total)}</td>
           </tr>
@@ -129,7 +124,10 @@ function Copy({ data, label, preview }: { data: StatementDocData; label?: string
             <th scope="col">품목</th>
             <th scope="col">규격</th>
             <th scope="col">수량</th>
-            <th scope="col">단가</th>
+            <th scope="col">
+              단가
+              {priceVatLabel(vat) && <small className={e.colNote}>{priceVatLabel(vat)}</small>}
+            </th>
             <th scope="col">공급가액</th>
             {showTax && <th scope="col">세액</th>}
             <th scope="col">비고</th>
