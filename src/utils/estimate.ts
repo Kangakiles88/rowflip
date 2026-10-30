@@ -121,8 +121,10 @@ function splitSpacedRow(line: string, header: Partial<Record<Col, number>> | nul
   if (header?.date !== undefined && head.length >= 2 && looksDate(head[0])) {
     out.date = head.shift()!;
   }
-  // 머리글에 규격이 있고 품목 앞부분이 두 낱말 이상이면 마지막 낱말을 규격으로
-  if (header?.spec !== undefined && head.length >= 2) {
+  // 머리글에 규격이 있고 품목 앞부분이 두 낱말 이상이면 마지막 낱말을 규격으로.
+  // 머리글이 없으면 마지막 낱말이 규격 모양(영문·숫자가 섞인 box·T-ZERO·80g)일 때만 —
+  // '사무용 의자'처럼 한글만 있는 낱말은 품목 이름으로 둔다
+  if (head.length >= 2 && (header ? header.spec !== undefined : /[A-Za-z0-9]/.test(head[head.length - 1]))) {
     out.spec = head.pop()!;
   }
   out.name = head.join(" ");

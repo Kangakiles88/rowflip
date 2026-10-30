@@ -30,6 +30,14 @@ describe("parseItems", () => {
     expect(r.items).toHaveLength(3);
     expect(r.items[2].note).toBe("설치 포함");
   });
+  it("머리글 없이 띄어쓰기: 영문·숫자 낱말은 규격으로, 한글 낱말은 품목에", () => {
+    const r = parseItems("의자 box 1ea 134,000\n사무용 의자 4 189000\nA4 복사용지 80g 10 27500");
+    expect(r.items.map((x) => [x.name, x.spec, x.qty, x.price])).toEqual([
+      ["의자", "box", 1, 134000],
+      ["사무용 의자", "", 4, 189000],
+      ["A4 복사용지", "80g", 10, 27500],
+    ]);
+  });
   it("탭 머리글 아래 띄어쓰기로 친 줄", () => {
     const r = parseItems("품목\t규격\t수량\t단가\t비고\n사무용 의자 T-ZERO 4 189,000\n모니터암 듀얼 2 64000 설치 포함\n볼펜\t\t20\t500");
     expect(r.items).toEqual([
