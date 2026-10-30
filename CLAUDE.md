@@ -37,8 +37,9 @@
 - 테스트 Vitest, 린트 ESLint(eslint-config-next).
 
 ## 배포
-- GitHub `Kangakiles88/rowflip`의 `main`에 푸시하면 Cloudflare Workers(정적 자산 전용)가 자동 빌드·배포. Build command `npm run build`, Deploy command `npx wrangler deploy`, 대상은 `wrangler.jsonc`의 `./out`. Node는 `.node-version`(22), wrangler는 package.json에 버전 고정.
+- GitHub `Kangakiles88/rowflip`의 `main`에 푸시하면 Cloudflare Workers(정적 자산 전용)가 자동 빌드·배포. Build command `npm run build`, Deploy command `node scripts/indexnow.mjs prepare && npx wrangler deploy && node scripts/indexnow.mjs submit`, 대상은 `wrangler.jsonc`의 `./out`. Node는 `.node-version`(22), wrangler는 package.json에 버전 고정.
 - `wrangler.jsonc`를 지우면 Cloudflare가 OpenNext(서버용)를 자동 적용해 빌드가 깨짐. 배포 전 점검: `npm run build && npx wrangler deploy --dry-run`.
+- IndexNow(2026-10-30): 배포 때 공개된 옛 판과 새 빌드(out/)의 화면 글자(제목·설명·본문)를 페이지마다 비교해 새로 생기거나 바뀐·사라진 주소만 `api.indexnow.org`로 전송(네이버·빙 등이 공유, 구글은 미참여 → 사이트맵·서치 콘솔). 키 파일 `public/27a08147023f31f48e9b4c7b3e3dca02.txt`(키는 `scripts/indexnow.mjs`의 KEY와 같아야 함, 지우지 말 것). 오류가 나도 종료 코드 0이라 배포를 막지 않음. 로컬 시험: `node scripts/indexnow.mjs prepare --live http://localhost:포트` → `submit --dry-run`.
 - 커밋 작성자는 `Kangakiles88 <Kangakiles88@users.noreply.github.com>`(공개 저장소라 개인 메일을 넣지 않음).
 
 ## 명령어

@@ -49,3 +49,6 @@ next-env.d.ts
 # 빌드 전에 node_modules/pretendard에서 만들어지는 글꼴 파일
 /public/fonts/pretendard/
 /src/app/pretendard.css
+
+# IndexNow 배포 중 임시 목록
+/.indexnow-pending.json
