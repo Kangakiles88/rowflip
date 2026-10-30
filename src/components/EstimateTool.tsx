@@ -8,6 +8,7 @@ import { trackPrint } from "@/utils/tracking";
 import { EMPTY_PARTY, isoDate, PARTY_FIELDS, SAMPLE_SUPPLIER, VAT_CHOICES, VAT_HINT } from "./docFields";
 import { EstimateDoc, type EstimateDocData, type Supplier } from "./EstimateDoc";
 import { DocImageFields, useDocImages } from "./DocImages";
+import { HwpxFillPanel } from "./HwpxFillPanel";
 import { InputPanel } from "./InputPanel";
 import { ResultPane } from "./ResultPane";
 import { Segmented } from "./Segmented";
@@ -268,6 +269,8 @@ export function EstimateTool() {
           <p className={styles.hint}>입력한 거래처·공급자 정보와 품목은 저장하지 않습니다. 새로고침하면 지워집니다.</p>
           <p className={styles.hint}>인쇄 창 ‘설정 더보기’에서 ‘머리글과 바닥글’을 끄면 종이에 주소·날짜가 찍히지 않습니다.</p>
         </fieldset>
+
+        <HwpxFillPanel source={data} />
       </div>
 
       <dialog
