@@ -75,6 +75,13 @@ describe("inspectTemplate", () => {
     expect(t.rows).toBe(4);
   });
 
+  it("견적서 전체가 표 하나: 아래쪽 머리글을 찾고 특기사항 줄 앞에서 멈춘다", () => {
+    const t = inspectTemplate(fixture("estimate-onetable.hwpx")).tables[0];
+    expect(t.columns.filter((c) => c.field).map((c) => c.field)).toEqual(["name", "spec", "qty", "price", "supply", "tax", "note"]);
+    expect(t.rows).toBe(8);
+    expect(t.hasTotal).toBe(false);
+  });
+
   it("HWPX가 아니면 알림", () => {
     expect(() => openHwpx(new Uint8Array([0xd0, 0xcf, 0x11, 0xe0]))).toThrow(HwpxError);
   });
@@ -128,6 +135,13 @@ describe("fillTemplate", () => {
     const { bytes } = fillTemplate(fixture("estimate-merged.hwpx"), { tableIndex: 0, fields: {}, lines: LINES, tokens: {} });
     const g = tableGrid(bytes);
     expect(g[1]).toEqual(["1", "사무용 의자 T-ZERO", "4", "189,000", "756,000", "75,600", ""]);
+  });
+
+  it("표 하나 양식: 품목을 머리글 아래에 채운다", () => {
+    const { bytes } = fillTemplate(fixture("estimate-onetable.hwpx"), { tableIndex: 0, fields: {}, lines: LINES, tokens: {} });
+    const g = tableGrid(bytes);
+    expect(g[12]).toEqual(["사무용 의자", "T-ZERO", "4", "189,000", "756,000", "75,600", ""]);
+    expect(g[20][0]).toBe("특기사항");
   });
 
   it("화면에서 고친 연결을 따른다", () => {

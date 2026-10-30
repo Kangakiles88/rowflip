@@ -144,7 +144,8 @@ function rowsOf(tbl: Element): Element[] {
 export function analyzeTable(tbl: Element, index = 0, section = ""): ItemTable | null {
   const rows = rowsOf(tbl);
   let best: { row: number; columns: TableColumn[]; score: number } | null = null;
-  for (const [ri, tr] of rows.slice(0, 8).entries()) {
+  // 견적서 전체가 표 하나인 양식은 머리글이 한참 아래에 있으므로 모든 줄을 본다
+  for (const [ri, tr] of rows.entries()) {
     const columns: TableColumn[] = kids(tr, "tc").map((tc) => {
       const a = addr(tc);
       const header = cellText(tc);
@@ -168,12 +169,20 @@ export function analyzeTable(tbl: Element, index = 0, section = ""): ItemTable |
   }
   const dataRows: Element[] = [];
   let totalRow: Element | null = null;
+  // 품목 줄은 머리글과 칸 나눔이 같다(연결된 칸의 시작 위치가 절반 이상 그대로).
+  // 다른 모양 줄(특기사항·계좌 안내 등)이 나오면 거기서 멈춘다
+  const starts = columns.filter((c) => c.field).map((c) => c.col);
+  const sameShape = (tr: Element) => {
+    const own = new Set(kids(tr, "tc").map((tc) => addr(tc).col));
+    return starts.filter((c) => own.has(c)).length * 2 >= starts.length;
+  };
   for (const tr of rows.slice(headerRow + 1)) {
     const texts = kids(tr, "tc").map((tc) => squash(cellText(tc)));
     if (texts.some((t) => TOTAL_ROW.test(t))) {
       totalRow = tr;
       break;
     }
+    if (!sameShape(tr)) break;
     dataRows.push(tr);
   }
   return { index, section, table: tbl, headerRow, columns, dataRows, totalRow };
