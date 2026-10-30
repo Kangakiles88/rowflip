@@ -5,7 +5,9 @@
 ## 프로젝트 개요
 - 브랜드: **RowFlip**, 도메인 `https://rowflip.com` (GoDaddy에서 구매). 엑셀·구글 시트·메모장에서 복사한 데이터를 붙여넣어 바로 변환하는 무료 웹 도구 사이트.
 - 브랜드·도메인에는 "엑셀/Excel"을 쓰지 않음(Microsoft 상표 가이드라인). "엑셀"은 페이지 제목·H1·본문에서 기능 설명으로만 사용. 제목 형식: `<페이지 제목> | RowFlip`.
-- 나중에 영어 페이지를 `/en/` 아래에 추가할 계획(.com 하나로 한국어 `/` + 영어 `/en/`).
+- 영어 페이지는 `/en/` 아래(.com 하나로 한국어 `/` + 영어 `/en/`). 2026-10-31 첫 페이지 `/en/` = Column to Comma Separated List(`/`와 같은 `Converter`, 노리는 검색어 'column to comma separated list'). 영어판에 맞는 도구(목록·텍스트 도구)만 옮기고, 한국 서식 도구(한영·금액 한글·견적서·거래명세서·기부금영수증·상장)는 옮기지 않음.
+- 영어 구조: `app/(ko)/`(기존 한국어 페이지 전부, `<html lang="ko">` 루트 레이아웃)와 `app/en/`(`<html lang="en">` 루트 레이아웃)으로 루트 레이아웃이 둘 → 404는 `app/global-not-found.tsx`(next.config `experimental.globalNotFound`). sitemap·robots·manifest·아이콘은 `app/` 바로 아래. 두 쪽을 오가면 전체 새로고침(정상).
+- 영어 문구: 공용 도구 컴포넌트는 `useLocale()`(`src/i18n/locale.tsx`, Provider 없으면 "ko")로 문구를 고름. 영어 페이지에서 `<LocaleProvider locale="en">`으로 도구를 감쌈. 선택지 목록은 항목에 `en` 이름을 같이 둠(`presets.ts`의 `en`, `split.ts`의 `en`·`enShort`, Separator·Sort의 `en`). 영어 페이지 목록·한국어 짝은 `config/navEn.ts`(`EN_TOOL_PAGES`, koHref) → 영어 헤더(`components/en/EnHeader`)·푸터·sitemap hreflang. 짝이 있는 한국어 페이지는 page metadata `alternates.languages`(ko·en·x-default)를 직접 넣음. 영어 페이지에는 공유 안내·브랜드커넥트를 넣지 않음. 영어 본문·FAQ는 `src/content/en/`, 예시는 테스트로 실제 변환 결과와 대조(`columnToComma.test.ts`).
 - 목표: 구글·네이버 검색 유입 → AdSense·네이버 브랜드커넥트 광고 수익.
 - 원칙: 붙여넣기 → 옵션 선택 → 결과 확인 → 복사. 회원가입·업로드·서버 저장 없음. 모든 처리는 브라우저 안에서.
 - 현재 페이지

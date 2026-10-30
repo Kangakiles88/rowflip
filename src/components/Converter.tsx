@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { useLocale } from "@/i18n/locale";
 import type { TransformOptions } from "@/types";
 import { copiedMessage, toastDuration } from "@/utils/bookmarkHint";
 import { copyText } from "@/utils/clipboard";
@@ -31,7 +32,10 @@ export function Converter() {
   const loaded = useRef(false);
   const prefixRef = useRef<HTMLInputElement>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const gate = useConvertGate();
+  const locale = useLocale();
+  const shareGate = useConvertGate();
+  // 공유 안내는 한국어 페이지에만 — 영어 페이지는 바로 변환
+  const gate = useMemo(() => (locale === "en" ? { ...shareGate, locked: false } : shareGate), [locale, shareGate]);
   const [shareOpen, setShareOpen] = useState(false);
 
   // 저장된 UI 설정 복원 (데이터는 저장하지 않음) — 서버 렌더와 맞추려고 마운트 후에 읽는다.
@@ -102,8 +106,10 @@ export function Converter() {
     // 앞자리 0(010, 00123)이 엑셀에서 지워지지 않게 표 형식도 함께
     const ok = await copyText(result.output, excelHtmlForText(result.output));
     if (ok) trackCopy();
-    showToast(ok ? copiedMessage() : "복사하지 못했습니다. 결과를 직접 선택해 주세요.");
-  }, [gate.locked, startConvert, result.output, showToast]);
+    const failed =
+      locale === "en" ? "Couldn't copy. Select the result and copy it manually." : "복사하지 못했습니다. 결과를 직접 선택해 주세요.";
+    showToast(ok ? copiedMessage(locale) : failed);
+  }, [gate.locked, startConvert, result.output, showToast, locale]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -174,12 +180,14 @@ export function Converter() {
       </div>
 
       <Toast message={toast} />
-      <ShareDialog
-        open={shareOpen}
-        onClose={() => setShareOpen(false)}
-        path="/"
-        summary={`${result.stats.outputCount.toLocaleString("ko-KR")}개 항목`}
-      />
+      {locale === "ko" && (
+        <ShareDialog
+          open={shareOpen}
+          onClose={() => setShareOpen(false)}
+          path="/"
+          summary={`${result.stats.outputCount.toLocaleString("ko-KR")}개 항목`}
+        />
+      )}
     </div>
   );
 }

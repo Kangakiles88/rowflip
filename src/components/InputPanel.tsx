@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useLocale } from "@/i18n/locale";
 import type { ColumnSelect } from "@/types";
 import { INPUT_SPLITS, type InputSplit } from "@/utils/split";
 import styles from "./tool.module.css";
@@ -37,6 +38,15 @@ A-10236
 
 팁: 엑셀에서 첫 칸을 누르고 Ctrl+Shift+↓(맥은 ⌘)를 누르면 열 끝까지 선택됩니다.`;
 
+const PLACEHOLDER_EN = `Paste data from Excel, Google Sheets or a text file here.
+
+Example:
+A-10234
+A-10235
+A-10236
+
+Tip: click the first cell in Excel and press Ctrl+Shift+↓ (⌘ on Mac) to select to the end of the column.`;
+
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 
 export function InputPanel({
@@ -48,14 +58,15 @@ export function InputPanel({
   colCount,
   column = "all",
   onColumnChange,
-  placeholder = PLACEHOLDER,
+  placeholder,
   inputId = "source",
-  title = "원본 데이터",
+  title,
   split,
   onSplitChange,
   onSplitSuggest,
   splitSuggestion,
 }: Props) {
+  const en = useLocale() === "en";
   const gutterRef = useRef<HTMLPreElement>(null);
   const lineCount = value === "" ? 1 : value.split("\n").length;
   // 줄 번호는 문자열 하나로 그린다 — 5만 줄이어도 DOM 노드는 하나.
@@ -66,14 +77,14 @@ export function InputPanel({
     <section className={`${styles.pane} ${styles.inputPane}`} aria-labelledby={`${inputId}-label`}>
       <div className={styles.paneHead}>
         <label id={`${inputId}-label`} htmlFor={inputId} className={styles.paneTitle}>
-          {title}
+          {title ?? (en ? "Source data" : "원본 데이터")}
         </label>
         <div className={styles.paneActions}>
           <button type="button" className={styles.ghost} onClick={onSample}>
-            샘플 넣기
+            {en ? "Sample" : "샘플 넣기"}
           </button>
           <button type="button" className={styles.ghost} onClick={onClear} disabled={value === ""}>
-            지우기
+            {en ? "Clear" : "지우기"}
           </button>
         </div>
       </div>
@@ -90,7 +101,7 @@ export function InputPanel({
           onScroll={(e) => {
             if (gutterRef.current) gutterRef.current.scrollTop = e.currentTarget.scrollTop;
           }}
-          placeholder={placeholder}
+          placeholder={placeholder ?? (en ? PLACEHOLDER_EN : PLACEHOLDER)}
           spellCheck={false}
           autoComplete="off"
           autoCorrect="off"
@@ -101,28 +112,34 @@ export function InputPanel({
 
       <div className={styles.status}>
         <span>
-          {onColumnChange || colCount <= 1
-            ? `${fmt(rowCount)}행 · ${fmt(value.length)}자`
-            : `${fmt(rowCount)}행 × ${fmt(colCount)}열 · ${fmt(value.length)}자`}
+          {en
+            ? onColumnChange || colCount <= 1
+              ? `${fmt(rowCount)} rows · ${fmt(value.length)} chars`
+              : `${fmt(rowCount)} rows × ${fmt(colCount)} cols · ${fmt(value.length)} chars`
+            : onColumnChange || colCount <= 1
+              ? `${fmt(rowCount)}행 · ${fmt(value.length)}자`
+              : `${fmt(rowCount)}행 × ${fmt(colCount)}열 · ${fmt(value.length)}자`}
         </span>
         {split && onSplitChange && (
           <span className={styles.statusControls}>
             {splitSuggestion && (
               <button type="button" className={styles.statusAction} onClick={() => (onSplitSuggest ?? onSplitChange)(splitSuggestion)}>
-                {INPUT_SPLITS.find((s) => s.value === splitSuggestion)?.short}로 나누기
+                {en
+                  ? `Split by ${INPUT_SPLITS.find((s) => s.value === splitSuggestion)?.enShort}`
+                  : `${INPUT_SPLITS.find((s) => s.value === splitSuggestion)?.short}로 나누기`}
               </button>
             )}
             <label className={split === "cells" ? undefined : styles.statusNotice}>
-              나누기{" "}
+              {en ? "Split" : "나누기"}{" "}
               <select
-                aria-label="원본을 나눌 기준"
+                aria-label={en ? "Split source by" : "원본을 나눌 기준"}
                 className={styles.statusSelect}
                 value={split}
                 onChange={(e) => onSplitChange(e.target.value as InputSplit)}
               >
                 {INPUT_SPLITS.map((s) => (
                   <option key={s.value} value={s.value}>
-                    {s.label}
+                    {en ? s.en : s.label}
                   </option>
                 ))}
               </select>
@@ -131,19 +148,19 @@ export function InputPanel({
         )}
         {multiColumn && onColumnChange && (
           <span className={styles.statusNotice}>
-            {fmt(rowCount)}행 × {colCount}열 감지
+            {en ? `${fmt(rowCount)} rows × ${colCount} cols` : `${fmt(rowCount)}행 × ${colCount}열 감지`}
             <select
-              aria-label="변환할 열"
+              aria-label={en ? "Column to convert" : "변환할 열"}
               className={styles.statusSelect}
               value={String(column)}
               onChange={(e) =>
                 onColumnChange(e.target.value === "all" ? "all" : Number(e.target.value))
               }
             >
-              <option value="all">전체 셀</option>
+              <option value="all">{en ? "All cells" : "전체 셀"}</option>
               {Array.from({ length: colCount }, (_, i) => (
                 <option key={i} value={i}>
-                  {i + 1}열만
+                  {en ? `Column ${i + 1} only` : `${i + 1}열만`}
                 </option>
               ))}
             </select>

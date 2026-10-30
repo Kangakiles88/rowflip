@@ -4,8 +4,8 @@ import { AdSenseScript } from "@/components/ads/AdSenseScript";
 import { adsConfig } from "@/config/ads";
 import { analyticsConfig } from "@/config/analytics";
 import { siteConfig } from "@/config/site";
-import "./pretendard.css";
-import "./globals.css";
+import "../pretendard.css";
+import "../globals.css";
 
 const { google, naver } = siteConfig.verification;
 

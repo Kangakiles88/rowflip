@@ -19,6 +19,9 @@ export function SiteFooter() {
               {p.label}
             </Link>
           ))}
+          <Link href="/en/" hrefLang="en" lang="en">
+            English
+          </Link>
           {siteConfig.contactEmail && (
             <FeedbackLink />
           )}

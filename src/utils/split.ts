@@ -4,14 +4,15 @@
  */
 export type InputSplit = "cells" | "comma" | "semicolon" | "space" | "slash" | "pipe" | "custom";
 
-export const INPUT_SPLITS: { value: InputSplit; label: string; short: string }[] = [
-  { value: "cells", label: "탭·줄바꿈만 (엑셀 칸)", short: "엑셀 칸" },
-  { value: "comma", label: "쉼표  a, b", short: "쉼표" },
-  { value: "semicolon", label: "세미콜론  a; b", short: "세미콜론" },
-  { value: "space", label: "띄어쓰기  a b", short: "띄어쓰기" },
-  { value: "slash", label: "슬래시  a / b", short: "슬래시" },
-  { value: "pipe", label: "파이프  a | b", short: "파이프" },
-  { value: "custom", label: "직접 입력", short: "직접 입력" },
+/** en·enShort는 영어 페이지(/en/)용 */
+export const INPUT_SPLITS: { value: InputSplit; label: string; short: string; en: string; enShort: string }[] = [
+  { value: "cells", label: "탭·줄바꿈만 (엑셀 칸)", short: "엑셀 칸", en: "Tabs and line breaks (cells)", enShort: "cells" },
+  { value: "comma", label: "쉼표  a, b", short: "쉼표", en: "Comma  a, b", enShort: "comma" },
+  { value: "semicolon", label: "세미콜론  a; b", short: "세미콜론", en: "Semicolon  a; b", enShort: "semicolon" },
+  { value: "space", label: "띄어쓰기  a b", short: "띄어쓰기", en: "Space  a b", enShort: "space" },
+  { value: "slash", label: "슬래시  a / b", short: "슬래시", en: "Slash  a / b", enShort: "slash" },
+  { value: "pipe", label: "파이프  a | b", short: "파이프", en: "Pipe  a | b", enShort: "pipe" },
+  { value: "custom", label: "직접 입력", short: "직접 입력", en: "Custom", enShort: "custom" },
 ];
 
 /** 큰따옴표로 감싼 칸 안의 구분자는 무시하고 나눈다 — "서울, 강남", 부산 → [서울, 강남] [부산] */

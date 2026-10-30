@@ -6,6 +6,7 @@
 export const BOOKMARK_HINT_KEY = "rowflip:bookmark-hint:v1";
 
 export const COPIED = "복사되었습니다.";
+export const COPIED_EN = "Copied.";
 
 /** 저장값 → 이번에 안내할지와 다음 저장값 */
 export function nextBookmarkHint(stored: string | null): { show: boolean; next: string } {
@@ -15,20 +16,23 @@ export function nextBookmarkHint(stored: string | null): { show: boolean; next: 
   return { show: false, next: String(count + 1) };
 }
 
-export function bookmarkMessage(isMac: boolean): string {
-  return `${COPIED} 다음에 바로 쓰려면 ${isMac ? "⌘+D" : "Ctrl+D"}로 북마크해 두세요.`;
+export function bookmarkMessage(isMac: boolean, locale: "ko" | "en" = "ko"): string {
+  const keys = isMac ? "⌘+D" : "Ctrl+D";
+  if (locale === "en") return `${COPIED_EN} Press ${keys} to bookmark this page for next time.`;
+  return `${COPIED} 다음에 바로 쓰려면 ${keys}로 북마크해 두세요.`;
 }
 
 /** 복사 성공 토스트 문구 — 터치 기기(단축키 없음)에서는 안내하지 않는다 */
-export function copiedMessage(): string {
+export function copiedMessage(locale: "ko" | "en" = "ko"): string {
+  const copied = locale === "en" ? COPIED_EN : COPIED;
   try {
-    if (window.matchMedia("(hover: none)").matches) return COPIED;
+    if (window.matchMedia("(hover: none)").matches) return copied;
     const { show, next } = nextBookmarkHint(window.localStorage.getItem(BOOKMARK_HINT_KEY));
     window.localStorage.setItem(BOOKMARK_HINT_KEY, next);
-    if (!show) return COPIED;
-    return bookmarkMessage(/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent));
+    if (!show) return copied;
+    return bookmarkMessage(/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent), locale);
   } catch {
-    return COPIED;
+    return copied;
   }
 }
 

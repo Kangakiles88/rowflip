@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useLocale } from "@/i18n/locale";
 import type { TransformStats } from "@/types";
 import styles from "./tool.module.css";
 
@@ -18,6 +19,7 @@ interface Props {
 const fmt = (n: number) => n.toLocaleString("ko-KR");
 
 export function OutputPanel({ value, stats, pending, modKey, onCopy, onResetOptions, waiting }: Props) {
+  const en = useLocale() === "en";
   const ref = useRef<HTMLTextAreaElement>(null);
 
   const selectAll = () => {
@@ -26,24 +28,24 @@ export function OutputPanel({ value, stats, pending, modKey, onCopy, onResetOpti
   };
 
   const removed: string[] = [];
-  if (stats.removedDuplicates > 0) removed.push(`중복 ${fmt(stats.removedDuplicates)}`);
-  if (stats.removedEmpty > 0) removed.push(`빈 칸 ${fmt(stats.removedEmpty)}`);
+  if (stats.removedDuplicates > 0) removed.push(en ? `${fmt(stats.removedDuplicates)} duplicates` : `중복 ${fmt(stats.removedDuplicates)}`);
+  if (stats.removedEmpty > 0) removed.push(en ? `${fmt(stats.removedEmpty)} empty` : `빈 칸 ${fmt(stats.removedEmpty)}`);
 
   return (
     <section className={`${styles.pane} ${styles.outputPane}`} aria-labelledby="output-label">
       <div className={styles.paneHead}>
         <label id="output-label" htmlFor="result" className={styles.paneTitle}>
-          변환 결과
+          {en ? "Result" : "변환 결과"}
         </label>
         <div className={styles.paneActions}>
           <button type="button" className={styles.ghost} onClick={onResetOptions}>
-            옵션 초기화
+            {en ? "Reset options" : "옵션 초기화"}
           </button>
           <button type="button" className={styles.ghost} onClick={selectAll} disabled={!value}>
-            전체 선택
+            {en ? "Select all" : "전체 선택"}
           </button>
           <button type="button" className={styles.primary} onClick={onCopy} disabled={!value}>
-            복사
+            {en ? "Copy" : "복사"}
             <kbd className={styles.kbd}>{modKey}↵</kbd>
           </button>
         </div>
@@ -57,9 +59,11 @@ export function OutputPanel({ value, stats, pending, modKey, onCopy, onResetOpti
           value={value}
           readOnly
           placeholder={
-            waiting
-              ? "‘변환하기’를 누르면 결과가 여기에 표시됩니다."
-              : "원본 데이터를 붙여넣으면 변환 결과가 여기에 바로 표시됩니다."
+            en
+              ? "Paste source data and the result appears here."
+              : waiting
+                ? "‘변환하기’를 누르면 결과가 여기에 표시됩니다."
+                : "원본 데이터를 붙여넣으면 변환 결과가 여기에 바로 표시됩니다."
           }
           spellCheck={false}
         />
@@ -71,9 +75,11 @@ export function OutputPanel({ value, stats, pending, modKey, onCopy, onResetOpti
         ) : (
           <>
             <span>
-              {fmt(stats.outputCount)}개 항목 · {fmt(value.length)}자
+              {en
+                ? `${fmt(stats.outputCount)} items · ${fmt(value.length)} chars`
+                : `${fmt(stats.outputCount)}개 항목 · ${fmt(value.length)}자`}
             </span>
-            {removed.length > 0 && <span>{removed.join(" · ")} 제거됨</span>}
+            {removed.length > 0 && <span>{en ? `${removed.join(" · ")} removed` : `${removed.join(" · ")} 제거됨`}</span>}
           </>
         )}
       </div>

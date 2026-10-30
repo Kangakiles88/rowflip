@@ -4,7 +4,7 @@ import { siteConfig } from "@/config/site";
 import { NavMenu } from "./NavMenu";
 import styles from "./tool.module.css";
 
-function Mark() {
+export function Mark() {
   return (
     <svg className={styles.mark} viewBox="0 0 32 32" aria-hidden="true">
       <rect width="32" height="32" rx="6" fill="currentColor" />

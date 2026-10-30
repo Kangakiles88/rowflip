@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Converter } from "@/components/Converter";
 import { Header } from "@/components/Header";
@@ -9,6 +10,11 @@ import { ToolDirectory } from "@/components/ToolDirectory";
 import { PromotionArea } from "@/components/ads/PromotionArea";
 import { siteConfig } from "@/config/site";
 import { FAQ, GUIDES } from "@/content/seo";
+
+/** 같은 도구의 영어판(/en/)과 hreflang으로 연결 */
+export const metadata: Metadata = {
+  alternates: { canonical: "/", languages: { ko: "/", en: "/en/", "x-default": "/" } },
+};
 
 export default function Home() {
   return (
