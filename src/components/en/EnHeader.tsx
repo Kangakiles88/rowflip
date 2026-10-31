@@ -5,8 +5,8 @@ import { Mark } from "../Header";
 import styles from "../tool.module.css";
 
 /** 영어 페이지 헤더 — 영어 도구 링크 + 같은 도구의 한국어 페이지 링크 */
-export function EnHeader({ current }: { current: EnPageId }) {
-  const ko = EN_TOOL_PAGES.find((p) => p.id === current)?.koHref ?? "/";
+export function EnHeader({ current }: { current: EnPageId | "blog" }) {
+  const ko = current === "blog" ? "/blog/" : (EN_TOOL_PAGES.find((p) => p.id === current)?.koHref ?? "/");
   return (
     <header className={styles.header}>
       <div className={`container ${styles.headerInner}`}>
@@ -28,6 +28,16 @@ export function EnHeader({ current }: { current: EnPageId }) {
                 </Link>
               </div>
             ))}
+            <div className={`${styles.navGroup} ${styles.navGroupLink}`}>
+              <Link
+                href="/en/blog/"
+                className={styles.navButton}
+                data-current={current === "blog" || undefined}
+                aria-current={current === "blog" ? "page" : undefined}
+              >
+                Blog
+              </Link>
+            </div>
             <div className={`${styles.navGroup} ${styles.navGroupLink}`}>
               <Link href={ko} hrefLang="ko" lang="ko" className={styles.navButton}>
                 한국어

@@ -3,6 +3,7 @@ import { INFO_PAGES, TOOL_PAGES } from "@/config/nav";
 import { EN_TOOL_PAGES } from "@/config/navEn";
 import { siteConfig } from "@/config/site";
 import { getPosts, postPath } from "@/content/blog";
+import { EN_BLOG_META, enPostPath, getEnPosts } from "@/content/en/blog";
 
 export const dynamic = "force-static";
 
@@ -35,5 +36,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "yearly",
     priority: 0.6,
   }));
-  return [...pages, ...enPages, ...posts];
+  const enBlog: MetadataRoute.Sitemap = [
+    { url: `${siteConfig.url}${EN_BLOG_META.path}`, lastModified, changeFrequency: "weekly", priority: 0.5 },
+    ...getEnPosts().map(({ meta }) => ({
+      url: `${siteConfig.url}${enPostPath(meta.slug)}`,
+      lastModified: new Date(meta.updated ?? meta.published),
+      changeFrequency: "yearly" as const,
+      priority: 0.6,
+    })),
+  ];
+  return [...pages, ...enPages, ...posts, ...enBlog];
 }

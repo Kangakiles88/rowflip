@@ -13,6 +13,7 @@ export function EnFooter() {
               {p.label}
             </Link>
           ))}
+          <Link href="/en/blog/">Blog</Link>
           <Link href="/" hrefLang="ko" lang="ko">
             한국어
           </Link>

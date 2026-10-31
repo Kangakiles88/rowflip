@@ -7,6 +7,8 @@ import { EnHeader } from "@/components/en/EnHeader";
 import { PromotionArea } from "@/components/ads/PromotionArea";
 import { EN_FAQ, EN_GUIDES, EN_HOME as M } from "@/content/en/columnToComma";
 import { LocaleProvider } from "@/i18n/locale";
+import Link from "next/link";
+import { enPostPath, getEnPostsForTool } from "@/content/en/blog";
 
 export const metadata: Metadata = {
   // 레이아웃 template을 거치지 않고 제목 전체를 그대로 쓴다
@@ -85,6 +87,16 @@ export default function EnHome() {
             ))}
           </div>
         </section>
+
+        {getEnPostsForTool("column-to-comma").length > 0 && (
+          <ul className="relatedPosts" aria-label="Related articles">
+            {getEnPostsForTool("column-to-comma").map((p) => (
+              <li key={p.meta.slug}>
+                <Link href={enPostPath(p.meta.slug)}>{p.meta.h1}</Link>
+              </li>
+            ))}
+          </ul>
+        )}
 
         <PromotionArea position="bottom" showBrandConnect={false} />
 
