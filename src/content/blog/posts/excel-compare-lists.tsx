@@ -5,6 +5,7 @@ import type { Post } from "../types";
  * 노리는 검색어: 엑셀 두 목록 비교, 엑셀 두 열 비교 없는 값 찾기, 엑셀 명단 대조, 엑셀 미제출자 찾기, COUNTIF 비교
  * 중복 제거 페이지(/dedupe/)는 '한 목록 안의 중복'을 노리므로 여기서는 '두 목록 사이의 차이'를 다룬다.
  * 예시: 전체 5명 중 제출 3명 → 미제출 박준호·정하늘.
+ * 2026-10-31 보강: '두 열 비교'·'일치하는 값 찾기'(반대 의도) 구간과 VLOOKUP·XLOOKUP 방식 추가(서치 콘솔 검색어 '엑셀 두 열 비교 없는 값 찾기' 반영).
  */
 export const excelCompareLists: Post = {
   meta: {
@@ -22,14 +23,16 @@ export const excelCompareLists: Post = {
       "엑셀 FILTER 없는 값",
     ],
     published: "2026-10-25",
+    updated: "2026-10-31",
     tool: "dedupe",
     excerpt:
       "전체 명단에는 있는데 제출 명단에는 없는 사람, 지난달에는 있었는데 이번 달에 빠진 상품코드를 찾는 방법입니다. COUNTIF 한 줄부터 FILTER까지.",
     toc: [
       { id: "setup", title: "예시: 전체 명단과 제출 명단" },
-      { id: "countif", title: "COUNTIF로 '없음' 표시하기" },
+      { id: "countif", title: "두 열 비교: COUNTIF로 '없음' 표시하기" },
       { id: "highlight", title: "조건부 서식으로 색칠하기" },
       { id: "filter", title: "FILTER로 빠진 값만 뽑기" },
+      { id: "match", title: "일치하는 값 찾기: VLOOKUP·XLOOKUP" },
       { id: "pitfalls", title: "있는데 못 찾을 때" },
       { id: "paste", title: "붙여넣기로 한 번에 보기" },
       { id: "summary", title: "정리" },
@@ -83,7 +86,7 @@ export const excelCompareLists: Post = {
           목록 어딘가에 있느냐&rdquo;를 물어야 합니다.
         </p>
 
-        <h2 id="countif">COUNTIF로 &lsquo;없음&rsquo; 표시하기</h2>
+        <h2 id="countif">두 열 비교: COUNTIF로 &lsquo;없음&rsquo; 표시하기</h2>
         <p>B2에 아래 수식을 넣고 아래로 채웁니다.</p>
         <pre className="postCode">
           <code>{`=IF(COUNTIF($C$2:$C$100, A2)=0, "없음", "")`}</code>
@@ -132,6 +135,24 @@ export const excelCompareLists: Post = {
           없을 때 보여 줄 문구입니다. 이 결과를 복사해 독촉 메일 받는 사람 칸에 붙이면 됩니다.
         </p>
 
+        <h2 id="match">일치하는 값 찾기: VLOOKUP·XLOOKUP</h2>
+        <p>
+          반대로 두 목록에 <em>같이 있는</em> 값(일치하는 값)을 찾거나, 일치한 행의 값을 옆에 가져와야 할 때는 조회 함수를
+          씁니다. 위 예시에서 B2에 아래 중 하나를 넣고 아래로 채우면 C열에 있는 이름은 그대로, 없는 이름은 &lsquo;없음&rsquo;이
+          나옵니다.
+        </p>
+        <pre className="postCode">
+          <code>{`=IFERROR(VLOOKUP(A2, $C$2:$C$100, 1, FALSE), "없음")
+
+=XLOOKUP(A2, $C$2:$C$100, $C$2:$C$100, "없음")`}</code>
+        </pre>
+        <p>
+          VLOOKUP은 모든 엑셀 버전에서 쓸 수 있고, XLOOKUP은 Microsoft 365와 엑셀 2021 이상에서 쓸 수 있습니다. 두 식 모두
+          A2와 같은 값을 C열에서 찾아 그 값을 돌려주고, 찾지 못하면 &lsquo;없음&rsquo;을 보여 줍니다. 결과가 &lsquo;없음&rsquo;이 아닌
+          행이 일치하는 값입니다. 목록 두 개의 오른쪽 열 값(예: 제출 날짜)을 가져오려면 VLOOKUP의 세 번째 인수나 XLOOKUP의
+          반환 범위를 그 열로 바꾸세요.
+        </p>
+
         <h2 id="pitfalls">있는데 못 찾을 때</h2>
         <h3>앞뒤 공백</h3>
         <p>
@@ -157,6 +178,10 @@ export const excelCompareLists: Post = {
           모아 볼 수 있습니다. 앞뒤 공백 무시 옵션이 기본으로 켜져 있어 위의 공백 문제도 함께 걸러집니다.
         </p>
         <p>
+          두 목록이 한 칸에 쉼표로 이어져 있다면 먼저 <Link href="/split/">쉼표를 줄바꿈으로 변환</Link>으로 한 줄에 하나씩
+          풀어 두고 비교하세요.
+        </p>
+        <p>
           이 방법은 어느 쪽 목록에서 빠졌는지는 알려 주지 않으니, 개수가 1인 값을 보고 원래 목록에서 확인하세요. 어느 쪽에 없는지까지
           바로 알아야 한다면 위의 COUNTIF 방법이 맞습니다.
         </p>
@@ -167,6 +192,7 @@ export const excelCompareLists: Post = {
           <li>반대 방향도 범위만 바꿔 한 번 더 확인</li>
           <li>색으로 보기: 조건부 서식 수식 =COUNTIF($C$2:$C$100, A2)=0</li>
           <li>빠진 값만 목록으로: =FILTER(A2:A100, (A2:A100&lt;&gt;&quot;&quot;)*(COUNTIF(C2:C100, A2:A100)=0))</li>
+          <li>일치하는 값 찾기: =IFERROR(VLOOKUP(A2, $C$2:$C$100, 1, FALSE), &quot;없음&quot;) 또는 XLOOKUP</li>
           <li>공백·숫자 형식·동명이인은 비교 전에 정리</li>
         </ul>
       </>
