@@ -88,9 +88,13 @@ export default function DedupePage() {
             </Link>
             를 쓰세요. 정리한 명단으로 상장이나 수료증을 찍으려면{" "}
             <Link className="inlineLink" href="/certificate/">
-              엑셀로 상장·수료증 일괄 만들기
+              상장 양식 만들기
             </Link>
-            로 넘어가면 됩니다.
+            로 넘어가면 됩니다. 병합을 풀어 빈칸이 생긴 표는{" "}
+            <Link className="inlineLink" href="/fill-blanks/">
+              엑셀 빈칸 채우기
+            </Link>
+            로 먼저 채우세요.
           </p>
           <RelatedPosts tool="dedupe" />
         </section>

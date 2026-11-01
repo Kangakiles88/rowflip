@@ -53,6 +53,15 @@ export const TOOL_PAGES = [
     priority: 0.9,
   },
   {
+    id: "fillblanks",
+    group: "list",
+    href: "/fill-blanks/",
+    label: "빈칸 채우기",
+    title: "엑셀 빈칸 채우기",
+    desc: "병합 해제로 생긴 빈칸을 위 값·아래 값·0으로 한 번에",
+    priority: 0.9,
+  },
+  {
     id: "count",
     group: "text",
     href: "/count/",

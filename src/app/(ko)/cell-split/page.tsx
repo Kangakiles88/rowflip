@@ -29,6 +29,10 @@ export default function CellSplitPage() {
           <Link className="inlineLink" href="/transpose/">
             엑셀 행열 바꾸기
           </Link>
+          를, 병합을 풀어 생긴 빈칸은{" "}
+          <Link className="inlineLink" href="/fill-blanks/">
+            엑셀 빈칸 채우기
+          </Link>
           를 쓰세요.
         </>
       }

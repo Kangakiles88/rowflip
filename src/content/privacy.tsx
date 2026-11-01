@@ -13,7 +13,7 @@ export const PRIVACY_META = {
 } as const;
 
 /** 시행일 (YYYY-MM-DD) */
-export const EFFECTIVE_DATE = "2026-10-27";
+export const EFFECTIVE_DATE = "2026-11-01";
 
 /** 이 사이트가 브라우저에 남기는 값 — 데이터는 저장하지 않고 화면 설정만 저장한다 */
 export const BROWSER_STORAGE = [
@@ -91,6 +91,11 @@ export const BROWSER_STORAGE = [
     key: "rowflip:donation:v1",
     where: "로컬 저장소",
     what: "기부금영수증 양식의 기부금 코드·기부내용 적는 방식·정렬·주민번호 가리기·직인 크기(내역·이름·주민등록번호·단체 정보·직인 이미지는 저장하지 않음)",
+  },
+  {
+    key: "rowflip:fillblanks:v1",
+    where: "로컬 저장소",
+    what: "엑셀 빈칸 채우기의 채우는 방식(위·아래·정한 값)과 정리 옵션(넣을 값·채울 열·표는 저장하지 않음)",
   },
   {
     key: "rowflip:cellsplit:v1",
