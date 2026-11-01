@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import type { EnPageId } from "@/config/navEn";
 import { excelTextjoin } from "./posts/excel-textjoin";
+import { googleSheetsSplit } from "./posts/google-sheets-split";
 
 /** 영어 블로그 글 하나의 정보 — 한국어 블로그(PostMeta)와 같은 모양, 이어지는 도구만 영어 페이지 id */
 export interface EnPostMeta {
@@ -34,7 +35,7 @@ export const EN_BLOG_META = {
 } as const;
 
 /** 영어 블로그 글 목록 — 새 글은 posts/<slug>.tsx를 만들고 여기에 추가 */
-const POSTS: EnPost[] = [excelTextjoin];
+const POSTS: EnPost[] = [excelTextjoin, googleSheetsSplit];
 
 export function getEnPosts(): EnPost[] {
   return [...POSTS].sort((a, b) => b.meta.published.localeCompare(a.meta.published));
