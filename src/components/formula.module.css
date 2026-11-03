@@ -1,0 +1,274 @@
+/* 함수 연습장(FormulaLab) — 표·입력줄·결과·연습 문제. 색은 globals.css 토큰만 쓴다. */
+
+/* 예제 표: 칸을 누르면 수식에 주소가 들어가므로 누를 수 있게 보이게 */
+.sheet td {
+  cursor: pointer;
+}
+.sheet td:hover {
+  background: var(--hover);
+}
+/* 수식이 가리키는 칸·열 이름·행 번호 */
+.sheet td[data-ref],
+.sheet tbody tr:first-child td[data-ref] {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+.sheet thead th[data-ref],
+.sheet tbody th[data-ref] {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.paste {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.paste textarea {
+  flex: 1;
+}
+.pasteBar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 8px;
+  border-top: 1px solid var(--line);
+  background: var(--gutter);
+}
+
+/* 엑셀처럼 fx 입력줄 */
+.fxBar {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--line);
+}
+.fxLabel {
+  flex: none;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  font: italic 600 14px/1 var(--font-mono);
+  color: var(--ink-3);
+  border-right: 1px solid var(--line);
+  background: var(--gutter);
+}
+.fxInput {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 12px;
+  font: 15px/1 var(--font-mono);
+  color: var(--ink);
+  background: var(--panel);
+  border: 0;
+  outline: none;
+}
+.fxInput:focus {
+  background: color-mix(in srgb, var(--accent-soft) 45%, var(--panel));
+}
+
+.body {
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 14px;
+  overflow: auto;
+}
+
+.result {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  background: var(--gutter);
+}
+.result[data-error] {
+  border-left-color: var(--del);
+}
+.resultLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.resultValue {
+  margin: 0;
+  font: 700 22px/1.35 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  word-break: break-all;
+}
+.resultCode {
+  margin: 0;
+  font: 700 20px/1.35 var(--font-mono);
+  color: var(--del);
+}
+.resultMsg {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.syntax {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.syntaxLabel,
+.subTitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.subTitle {
+  margin-bottom: 8px;
+}
+.syntax code {
+  font: 13px/1.6 var(--font-mono);
+  color: var(--ink);
+  word-break: break-all;
+}
+/* 예제 버튼은 휴대폰에서도 접어서 모두 보이게(빠른 변환 줄과 달리 가로 스크롤하지 않음) */
+.exampleList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.exampleList > button {
+  flex: none;
+}
+.exampleNote {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+/* 연습 문제 */
+.tasks {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+.tasksHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 42px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--gutter);
+}
+.tasksTitle {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+.score {
+  font: 12px/1 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+.taskList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: task;
+}
+.task {
+  counter-increment: task;
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.task:last-child {
+  border-bottom: 0;
+}
+.taskQ {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.taskQ::before {
+  content: counter(task) ". ";
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+.taskRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.taskInput {
+  flex: 1;
+  min-width: 0;
+  max-width: 560px;
+  height: 32px;
+  padding: 0 10px;
+  font: 13.5px/1 var(--font-mono);
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+}
+.task[data-status="ok"] .taskInput {
+  border-color: var(--accent);
+}
+.task[data-status="bad"] .taskInput {
+  border-color: var(--del);
+}
+.taskMsg {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.task[data-status="ok"] .taskMsg {
+  color: var(--accent);
+  font-weight: 700;
+}
+.task[data-status="bad"] .taskMsg {
+  color: var(--del);
+}
+.taskAnswer {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.taskAnswer code {
+  padding: 3px 8px;
+  font: 13px/1.5 var(--font-mono);
+  background: var(--gutter);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  word-break: break-all;
+}
+
+@media (max-width: 860px) {
+  .body {
+    flex: none;
+  }
+  /* iOS가 16px 미만 입력칸을 누르면 화면을 확대하므로 */
+  .fxInput,
+  .taskInput {
+    font-size: 16px;
+  }
+  .taskRow {
+    flex-wrap: wrap;
+  }
+  .taskInput {
+    flex-basis: 100%;
+    max-width: none;
+  }
+}

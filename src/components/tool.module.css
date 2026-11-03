@@ -1237,8 +1237,17 @@ ins.diffMark {
   .wordmark {
     font-size: 14px;
   }
+  /* 묶음 4개 + Blog가 390px 한 줄에 들어가게 여백을 줄인다 */
+  .nav {
+    gap: 0;
+  }
   .navButton {
+    gap: 5px;
+    padding: 0 5px;
     font-size: 13.5px;
+  }
+  .navGroupLink .navButton {
+    padding: 0 10px;
   }
   .privacy {
     font-size: 11px;

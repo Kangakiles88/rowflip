@@ -108,7 +108,8 @@ export const excelSumByName: Post = {
         <p>
           SUMIF는 &ldquo;B열이 E2와 같은 행의 C열만 더하라&rdquo;는 뜻입니다. 범위에 $를 붙여야 아래로 채워도 범위가 밀리지 않습니다.
           범위를 실제 내역보다 넉넉하게 잡아 두면 내역이 늘어도 수식을 고칠 필요가 없습니다. 몇 번 냈는지도 필요하면 G2에
-          =COUNTIF($B$2:$B$1000, E2)를 넣으세요.
+          =COUNTIF($B$2:$B$1000, E2)를 넣으세요. SUMIF 조건 쓰는 법은 <Link href="/functions/sumif/">SUMIF 함수 사용법</Link>에서
+          예제 표에 직접 입력해 보며 익힐 수 있습니다.
         </p>
 
         <h2 id="monthly">SUMIFS로 월별 합계</h2>

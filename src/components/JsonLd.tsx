@@ -1,3 +1,4 @@
+import { TOOL_PAGES } from "@/config/nav";
 import { siteConfig } from "@/config/site";
 import type { FaqItem } from "@/content/seo";
 
@@ -43,12 +44,16 @@ export function JsonLd({ path, name, description, features, faq, locale = "ko" }
     },
   ];
   if (!isHome) {
+    // /functions/sumif/처럼 상위 기능 페이지가 있으면 그 페이지를 중간 단계로 넣는다
+    const parent = TOOL_PAGES.find((p) => p.href !== "/" && p.href !== path && path.startsWith(p.href));
+    const crumbs = [
+      { name: siteConfig.name, item: `${siteConfig.url}/` },
+      ...(parent ? [{ name: parent.title, item: `${siteConfig.url}${parent.href}` }] : []),
+      { name, item: url },
+    ];
     graph.push({
       "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: siteConfig.name, item: `${siteConfig.url}/` },
-        { "@type": "ListItem", position: 2, name, item: url },
-      ],
+      itemListElement: crumbs.map((c, i) => ({ "@type": "ListItem", position: i + 1, ...c })),
     });
   }
   const data = { "@context": "https://schema.org", "@graph": graph };

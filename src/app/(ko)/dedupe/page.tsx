@@ -94,7 +94,11 @@ export default function DedupePage() {
             <Link className="inlineLink" href="/fill-blanks/">
               엑셀 빈칸 채우기
             </Link>
-            로 먼저 채우세요.
+            로 먼저 채우세요. 엑셀 수식으로 중복을 표시하려면{" "}
+            <Link className="inlineLink" href="/functions/countif/">
+              COUNTIF 함수 사용법
+            </Link>
+            을 보세요.
           </p>
           <RelatedPosts tool="dedupe" />
         </section>

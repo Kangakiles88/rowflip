@@ -3,6 +3,7 @@ export const TOOL_GROUPS = [
   { id: "list", label: "엑셀·목록 도구", short: "엑셀·목록" },
   { id: "text", label: "텍스트 도구", short: "텍스트" },
   { id: "doc", label: "문서 만들기", short: "문서 만들기" },
+  { id: "func", label: "엑셀 함수", short: "함수" },
 ] as const;
 
 /** 사이트 안의 기능 페이지 목록 — 헤더 메뉴, 푸터, sitemap, '다른 도구' 목록이 모두 이 목록을 쓴다. */
@@ -150,6 +151,51 @@ export const TOOL_PAGES = [
     title: "숫자 한글 변환",
     desc: "금액을 일금 ○○원정, 읽기 표기, 한자 갖은자로",
     priority: 0.9,
+  },
+  {
+    id: "functions",
+    group: "func",
+    href: "/functions/",
+    label: "함수 정리",
+    title: "엑셀 함수 정리",
+    desc: "자주 쓰는 함수 형식과 예시, 수식을 바로 계산해 보는 연습장",
+    priority: 0.9,
+  },
+  {
+    id: "fn-sumif",
+    group: "func",
+    href: "/functions/sumif/",
+    label: "SUMIF",
+    title: "SUMIF 함수 사용법",
+    desc: "조건에 맞는 값만 더하기, 조건 여러 개는 SUMIFS",
+    priority: 0.8,
+  },
+  {
+    id: "fn-countif",
+    group: "func",
+    href: "/functions/countif/",
+    label: "COUNTIF",
+    title: "COUNTIF 함수 사용법",
+    desc: "조건에 맞는 칸 개수 세기, 빈칸 세기, 중복 확인",
+    priority: 0.8,
+  },
+  {
+    id: "fn-vlookup",
+    group: "func",
+    href: "/functions/vlookup/",
+    label: "VLOOKUP",
+    title: "VLOOKUP 함수 사용법",
+    desc: "코드로 단가·이름 찾아오기, #N/A 오류 해결",
+    priority: 0.8,
+  },
+  {
+    id: "fn-if",
+    group: "func",
+    href: "/functions/if/",
+    label: "IF",
+    title: "IF 함수 사용법",
+    desc: "조건에 따라 달성·미달, 중첩 IF와 AND·OR",
+    priority: 0.8,
   },
 ] as const;
 
