@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import type { EnPageId } from "@/config/navEn";
+import { excelAddPrefixSuffix } from "./posts/excel-add-prefix-suffix";
 import { excelSplitIntoRows } from "./posts/excel-split-into-rows";
 import { excelTextjoin } from "./posts/excel-textjoin";
 import { googleSheetsSplit } from "./posts/google-sheets-split";
@@ -36,7 +37,7 @@ export const EN_BLOG_META = {
 } as const;
 
 /** 영어 블로그 글 목록 — 새 글은 posts/<slug>.tsx를 만들고 여기에 추가 */
-const POSTS: EnPost[] = [excelTextjoin, googleSheetsSplit, excelSplitIntoRows];
+const POSTS: EnPost[] = [excelTextjoin, googleSheetsSplit, excelSplitIntoRows, excelAddPrefixSuffix];
 
 export function getEnPosts(): EnPost[] {
   return [...POSTS].sort((a, b) => b.meta.published.localeCompare(a.meta.published));
