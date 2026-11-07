@@ -42,6 +42,11 @@ export const excelReceivableBalance: Post = {
           시트를 따로 만들면 합계를 맞추기 어렵고, 장부 하나에 매출과 입금을 같이 적어 두면 SUMIFS로 필요한 숫자를 언제든 뽑을 수 있습니다.
         </p>
 
+        <p>
+          잔액을 구한 다음 거래처에 보낼 서류가 필요하면 <Link href="/statement/">거래명세서 양식 작성</Link>에 품목 표를
+          붙여넣고 전잔액·입금액을 넣으세요. 잔액까지 계산된 거래명세서를 A4로 인쇄합니다.
+        </p>
+
         <h2 id="ledger">예시: 매출과 입금을 한 장부에</h2>
         <p>A열 날짜, B열 거래처, C열 매출(공급가액+부가세 합계), D열 입금으로 적은 장부입니다.</p>
         <div className="postTableWrap">

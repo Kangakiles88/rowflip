@@ -44,6 +44,11 @@ export const excelSumByName: Post = {
           다시 해야 합니다. 엑셀에서는 SUMIF 하나로 끝낼 수 있습니다.
         </p>
 
+        <p>
+          합계를 낸 뒤 기부금영수증까지 만들어야 한다면 <Link href="/donation-receipt/">기부금영수증 양식</Link>에 내역을
+          그대로 붙여넣으세요. 이름별 합계와 사람마다 한 장씩인 영수증을 한 번에 만듭니다. 엑셀 수식으로 직접 하는 방법은 아래와 같습니다.
+        </p>
+
         <h2 id="setup">예시: 날짜별로 쌓인 내역</h2>
         <p>A열 날짜, B열 성명, C열 금액으로 된 헌금 내역이 있다고 하겠습니다.</p>
         <div className="postTableWrap">

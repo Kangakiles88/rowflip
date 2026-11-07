@@ -42,6 +42,11 @@ export const excelAmountKorean: Post = {
           손으로 다시 적을 필요 없이, 엑셀이 자동으로 만들게 할 수 있습니다.
         </p>
 
+        <p>
+          금액 여러 개를 한 번에 바꾸기만 하면 된다면 <Link href="/amount/">숫자 한글 변환</Link>에 금액 열을 붙여넣으면
+          줄마다 「일금 ○○원정」이 나옵니다. 엑셀 안에서 자동으로 바뀌게 하려면 아래 수식을 쓰세요.
+        </p>
+
         <h2 id="two-ways">함수와 셀 서식, 무엇이 다른가</h2>
         <p>방법은 두 가지입니다. 결과가 글자인지 숫자인지가 다릅니다.</p>
         <div className="postTableWrap">
