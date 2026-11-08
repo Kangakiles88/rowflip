@@ -37,6 +37,7 @@
     - 계산 엔진 `utils/formula.ts`(외부 수식 엔진 라이선스 문제를 피해 직접 구현): 토큰→구문 트리→계산, 엑셀 규칙(천 단위 쉼표 숫자, 숫자<글자<논리값 비교·대소문자 무시, 빈칸 참조=0, COUNTIF 조건 문법·와일드카드·~, VLOOKUP TRUE=정렬된 구간 찾기, SUMIF 더할 범위는 왼쪽 위 기준 크기 맞춤, IF는 고른 쪽만 계산). 지원 함수는 `SUPPORTED_FUNCTIONS`(SUM·AVERAGE·MIN·MAX·COUNT·COUNTA·COUNTBLANK·COUNTIF(S)·SUMIF(S)·AVERAGEIF(S)·IF·IFS·AND·OR·NOT·IFERROR·IFNA·VLOOKUP·HLOOKUP·MATCH·INDEX·XLOOKUP·ROUND(UP/DOWN)·ABS·INT·MOD·LEN·TRIM·UPPER·LOWER·LEFT·RIGHT·MID·CONCAT(ENATE)). 날짜·배열 수식·다른 시트·행 범위(1:3)는 안내 문구와 함께 '수식 오류'. 붙여넣은 수식의 둥근 따옴표·전각 기호는 바꿔 읽음. 따옴표 없는 글자·조건(<1000)은 고칠 방법을 알려 줌
     - `src/content/functions.test.ts`가 안내 예시 결과·예제 수식·연습 문제 정답을 예제 표에서 실제로 계산해 대조(내용을 고치면 숫자도 같이 맞출 것). 새 함수 페이지는 `FUNCTION_LESSONS`에 추가 + `nav.ts`(group `func`) + `app/(ko)/functions/<함수>/page.tsx` + `public/og-<함수>.png`
     - JSON-LD 이동 경로: `/functions/<함수>/`처럼 상위 기능 페이지가 있으면 중간 단계로 넣음(`JsonLd`)
+  - `/about/` 사이트 소개(2026-11-08, AdSense '가치 없는 콘텐츠' 재거절 대응): 만든 목적·데이터 원칙·도구 목록(nav에서 자동)·결과 확인 방법·광고·업데이트 기록·문의. 문구는 `src/content/about.tsx`, 새 기능·큰 변경 때 `ABOUT_UPDATES` 맨 앞에 한 줄 추가
   - `/privacy/` 개인정보처리방침(문구는 `src/content/privacy.tsx`, 문의 메일 `contact@rowflip.com` = `site.ts`의 contactEmail, Cloudflare 이메일 라우팅으로 운영자 Gmail에 전달 — 개인 메일 주소는 저장소에 넣지 않음). 안내 페이지는 `nav.ts`의 `INFO_PAGES` → 푸터·sitemap에만 들어감. 푸터에 '의견 보내기'(contactEmail mailto)
 
 ## 기술 스택
@@ -162,7 +163,7 @@ public/            og.png, og-<기능>.png(기능마다 1200×630 공유 이미�
 - 완료: `https://rowflip.com` 공개(Cloudflare Workers 정적 자산, 커스텀 도메인 rowflip.com·www 연결), 기능 페이지 16개(엑셀·목록 6: 가로세로·행열·중복 제거·쉼표→줄바꿈·셀 나누기·빈칸 채우기 / 텍스트 5: 글자수·줄바꿈 제거·텍스트 비교·한영 변환·대소문자 / 문서 5: 견적서·거래명세서·상장 양식·기부금영수증·금액 한글), 구글 색인 확인, 첫 변환 공유 안내 팝업(카카오톡 공유 동작 확인, 공유 링크는 항상 https://rowflip.com), 개인정보처리방침, 네이버 서치어드바이저·구글 서치 콘솔 등록(sitemap 제출), 테스트 264개, 광고 컴포넌트(AdSense·브랜드커넥트), 페이지별 SEO, sitemap·robots·manifest, 다크 모드, 반응형
 - 남은 일
   - (확인 완료 2026-10-11) Cloudflare 관리형 robots.txt: Googlebot·Yeti(네이버)·Bingbot·Mediapartners-Google(AdSense) 허용, AI 학습 로봇과 AI 에이전트(ChatGPT-User·Claude-User 등)만 차단. 우리 robots.ts는 그 아래에 붙음
-  - AdSense: 기존 계정(pub-1418493009023603, 예전 수익 있음)으로 변경(2026-10-12). 새로 만든 계정(pub-9884982808493036)은 중복 계정 방지를 위해 사이트 삭제·해지 → 기존 계정에서 rowflip.com 사이트 검토 요청 → 2026-10-22 '가치가 별로 없는 콘텐츠'로 거절. 공유 안내 팝업 끔, 블로그 글 늘리고 색인·검색 유입 생기면(2~4주 뒤) 같은 화면에서 재검토 요청(사이트 삭제 금지)
+  - AdSense: 기존 계정(pub-1418493009023603, 예전 수익 있음)으로 변경(2026-10-12). 새로 만든 계정(pub-9884982808493036)은 중복 계정 방지를 위해 사이트 삭제·해지 → 기존 계정에서 rowflip.com 사이트 검토 요청 → 2026-10-22 '가치가 별로 없는 콘텐츠'로 거절, 재요청도 같은 사유로 거절(11월 초). 다음 재요청은 12월 첫째 주 — 그 전에 소개 페이지(완료)·블로그 30개 이상·서치 콘솔 색인 확인. 공유 안내 팝업 끔, 블로그 글 늘리고 색인·검색 유입 생기면(2~4주 뒤) 같은 화면에서 재검토 요청(사이트 삭제 금지)
   - 브랜드커넥트 상품 5개(의자 2, A4용지, 데스크매트, 책상) + 삼성닷컴 제휴 1개(갤럭시 북6, 2026-10-18) — 상품 추가·교체는 brandConnect.ts. 네이버가 아닌 제휴 상품은 `disclosure`로 대가성 안내를 따로 적음
   - GA4(`G-N193ST4FX3`, `src/config/analytics.ts`) 연결 완료 — 이벤트는 페이지 조회·share·promotion_click·result_copy·result_print(페이지 경로만)만
   - Cloudflare Web Analytics(쿠키 없음): Cloudflare가 자동으로 `beacon.min.js`를 붙임(코드에는 없음). GA와 수치 비교용으로 유지하기로 함(2026-10-16), 개인정보처리방침 5항에 기재

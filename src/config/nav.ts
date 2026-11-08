@@ -204,6 +204,7 @@ export const BLOG_NAV = { href: "/blog/", label: "Blog" } as const;
 
 /** 기능이 아닌 안내 페이지 — 푸터와 sitemap에만 들어간다 */
 export const INFO_PAGES = [
+  { id: "about", href: "/about/", label: "사이트 소개", priority: 0.4 },
   { id: "blog", href: "/blog/", label: "엑셀 작업 팁", priority: 0.6 },
   { id: "privacy", href: "/privacy/", label: "개인정보처리방침", priority: 0.3 },
 ] as const;
