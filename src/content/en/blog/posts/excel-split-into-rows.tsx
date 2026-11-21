@@ -28,6 +28,7 @@ export const excelSplitIntoRows: EnPost = {
     excerpt:
       "One cell holds A-10234, B-20031 and you need one value per row, with the order ID next to each. TEXTSPLIT, Power Query and a version for Excel 2019.",
     toc: [
+      { id: "text-to-rows", title: "Is there a Text to Rows in Excel?" },
       { id: "setup", title: "Example: items in one cell per order" },
       { id: "one-cell", title: "One cell into rows: TEXTSPLIT" },
       { id: "column", title: "A whole column into one list" },
@@ -45,6 +46,14 @@ export const excelSplitIntoRows: EnPost = {
           Exports from order systems and forms often put several values in one cell: the items in an order, the tags on a ticket, the
           people on a team. To count, filter or look them up, you usually need one value per row. Splitting into columns is the easy
           part; this post is about splitting down into rows, and keeping the other columns next to each value.
+        </p>
+
+        <h2 id="text-to-rows">Is there a Text to Rows in Excel?</h2>
+        <p>
+          No. Excel has Data &gt; Text to Columns, but no Text to Rows button. For a single cell, you can run Text to Columns and then
+          copy the result and use Paste Special &gt; Transpose to turn the columns into rows. For a whole column, or when the order ID
+          must stay next to each value, use one of the methods below: TEXTSPLIT with a row delimiter in Microsoft 365, or Split Column
+          &gt; By Delimiter &gt; Advanced options &gt; Rows in Power Query.
         </p>
 
         <h2 id="setup">Example: items in one cell per order</h2>

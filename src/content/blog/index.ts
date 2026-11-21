@@ -9,6 +9,9 @@ import { excelCompareLists } from "./posts/excel-compare-lists";
 import { excelCompareSheets } from "./posts/excel-compare-sheets";
 import { excelCountUnique } from "./posts/excel-count-unique";
 import { excelDateKorean } from "./posts/excel-date-korean";
+import { excelEstimateTemplate } from "./posts/excel-estimate-template";
+import { excelMaskPersonalInfo } from "./posts/excel-mask-personal-info";
+import { excelStatementLookup } from "./posts/excel-statement-lookup";
 import { excelHanyoungAutocorrect } from "./posts/excel-hanyoung-autocorrect";
 import { excelLenCount } from "./posts/excel-len-count";
 import { excelLinebreakFormula } from "./posts/excel-linebreak-formula";
@@ -37,7 +40,7 @@ export const BLOG_META = {
  * 블로그 글 목록 — 새 글은 posts/<slug>.tsx를 만들고 여기에 추가한다.
  * 목록·sitemap·기능 페이지 '관련 글'이 모두 이 배열을 쓴다.
  */
-const POSTS: Post[] = [excelAddressSplit, excelAmountKorean, excelVatFormula, excelLenCount, excelPhoneNumber, excelAddQuotes, excelUnpivot, excelCompareLists, excelCommaValues, excelSumByName, excelCaseSensitive, excelLinebreakFormula, excelReceivableBalance, excelDateKorean, hwpxEstimateFill, excelHanyoungAutocorrect, excelCompareSheets, excelCountUnique, excelNameSplit, donationReceiptIssue, excelVlookupMulti, excelTextToNumber];
+const POSTS: Post[] = [excelAddressSplit, excelAmountKorean, excelVatFormula, excelLenCount, excelPhoneNumber, excelAddQuotes, excelUnpivot, excelCompareLists, excelCommaValues, excelSumByName, excelCaseSensitive, excelLinebreakFormula, excelReceivableBalance, excelDateKorean, hwpxEstimateFill, excelHanyoungAutocorrect, excelCompareSheets, excelCountUnique, excelNameSplit, donationReceiptIssue, excelVlookupMulti, excelTextToNumber, excelEstimateTemplate, excelStatementLookup, excelMaskPersonalInfo];
 
 /** 최신 글이 먼저 오도록 정렬한 목록 */
 export function getPosts(): Post[] {
